@@ -22,4 +22,8 @@ public abstract class BaseEntity {
     @Column(nullable = false)
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    //MYSQL 에서만 작동 db 변경시 수정 필요
+    @Column(columnDefinition = "boolean default false")
+    private Boolean delYn;
 }
