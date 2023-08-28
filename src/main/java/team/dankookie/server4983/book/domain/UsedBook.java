@@ -3,8 +3,10 @@ package team.dankookie.server4983.book.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.common.domain.BaseEntity;
@@ -38,6 +40,9 @@ public class UsedBook extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Department department;
 
+    @Enumerated(EnumType.STRING)
+    private BookStatus bookStatus;
+
     @Column(columnDefinition = "boolean default false")
     private Boolean isUnderlinedOrWrite;
 
@@ -47,14 +52,18 @@ public class UsedBook extends BaseEntity {
     @Column(columnDefinition = "boolean default false")
     private Boolean isCoverDamaged;
 
-    @Column(columnDefinition = "boolean default true")
-    private Boolean onSailed;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Member buyerMember;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member sellerMember;
 
-
+    @Builder
+    public UsedBook(String name, Integer price, LocalDate tradeAvailableDate, BookStatus bookStatus, Member buyerMember) {
+        this.name = name;
+        this.price = price;
+        this.tradeAvailableDate = tradeAvailableDate;
+        this.bookStatus = bookStatus;
+        this.buyerMember = buyerMember;
+    }
 }
