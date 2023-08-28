@@ -3,13 +3,13 @@ package team.dankookie.server4983.member.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import team.dankookie.server4983.common.domain.BaseEntity;
 import team.dankookie.server4983.member.constant.AccountBank;
 
-@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -52,6 +52,19 @@ public class Member extends BaseEntity {
 
     @Column(columnDefinition = "boolean default false")
     private Boolean marketingAgree;
+
+    @Builder
+    public Member(String studentId, String department, Integer yearOfAdmission, String nickname, String password, String phoneNumber, String accountHolder, AccountBank accountBank, String accountNumber) {
+        this.studentId = studentId;
+        this.department = department;
+        this.yearOfAdmission = yearOfAdmission;
+        this.nickname = nickname;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.accountHolder = accountHolder;
+        this.accountBank = accountBank;
+        this.accountNumber = accountNumber;
+    }
 
 
 
