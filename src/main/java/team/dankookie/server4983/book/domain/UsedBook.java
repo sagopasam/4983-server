@@ -59,11 +59,13 @@ public class UsedBook extends BaseEntity {
     private Member sellerMember;
 
     @Builder
-    public UsedBook(String name, Integer price, LocalDate tradeAvailableDate, BookStatus bookStatus, Member buyerMember) {
+    public UsedBook(String name, Integer price, LocalDate tradeAvailableDate, BookStatus bookStatus, Member buyerMember, Department department, College college) {
         this.name = name;
         this.price = price;
         this.tradeAvailableDate = tradeAvailableDate;
         this.bookStatus = bookStatus;
         this.buyerMember = buyerMember;
+        this.department = department;
+        this.college = college;
     }
 }
