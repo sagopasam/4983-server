@@ -19,28 +19,21 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<UsedBook> getUsedBookList(boolean canBuy) {
+    public List<UsedBook> getUsedBookList(boolean canBuyElseAll) {
         JPAQuery<UsedBook> query = queryFactory.selectFrom(usedBook);
-        return getUsedBooksCanBuyOrNot(canBuy, query);
+        return getUsedBooksCanBuyElseAll(canBuyElseAll, query);
     }
 
     @Override
-    public List<UsedBook> getUsedBookListInCollegeAndDepartment(List<College> college, List<Department> department, boolean canBuy) {
+    public List<UsedBook> getUsedBookListInCollegeAndDepartment(List<College> college, List<Department> department, boolean canBuyElseAll) {
         JPAQuery<UsedBook> query = queryFactory.selectFrom(usedBook);
 
-        if (!college.isEmpty() && !department.isEmpty()) {
-            query.where(usedBook.college.in(college).and(usedBook.department.in(department)));
-        } else if (!college.isEmpty()) {
-            query.where(usedBook.college.in(college));
-        } else if (!department.isEmpty()) {
-            query.where(usedBook.department.in(department));
-        }
-
-        return getUsedBooksCanBuyOrNot(canBuy, query);
+        query.where(usedBook.college.in(college).or(usedBook.department.in(department)));
+        return getUsedBooksCanBuyElseAll(canBuyElseAll, query);
     }
 
-    private List<UsedBook> getUsedBooksCanBuyOrNot(boolean canBuy, JPAQuery<UsedBook> query) {
-        if (canBuy) {
+    private List<UsedBook> getUsedBooksCanBuyElseAll(boolean canBuyElseAll, JPAQuery<UsedBook> query) {
+        if (canBuyElseAll) {
             return query
                     .where(usedBook.bookStatus.eq(BookStatus.SALE))
                     .orderBy(usedBook.createdAt.desc()).fetch();
