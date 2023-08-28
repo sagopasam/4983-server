@@ -70,7 +70,7 @@ class UsedBookListControllerTest {
     @Test
     void 서적의_모든_리스트를_반환한다() throws Exception {
         //given
-        final boolean canBuy = false;
+        final boolean canBuyElseAll = false;
 
         UsedBookListResponse usedBookListResponse1 = UsedBookListResponse.builder()
                 .imageUrl("imageUrl")
@@ -99,7 +99,7 @@ class UsedBookListControllerTest {
 
         //when
         ResultActions resultActions = mockMvc.perform(get(API)
-                        .queryParam("canBuy", String.valueOf(canBuy)))
+                        .queryParam("canBuyElseAll", String.valueOf(canBuyElseAll)))
                 .andDo(print());
 
         //then
@@ -107,7 +107,7 @@ class UsedBookListControllerTest {
                 .andDo(
                         document("used-book-list/getUsedBookList/success",
                                 queryParameters(
-                                        parameterWithName("canBuy").description("구매 가능 여부")
+                                        parameterWithName("canBuyElseAll").description("구매 가능 여부")
                                 ),
                                 responseFields(
                                         fieldWithPath("[].imageUrl").description("책 이미지"),
@@ -125,7 +125,7 @@ class UsedBookListControllerTest {
     void 서적을_단과대와_학과에따라_리스트로_반환한다() throws Exception {
         //given
         final String URL = API + "/college-and-department";
-        final boolean canBuy = false;
+        final boolean canBuyElseAll = false;
 
         UsedBookListResponse usedBookListResponse1 = UsedBookListResponse.builder()
                 .imageUrl("imageUrl")
@@ -152,14 +152,14 @@ class UsedBookListControllerTest {
         List<College> collegeList = List.of(College.ENGINEERING, College.EDUCATION);
         List<Department> departmentList = List.of(Department.COMPUTER, Department.SOFTWARE, Department.KOREAN);
 
-        when(usedBookListService.getUsedBookList(collegeList, departmentList, canBuy))
+        when(usedBookListService.getUsedBookList(collegeList, departmentList, canBuyElseAll))
                 .thenReturn(usedBookListResponseList);
 
         //when
         ResultActions resultActions = mockMvc.perform(get(URL)
                         .param("college", "ENGINEERING,EDUCATION")
                         .param("department", "COMPUTER,SOFTWARE,KOREAN")
-                        .param("canBuy", String.valueOf(canBuy))
+                        .param("canBuyElseAll", String.valueOf(canBuyElseAll))
                 )
                 .andDo(print());
 
@@ -170,7 +170,7 @@ class UsedBookListControllerTest {
                                 queryParameters(
                                         parameterWithName("college").description("단과대학 enum 리스트"),
                                         parameterWithName("department").description("학과 enum 리스트"),
-                                        parameterWithName("canBuy").description("구매 가능 여부")
+                                        parameterWithName("canBuyElseAll").description("구매 가능 여부")
                                 ),
                                 responseFields(
                                         fieldWithPath("[].imageUrl").description("책 이미지"),

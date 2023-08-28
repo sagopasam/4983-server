@@ -21,17 +21,17 @@ public class UsedBookListController {
     private final UsedBookListService usedBookListService;
 
     @GetMapping
-    public ResponseEntity<List<UsedBookListResponse>> getUsedBookList(@RequestParam boolean canBuy) {
-        return ResponseEntity.ok(usedBookListService.getUsedBookList(canBuy));
+    public ResponseEntity<List<UsedBookListResponse>> getUsedBookList(@RequestParam boolean canBuyElseAll) {
+        return ResponseEntity.ok(usedBookListService.getUsedBookList(canBuyElseAll));
     }
 
     @GetMapping("/college-and-department")
     public ResponseEntity<List<UsedBookListResponse>> getUsedBookListByCollegeAndDepartment(
-            @RequestParam boolean canBuy,
+            @RequestParam boolean canBuyElseAll,
             @RequestParam List<College> college,
             @RequestParam List<Department> department
     ) {
-        return ResponseEntity.ok(usedBookListService.getUsedBookList(college, department, canBuy));
+        return ResponseEntity.ok(usedBookListService.getUsedBookList(college, department, canBuyElseAll));
     }
 
 

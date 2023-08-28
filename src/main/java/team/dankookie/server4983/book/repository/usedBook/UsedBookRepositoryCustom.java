@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UsedBookRepositoryCustom {
 
-    List<UsedBook> getUsedBookList(boolean canBuy);
+    List<UsedBook> getUsedBookList(boolean canBuyElseAll);
 
-    List<UsedBook> getUsedBookListInCollegeAndDepartment(List<College> college, List<Department> department, boolean canBuy);
+    List<UsedBook> getUsedBookListInCollegeAndDepartment(List<College> college, List<Department> department, boolean canBuyElseAll);
 }
