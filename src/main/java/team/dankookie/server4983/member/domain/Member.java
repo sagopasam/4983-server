@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
+import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.common.domain.BaseEntity;
 import team.dankookie.server4983.member.constant.AccountBank;
 
@@ -22,7 +22,8 @@ public class Member extends BaseEntity {
     private String studentId;
 
     @NotNull
-    private String department;
+    @Enumerated(EnumType.STRING)
+    private Department department;
 
     @NotNull
     private Integer yearOfAdmission;
@@ -54,7 +55,7 @@ public class Member extends BaseEntity {
     private Boolean marketingAgree;
 
     @Builder
-    public Member(String studentId, String department, Integer yearOfAdmission, String nickname, String password, String phoneNumber, String accountHolder, AccountBank accountBank, String accountNumber) {
+    public Member(String studentId, Department department, Integer yearOfAdmission, String nickname, String password, String phoneNumber, String accountHolder, AccountBank accountBank, String accountNumber) {
         this.studentId = studentId;
         this.department = department;
         this.yearOfAdmission = yearOfAdmission;
