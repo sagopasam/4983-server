@@ -19,19 +19,19 @@ public class UsedBookListService {
     private final UsedBookRepository usedBookRepository;
     private final BookImageRepository bookImageRepository;
 
-    public List<UsedBookListResponse> getUsedBookList(boolean canBuy) {
+    public List<UsedBookListResponse> getUsedBookList(boolean canBuyElseAll) {
 
         List<UsedBookListResponse> responseList = new ArrayList<>();
 
-        List<UsedBook> usedBookList = usedBookRepository.getUsedBookList(canBuy);
+        List<UsedBook> usedBookList = usedBookRepository.getUsedBookList(canBuyElseAll);
 
         return getUsedBookListResponses(responseList, usedBookList);
     }
 
-    public List<UsedBookListResponse> getUsedBookList(List<College> college, List<Department> department, boolean canBuy) {
+    public List<UsedBookListResponse> getUsedBookList(List<College> college, List<Department> department, boolean canBuyElseAll) {
         List<UsedBookListResponse> responseList = new ArrayList<>();
 
-        List<UsedBook> usedBookList = usedBookRepository.getUsedBookListInCollegeAndDepartment(college, department, canBuy);
+        List<UsedBook> usedBookList = usedBookRepository.getUsedBookListInCollegeAndDepartment(college, department, canBuyElseAll);
 
         return getUsedBookListResponses(responseList, usedBookList);
     }
