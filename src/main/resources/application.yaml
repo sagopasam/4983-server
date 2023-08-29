@@ -6,3 +6,6 @@ frontend:
 spring:
   profiles:
     default: local
+  config:
+    import:
+      - submodule/application-jwt.yml
