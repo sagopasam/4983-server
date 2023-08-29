@@ -6,14 +6,21 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.common.domain.BaseEntity;
 import team.dankookie.server4983.member.constant.AccountBank;
+import team.dankookie.server4983.member.constant.UserRole;
+
+import java.util.Collection;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements UserDetails {
 
     @Id @GeneratedValue
     private Long id;
@@ -67,6 +74,36 @@ public class Member extends BaseEntity {
         this.accountNumber = accountNumber;
     }
 
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
 
+    @Override
+    public String getUsername() {
+        return nickname;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return !getDelYn();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !getDelYn();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return !getDelYn();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return !getDelYn();
+    }
 }
