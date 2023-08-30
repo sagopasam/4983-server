@@ -9,6 +9,10 @@
 
 * link:https://github.com/dankookie-4983/4983-server[GitHub 주소]
 
-== User 문서
+== UsedBook 문서
 
 * link:usedBook.html[UsedBook 문서]
+
+== Member 문서
+
+* link:member.html[Member 문서]
