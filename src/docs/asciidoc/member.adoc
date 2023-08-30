@@ -1,0 +1,48 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+== 메인 문서
+
+link:index.html[메인 문서]
+
+=== 로그인, 회원가입 관련 api 문서
+
+==== 로그인 (성공)
+
+===== Request
+
+include::{snippets}/member/login/success/http-request.adoc[]
+include::{snippets}/member/login/success/request-fields.adoc[]
+
+===== Response
+
+include::{snippets}/member/login/success/http-response.adoc[]
+Cookie
+include::{snippets}/member/login/success/response-cookies.adoc[]
+Response Header
+include::{snippets}/member/login/success/response-headers.adoc[]
+
+==== 로그인 (학번 일치 안하는 경우)
+
+===== Request
+
+include::{snippets}/member/login/fail/studentId/http-request.adoc[]
+
+===== Response
+
+include::{snippets}/member/login/fail/studentId/http-response.adoc[]
+include::{snippets}/member/login/fail/studentId/response-fields.adoc[]
+
+==== 로그인 (비밀번호 일치 안하는 경우)
+
+===== Request
+
+include::{snippets}/member/login/fail/password/http-request.adoc[]
+
+===== Response
+
+include::{snippets}/member/login/fail/password/http-response.adoc[]
+include::{snippets}/member/login/fail/password/response-fields.adoc[]
