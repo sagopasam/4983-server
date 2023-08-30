@@ -1,15 +1,21 @@
 package team.dankookie.server4983.member.controller;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.cookies.CookieDocumentation;
 import org.springframework.restdocs.headers.HeaderDocumentation;
 import org.springframework.test.web.servlet.ResultActions;
 import team.dankookie.server4983.common.BaseControllerTest;
+import team.dankookie.server4983.common.exception.ErrorResponse;
 import team.dankookie.server4983.common.exception.LoginFailedException;
 import team.dankookie.server4983.member.dto.LoginRequest;
 import team.dankookie.server4983.member.service.MemberService;
 
+import java.nio.charset.StandardCharsets;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -58,6 +64,8 @@ class MemberLoginControllerTest extends BaseControllerTest {
                                 )
                         )
                 );
+        String content = resultActions.andReturn().getResponse().getContentAsString(UTF_8);
+        assertThat(content).isEmpty();
     }
 
     @Test
@@ -90,6 +98,10 @@ class MemberLoginControllerTest extends BaseControllerTest {
                                 )
                         )
                 );
+
+        String content = resultActions.andReturn().getResponse().getContentAsString(UTF_8);
+        ErrorResponse response = ErrorResponse.of("존재하지 않는 학번입니다.");
+        assertThat(content).isEqualTo(objectMapper.writeValueAsString(response));
     }
 
     @Test
@@ -122,6 +134,10 @@ class MemberLoginControllerTest extends BaseControllerTest {
                                 )
                         )
                 );
+
+        String content = resultActions.andReturn().getResponse().getContentAsString(UTF_8);
+        ErrorResponse response = ErrorResponse.of("잘못된 비밀번호입니다!");
+        assertThat(content).isEqualTo(objectMapper.writeValueAsString(response));
     }
 
 }
