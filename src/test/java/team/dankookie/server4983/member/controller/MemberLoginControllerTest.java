@@ -80,7 +80,7 @@ class MemberLoginControllerTest extends BaseControllerTest {
         //then
         resultActions.andExpect(status().isUnauthorized())
                 .andDo(
-                        document("member/login/success",
+                        document("member/login/fail/studentId",
                                 requestFields(
                                         fieldWithPath("studentId").description("이메일"),
                                         fieldWithPath("password").description("비밀번호")
@@ -112,7 +112,7 @@ class MemberLoginControllerTest extends BaseControllerTest {
         //then
         resultActions.andExpect(status().isUnauthorized())
                 .andDo(
-                        document("member/login/success",
+                        document("member/login/fail/password",
                                 requestFields(
                                         fieldWithPath("studentId").description("이메일"),
                                         fieldWithPath("password").description("비밀번호")
