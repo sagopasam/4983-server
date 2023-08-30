@@ -11,6 +11,7 @@ import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.book.domain.UsedBook;
+import team.dankookie.server4983.common.BaseRepositoryTest;
 import team.dankookie.server4983.config.TestConfig;
 import team.dankookie.server4983.member.constant.AccountBank;
 import team.dankookie.server4983.member.domain.Member;
@@ -22,11 +23,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@DataJpaTest
-@Import(TestConfig.class)
-class UsedBookRepositoryTest {
+class UsedBookRepositoryTest extends BaseRepositoryTest {
 
     @Autowired
     UsedBookRepository usedBookRepository;

@@ -12,6 +12,7 @@ import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.book.dto.UsedBookListResponse;
 import team.dankookie.server4983.book.repository.bookImage.BookImageRepository;
 import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
+import team.dankookie.server4983.common.BaseServiceTest;
 import team.dankookie.server4983.member.domain.Member;
 
 import java.time.LocalDate;
@@ -21,10 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@ExtendWith(MockitoExtension.class)
-class UsedBookListServiceTest {
+class UsedBookListServiceTest extends BaseServiceTest {
 
     @InjectMocks
     UsedBookListService usedBookListService;
