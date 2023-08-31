@@ -74,6 +74,10 @@ public class Member extends BaseEntity implements UserDetails {
         this.accountNumber = accountNumber;
     }
 
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 

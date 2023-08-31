@@ -8,6 +8,7 @@ import team.dankookie.server4983.common.BaseServiceTest;
 import team.dankookie.server4983.common.exception.LoginFailedException;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.dto.LoginRequest;
+import team.dankookie.server4983.member.dto.MemberPasswordChangeRequest;
 import team.dankookie.server4983.member.repository.MemberRepository;
 
 import java.util.Optional;
@@ -59,7 +60,8 @@ class MemberServiceTest extends BaseServiceTest {
         //when
         //then
         assertThatThrownBy(() -> memberService.login(loginRequest))
-                .isInstanceOf(LoginFailedException.class);
+                .isInstanceOf(LoginFailedException.class)
+                .hasMessage("존재하지 않는 학번입니다.");
 
     }
 
@@ -78,7 +80,8 @@ class MemberServiceTest extends BaseServiceTest {
         //when
         //then
         assertThatThrownBy(() -> memberService.login(loginRequest))
-                .isInstanceOf(LoginFailedException.class);
+                .isInstanceOf(LoginFailedException.class)
+                .hasMessage("잘못된 비밀번호입니다!");
 
     }
 
@@ -108,8 +111,101 @@ class MemberServiceTest extends BaseServiceTest {
         //when
         //then
         assertThatThrownBy(() -> memberService.findMemberNicknameByStudentId(studentId))
-                .isInstanceOf(LoginFailedException.class);
+                .isInstanceOf(LoginFailedException.class)
+                .hasMessage("존재하지 않는 학번입니다.");
     }
-    
+
+    @Test
+    void 학번과_휴대폰번호가_일치하는_회원이_있으면_true를_리턴한다() {
+        //given
+        String studentId = "studentId";
+        String phoneNumber = "phoneNumber";
+
+        when(memberRepository.findByStudentId(studentId))
+                .thenReturn(Optional.of(Member.builder().phoneNumber(phoneNumber).build()));
+        //when
+        boolean isMemberExists = memberService.isMemberExistsByMemberPasswordRequest(studentId, phoneNumber);
+        //then
+        assertThat(isMemberExists).isEqualTo(true);
+    }
+
+    @Test
+    void 학번과_일치하는_회원이_없으면_에러를_던진다() {
+        //given
+        String studentId = "studentId";
+        String phoneNumber = "phoneNumber";
+
+        when(memberRepository.findByStudentId(studentId))
+                .thenThrow(new IllegalArgumentException("존재하지 않는 학번입니다."));
+        //when
+        //then
+        assertThatThrownBy(() -> memberService.isMemberExistsByMemberPasswordRequest(studentId, phoneNumber))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 학번입니다.");
+    }
+
+    @Test
+    void 학번과_휴대폰번호가_일치하는_회원이_없으면_에러를_던진다() {
+        //given
+        String studentId = "studentId";
+        String phoneNumber = "phoneNumber";
+
+        when(memberRepository.findByStudentId(studentId))
+                .thenReturn(Optional.of(Member.builder().phoneNumber("wrongPhoneNumber").build()));
+        //when
+        //then
+        assertThatThrownBy(() -> memberService.isMemberExistsByMemberPasswordRequest(studentId, phoneNumber))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("학번과 맞지 않는 휴대폰번호입니다.");
+    }
+
+    @Test
+    void 학번과_비밀번호_변경할_비밀번호를_받으면_비밀번호를_변경한다() {
+        //given
+        MemberPasswordChangeRequest request = MemberPasswordChangeRequest.of("studentId", "phoneNumber", "password");
+
+        Member member = Member.builder().nickname("nickname").studentId("studentId").phoneNumber("phoneNumber").password("password").build();
+
+        when(memberRepository.findByStudentId(request.getStudentId()))
+                .thenReturn(Optional.of(member));
+
+        //when
+        boolean isChanged = memberService.changeMemberPassword(request);
+
+        //then
+        assertThat(isChanged).isTrue();
+
+    }
+
+
+    @Test
+    void 비밀번호_변경_학번과_일치하는_회원이_없으면_에러를_던진다() {
+        //given
+        String studentId = "studentId";
+        String phoneNumber = "phoneNumber";
+
+        when(memberRepository.findByStudentId(studentId))
+                .thenThrow(new IllegalArgumentException("존재하지 않는 학번입니다."));
+        //when
+        //then
+        assertThatThrownBy(() -> memberService.isMemberExistsByMemberPasswordRequest(studentId, phoneNumber))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 학번입니다.");
+    }
+
+    @Test
+    void 비밀번호_변경_학번과_휴대폰번호가_일치하는_회원이_없으면_에러를_던진다() {
+        //given
+        String studentId = "studentId";
+        String phoneNumber = "phoneNumber";
+
+        when(memberRepository.findByStudentId(studentId))
+                .thenReturn(Optional.of(Member.builder().phoneNumber("wrongPhoneNumber").build()));
+        //when
+        //then
+        assertThatThrownBy(() -> memberService.isMemberExistsByMemberPasswordRequest(studentId, phoneNumber))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("학번과 맞지 않는 휴대폰번호입니다.");
+    }
 
 }
