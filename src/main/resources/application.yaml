@@ -9,3 +9,4 @@ spring:
   config:
     import:
       - submodule/application-jwt.yml
+      - submodule/application-sms.yaml
