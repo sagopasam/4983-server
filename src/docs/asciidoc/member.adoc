@@ -8,16 +8,15 @@
 
 link:index.html[메인 문서]
 
-=== 로그인, 회원가입 관련 api 문서
 
-==== 로그인 (성공)
+=== 로그인 (성공)
 
-===== Request
+==== Request
 
 include::{snippets}/member/login/success/http-request.adoc[]
 include::{snippets}/member/login/success/request-fields.adoc[]
 
-===== Response
+==== Response
 
 include::{snippets}/member/login/success/http-response.adoc[]
 Cookie
@@ -25,24 +24,100 @@ include::{snippets}/member/login/success/response-cookies.adoc[]
 Response Header
 include::{snippets}/member/login/success/response-headers.adoc[]
 
-==== 로그인 (학번 일치 안하는 경우)
+=== 로그인 (학번 일치 안하는 경우)
 
-===== Request
+==== Request
 
 include::{snippets}/member/login/fail/studentId/http-request.adoc[]
 
-===== Response
+==== Response
 
 include::{snippets}/member/login/fail/studentId/http-response.adoc[]
 include::{snippets}/member/login/fail/studentId/response-fields.adoc[]
 
-==== 로그인 (비밀번호 일치 안하는 경우)
+=== 로그인 (비밀번호 일치 안하는 경우)
 
-===== Request
+==== Request
 
 include::{snippets}/member/login/fail/password/http-request.adoc[]
 
-===== Response
+==== Response
 
 include::{snippets}/member/login/fail/password/http-response.adoc[]
 include::{snippets}/member/login/fail/password/response-fields.adoc[]
+
+=== 비밀번호 인증번호 보내기 (성공)
+
+==== Request
+
+include::{snippets}/member/password/certification-number/success/http-request.adoc[]
+
+===== query parameters
+include::{snippets}/member/password/certification-number/success/query-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/member/password/certification-number/success/http-response.adoc[]
+include::{snippets}/member/password/certification-number/success/response-fields.adoc[]
+
+=== 비밀번호 인증번호 보내기 (실패 : 학번 일치하지 않는 경우)
+
+==== Request
+
+include::{snippets}/member/password/certification-number/fail/studentId/http-request.adoc[]
+===== query parameters
+include::{snippets}/member/password/certification-number/fail/studentId/query-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/member/password/certification-number/fail/studentId/http-response.adoc[]
+include::{snippets}/member/password/certification-number/fail/studentId/response-fields.adoc[]
+
+
+=== 비밀번호 인증번호 보내기 (실패: 휴대폰번호와 일치하지 않는 경우)
+
+==== Request
+
+include::{snippets}/member/password/certification-number/fail/phoneNumber/http-request.adoc[]
+===== query parameters
+include::{snippets}/member/password/certification-number/fail/phoneNumber/query-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/member/password/certification-number/fail/phoneNumber/http-response.adoc[]
+include::{snippets}/member/password/certification-number/fail/phoneNumber/response-fields.adoc[]
+
+=== 비밀번호 변경 (성공)
+
+==== Request
+
+include::{snippets}/member/password/change/success/http-request.adoc[]
+include::{snippets}/member/password/change/success/request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/member/password/change/success/http-response.adoc[]
+
+=== 비밀번호 변경 (실패: 학번이 존재하지 않는 경우)
+
+==== Request
+
+include::{snippets}/member/password/change/fail/studentId/http-request.adoc[]
+include::{snippets}/member/password/change/fail/studentId/request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/member/password/change/fail/studentId/http-response.adoc[]
+include::{snippets}/member/password/change/fail/studentId/response-fields.adoc[]
+
+=== 비밀번호 변경 (실패: 휴대폰번호가 학번과 일치하지 않는 경우)
+
+==== Request
+
+include::{snippets}/member/password/change/fail/phoneNumber/http-request.adoc[]
+include::{snippets}/member/password/change/fail/phoneNumber/request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/member/password/change/fail/phoneNumber/http-response.adoc[]
+include::{snippets}/member/password/change/fail/phoneNumber/response-fields.adoc[]
