@@ -1,6 +1,5 @@
 package team.dankookie.server4983.member.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,7 @@ public class MemberPasswordController {
         memberService.isMemberExistsByMemberPasswordRequest(studentId, phoneNumber);
 
         Long time = System.currentTimeMillis();
-        SmsCertificationNumber certificationNumber = smsService.sendCertificationNumberToPhoneNumber(phoneNumber, time );
+        SmsCertificationNumber certificationNumber = smsService.sendCertificationNumberToPhoneNumber(phoneNumber, time);
         return ResponseEntity.ok(certificationNumber);
     }
 
