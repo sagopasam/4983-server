@@ -112,4 +112,5 @@ public class Member extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return !getDelYn();
     }
+
 }
