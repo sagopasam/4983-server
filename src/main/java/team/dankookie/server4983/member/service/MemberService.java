@@ -1,16 +1,15 @@
 package team.dankookie.server4983.member.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import team.dankookie.server4983.common.exception.LoginFailedException;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.dto.LoginRequest;
 import team.dankookie.server4983.member.dto.MemberPasswordChangeRequest;
+import team.dankookie.server4983.member.dto.MemberRegisterRequest;
 import team.dankookie.server4983.member.repository.MemberRepository;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -36,10 +35,10 @@ public class MemberService {
         return true;
     }
 
-    public String findMemberNicknameByStudentId(String studentId) {
+    public Member findMemberNicknameByStudentId(String studentId) {
         Member member = memberRepository.findByStudentId(studentId)
                 .orElseThrow(() -> new LoginFailedException("존재하지 않는 학번입니다."));
-        return member.getNickname();
+        return member;
     }
 
     public boolean isMemberExistsByMemberPasswordRequest(String studentId, String phoneNumber) {
@@ -67,6 +66,19 @@ public class MemberService {
 
         member.changePassword(passwordEncoder.encode(request.getPassword()));
         return true;
-
     }
+
+    public boolean isStudentIdDuplicate(String studentId) {
+        return memberRepository.existsByStudentId(studentId);
+    }
+
+    public boolean isNicknameDuplicate(String nickname) {
+        return memberRepository.existsByNickname(nickname);
+    }
+
+    @Transactional
+    public Member register(MemberRegisterRequest request) {
+        return memberRepository.save(request.toEntity());
+    }
+
 }
