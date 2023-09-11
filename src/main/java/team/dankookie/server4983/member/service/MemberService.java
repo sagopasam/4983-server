@@ -1,10 +1,12 @@
 package team.dankookie.server4983.member.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import team.dankookie.server4983.common.exception.LoginFailedException;
+import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.dto.LoginRequest;
 import team.dankookie.server4983.member.dto.MemberPasswordChangeRequest;
@@ -18,7 +20,10 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Member loadUserByUsername(String nickname) {
+    @Value("${jwt.secret-key}")
+    private String secretKey;
+
+    public Member loadUserByNickname(String nickname) {
         return memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
@@ -55,16 +60,16 @@ public class MemberService {
 
     @Transactional
     public boolean changeMemberPassword(MemberPasswordChangeRequest request) {
-        Member member = memberRepository.findByStudentId(request.getStudentId())
+        Member member = memberRepository.findByStudentId(request.studentId())
                 .orElseThrow(
                         () -> new IllegalArgumentException("존재하지 않는 학번입니다.")
                 );
 
-        if (!member.getPhoneNumber().equals(request.getPhoneNumber())) {
+        if (!member.getPhoneNumber().equals(request.phoneNumber())) {
             throw new IllegalArgumentException("학번과 맞지 않는 휴대폰번호입니다.");
         }
 
-        member.changePassword(passwordEncoder.encode(request.getPassword()));
+        member.changePassword(passwordEncoder.encode(request.password()));
         return true;
     }
 
@@ -81,4 +86,20 @@ public class MemberService {
         return memberRepository.save(request.toEntity());
     }
 
+    public Boolean checkNicknameDuplicate(String nickname) {
+        return memberRepository.existsMemberByNickname(nickname);
+    }
+
+    public boolean isMemberPasswordMatch(String password, String accessToken) {
+        String nickname = JwtTokenUtils.getNickname(accessToken, secretKey);
+
+        Member findMember = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+        if (passwordEncoder.matches(password, findMember.getPassword())) {
+            return true;
+        }else {
+            return false;
+        }
+    }
 }
