@@ -1,6 +1,5 @@
 package team.dankookie.server4983.chat.handler;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -40,18 +39,11 @@ public class ChatLogicHandler {
     }
 
     public String purchaseBookStart(Map<String , Object> data) {
-        String token = getAccessToken((String) data.get("Authentication"));
-        String userName = JwtTokenUtils.getUsername(token , key);
+        System.out.println("데이터 : " + data.get("Authentication"));
+        String token = (String) data.get("Authentication");
+        String userName = JwtTokenUtils.getNickname(token , key);
 
         return String.format("\'%s\' 님이 거래 요청을 보냈어요!\n오늘 거래하러 갈래요?" , userName);
-    }
-
-    public String getAccessToken(String authorizationHeader) {
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring(7);
-        }
-
-        return null;
     }
 
 }

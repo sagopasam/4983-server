@@ -30,21 +30,21 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         System.out.println("받은 데이터 Type : " + chatMessage.getContentType());
 
-        chatLogicHandler.chatLoginHandler(chatMessage , chatMessage.getData());
-        sendData(chatMessage);
+        String result = chatLogicHandler.chatLoginHandler(chatMessage , chatMessage.getData());
+
+        sendData(ChatResponse.createChatResponse(result , session.getId()));
     }
 
-    private void sendData(ChatRequest chatMessage) throws IOException {
-        ChatResponse chatResponse = createChatResponse((String) chatMessage.getData().get("message") , chatMessage);
+    private void sendData(ChatResponse chatResponse) throws IOException {
         String result = objectMapper.writeValueAsString(chatResponse);
 
-        WebSocketSession receiver = sessionMap.get(chatMessage.getSession());
+        WebSocketSession receiver = sessionMap.get(chatResponse.getSession());
 
         if(receiver != null && receiver.isOpen()) {
             receiver.sendMessage(new TextMessage(result));
-            System.out.println("메세지 전송 : " + chatMessage.getData().get("message"));
+            System.out.println("메세지 전송 : " + chatResponse.getMessage());
         } else {
-            System.out.println("찾을 수 없는 사용자 : " + chatMessage.getSession());
+            System.out.println("찾을 수 없는 사용자 : " + chatResponse.getSession());
         }
     }
 
