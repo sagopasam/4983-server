@@ -15,10 +15,17 @@ public class ChatResponse {
 
     private String session;
 
-    public static ChatResponse createChatResponse(ChatRequest chatMessage) {
+    public static ChatResponse createChatResponse(String message , ChatRequest chatMessage) {
         return ChatResponse.builder()
-                .message(chatMessage.getMessage())
+                .message(message)
                 .session(chatMessage.getSession())
+                .build();
+    }
+
+    public static ChatResponse createChatResponse(String message , String session) {
+        return ChatResponse.builder()
+                .message(message)
+                .session(session)
                 .build();
     }
 

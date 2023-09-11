@@ -1,8 +1,6 @@
 package team.dankookie.server4983.chat.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.websocket.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -13,7 +11,8 @@ import team.dankookie.server4983.chat.dto.ChatRequest;
 import team.dankookie.server4983.chat.dto.ChatResponse;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static team.dankookie.server4983.chat.dto.ChatResponse.createChatResponse;
 

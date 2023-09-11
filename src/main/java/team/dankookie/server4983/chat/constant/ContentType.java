@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum ContentType {
+    BOOK_PURCHASE_START,
     BOOK_PURCHASE_REQUEST,
     BOOK_SALE_REJECTION,
     BOOK_SALE_AGREEMENT,
