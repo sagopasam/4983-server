@@ -1,6 +1,5 @@
 package team.dankookie.server4983.member.controller;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.cookies.CookieDocumentation;
@@ -9,13 +8,14 @@ import org.springframework.test.web.servlet.ResultActions;
 import team.dankookie.server4983.common.BaseControllerTest;
 import team.dankookie.server4983.common.exception.ErrorResponse;
 import team.dankookie.server4983.common.exception.LoginFailedException;
+import team.dankookie.server4983.jwt.service.RefreshTokenService;
+import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.dto.LoginRequest;
 import team.dankookie.server4983.member.service.MemberService;
 
-import java.nio.charset.StandardCharsets;
-
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -29,6 +29,8 @@ class MemberLoginControllerTest extends BaseControllerTest {
 
     @MockBean
     MemberService memberService;
+    @MockBean
+    RefreshTokenService refreshTokenService;
 
     @Test
     void 로그인시_accessToken과_refreshToken을_리턴한다() throws Exception {
@@ -40,6 +42,8 @@ class MemberLoginControllerTest extends BaseControllerTest {
 
         when(memberService.login(loginRequest))
                 .thenReturn(true);
+        when(memberService.findMemberNicknameByStudentId(any()))
+                .thenReturn(Member.builder().nickname("nickname").studentId("studentId").password("password").build());
 
         //when
         ResultActions resultActions = mockMvc.perform(post(loginUrl)

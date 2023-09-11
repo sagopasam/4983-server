@@ -89,7 +89,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        String generateAccessToken = JwtTokenUtils.generateAccessToken(refreshTokenEntity.get().getMember().getNickname(), key, TokenDuration.REFRESH_TOKEN_DURATION.getDuration());
+        String generateAccessToken = JwtTokenUtils.generateJwtToken(refreshTokenEntity.get().getMember().getNickname(), key, TokenDuration.REFRESH_TOKEN_DURATION.getDuration());
 
         response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + generateAccessToken);
 
@@ -97,7 +97,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     private void setAuthentication(HttpServletRequest request, String accessToken) {
-        String username = JwtTokenUtils.getUsername(accessToken, key);
+        String username = JwtTokenUtils.getNickname(accessToken, key);
         Member member = memberService.loadUserByUsername(username);
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

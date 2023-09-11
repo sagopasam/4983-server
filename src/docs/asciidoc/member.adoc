@@ -121,3 +121,61 @@ include::{snippets}/member/password/change/fail/phoneNumber/request-fields.adoc[
 
 include::{snippets}/member/password/change/fail/phoneNumber/http-response.adoc[]
 include::{snippets}/member/password/change/fail/phoneNumber/response-fields.adoc[]
+
+
+=== 학번 중복 확인 (성공)
+
+==== Request
+
+include::{snippets}/member-register/duplicate/studentId/success/http-request.adoc[]
+===== query parameters
+include::{snippets}/member-register/duplicate/studentId/success/query-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/member-register/duplicate/studentId/success/http-response.adoc[]
+
+=== 학번 중복 확인 (실패 : 학번 중복)
+
+==== Request
+include::{snippets}/member-register/duplicate/studentId/fail/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/member-register/duplicate/studentId/fail/http-response.adoc[]
+include::{snippets}/member-register/duplicate/studentId/fail/response-fields.adoc[]
+
+=== 닉네임 중복 확인 (성공)
+
+==== Request
+
+include::{snippets}/member-register/duplicate/nickname/success/http-request.adoc[]
+===== query parameters
+include::{snippets}/member-register/duplicate/nickname/success/query-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/member-register/duplicate/nickname/success/http-response.adoc[]
+include::{snippets}/member-register/duplicate/nickname/success/response-fields.adoc[]
+
+=== 닉네임 중복 확인 (실패 : 닉네임 중복)
+
+==== Request
+
+include::{snippets}/member-register/duplicate/nickname/fail/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/member-register/duplicate/nickname/fail/http-response.adoc[]
+include::{snippets}/member-register/duplicate/nickname/fail/response-fields.adoc[]
+
+=== 회원가입 (성공)
+
+==== Request
+
+include::{snippets}/member-register/success/http-request.adoc[]
+include::{snippets}/member-register/success/request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/member-register/success/http-response.adoc[]

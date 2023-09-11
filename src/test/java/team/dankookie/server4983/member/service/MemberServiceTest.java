@@ -94,10 +94,10 @@ class MemberServiceTest extends BaseServiceTest {
         when(memberRepository.findByStudentId(studentId))
                 .thenReturn(Optional.of(member));
         //when
-        String nickname = memberService.findMemberNicknameByStudentId(studentId);
+        Member findMember = memberService.findMemberNicknameByStudentId(studentId);
 
         //then
-        assertThat(nickname).isEqualTo(member.getNickname());
+        assertThat(findMember.getNickname()).isEqualTo(member.getNickname());
     }
 
     @Test
