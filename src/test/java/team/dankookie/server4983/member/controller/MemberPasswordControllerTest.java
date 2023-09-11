@@ -173,7 +173,7 @@ class MemberPasswordControllerTest extends BaseControllerTest {
         //given
         final MemberPasswordChangeRequest request = MemberPasswordChangeRequest.of("studentId", "phoneNumber", "password");
 
-        when(memberService.changeMemberPassword(any(MemberPasswordChangeRequest.class)))
+        when(memberService.changeMemberPassword(any()))
                 .thenThrow(new IllegalArgumentException("존재하지 않는 학번입니다."));
 
         //when
