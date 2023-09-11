@@ -1,23 +1,16 @@
 package team.dankookie.server4983.member.controller;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.headers.HeaderDocumentation;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
 import team.dankookie.server4983.common.BaseControllerTest;
 import team.dankookie.server4983.common.exception.ErrorResponse;
-import team.dankookie.server4983.member.dto.MemberPasswordMatchResponse;
 import team.dankookie.server4983.member.service.MemberService;
-
-import java.nio.charset.StandardCharsets;
 
 import static io.jsonwebtoken.lang.Strings.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -25,10 +18,8 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class MemberChangePasswordControllerTest extends BaseControllerTest {
@@ -53,7 +44,7 @@ public class MemberChangePasswordControllerTest extends BaseControllerTest {
         //then
         resultActions.andExpect(status().isOk())
                 .andDo(
-                        document("/my-pages/change-password/verify-current-password/success",
+                        document("my-pages/change-password/verify-current-password/success",
                                 requestFields(
                                         fieldWithPath("password").description("검사할 현재 비밀번호")
                                 ),
@@ -87,7 +78,7 @@ public class MemberChangePasswordControllerTest extends BaseControllerTest {
         //then
         resultActions.andExpect(status().isBadRequest())
                 .andDo(
-                        document("/my-pages/change-password/verify-current-password/fail",
+                        document("my-pages/change-password/verify-current-password/fail",
                                 requestFields(
                                         fieldWithPath("password").description("검사할 현재 비밀번호")
                                 ),

@@ -34,7 +34,7 @@ public class MemberNicknameDuplicateControllerTest extends BaseControllerTest {
 
 //        THEN
         resultActions.andExpect(MockMvcResultMatchers.status().isOk())
-                .andDo(document("/my-pages/nickname-duplicate/success",
+                .andDo(document("my-pages/nickname-duplicate/success",
                         queryParameters(
                                 parameterWithName("nickname").description("중복 검사할 닉네임")
                         ),
