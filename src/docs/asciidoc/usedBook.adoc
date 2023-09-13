@@ -103,5 +103,38 @@ include::{snippets}/used-book-list/getUsedBookListWithCollegeAndDepartment/succe
     GUGAK("국악전공", MUSIC_AND_ARTS);
 
 
+=== UsedBook 글쓰기 관련 문서
+
+=== UsedBook 글 저장
+
+==== Request
+
+include::{snippets}/used-book/save/success/http-request.adoc[]
+include::{snippets}/used-book/save/success/request-parts.adoc[]
+===== usedBook fields 요소  {usedBook : {}}
+include::{snippets}/used-book/save/success/request-part-usedBook-fields.adoc[]
+
+===== RequestHeader
+include::{snippets}/used-book/save/success/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/used-book/save/success/http-response.adoc[]
+include::{snippets}/used-book/save/success/response-fields.adoc[]
+
+=== Usedbook 상세 보기
+
+==== Request
+
+include::{snippets}/used-book/detail/success/http-request.adoc[]
+include::{snippets}/used-book/detail/success/path-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/used-book/detail/success/http-response.adoc[]
+include::{snippets}/used-book/detail/success/response-fields.adoc[]
+
+
+
 
 
