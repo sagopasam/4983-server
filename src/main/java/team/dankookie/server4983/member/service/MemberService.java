@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import team.dankookie.server4983.common.exception.LoginFailedException;
+import team.dankookie.server4983.jwt.constants.TokenSecretKey;
+import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.dto.LoginRequest;
+import team.dankookie.server4983.member.dto.MemberCollegeAndDepartment;
 import team.dankookie.server4983.member.dto.MemberPasswordChangeRequest;
 import team.dankookie.server4983.member.dto.MemberRegisterRequest;
 import team.dankookie.server4983.member.repository.MemberRepository;
@@ -19,11 +22,13 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenUtils jwtTokenUtils;
+    private final TokenSecretKey tokenSecretKey;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
 
-    public Member loadUserByNickname(String nickname) {
+    public Member findMemberByNickname(String nickname) {
         return memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
@@ -91,7 +96,7 @@ public class MemberService {
     }
 
     public boolean isMemberPasswordMatch(String password, String accessToken) {
-        String nickname = JwtTokenUtils.getNickname(accessToken, secretKey);
+        String nickname = jwtTokenUtils.getNickname(accessToken, secretKey);
 
         Member findMember = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
@@ -101,5 +106,12 @@ public class MemberService {
         }else {
             return false;
         }
+    }
+
+    public MemberCollegeAndDepartment findMemberCollegeAndDepartment(AccessToken accessToken) {
+        String nickname = jwtTokenUtils.getNickname(accessToken.value(), tokenSecretKey.getSecretKey());
+        Member member = findMemberByNickname(nickname);
+
+        return MemberCollegeAndDepartment.of(member.getDepartment());
     }
 }
