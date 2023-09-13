@@ -97,8 +97,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     private void setAuthentication(HttpServletRequest request, String accessToken) {
-        String username = JwtTokenUtils.getNickname(accessToken, key);
-        Member member = memberService.loadUserByUsername(username);
+        String nickname = JwtTokenUtils.getNickname(accessToken, key);
+        Member member = memberService.loadUserByNickname(nickname);
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 member, null, List.of(new SimpleGrantedAuthority(member.getRole().toString()))

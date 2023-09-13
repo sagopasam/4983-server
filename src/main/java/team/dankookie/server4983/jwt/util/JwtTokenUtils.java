@@ -12,8 +12,8 @@ import java.util.Date;
 public class JwtTokenUtils {
 
     public static Boolean validate(String token, String nickname, String key) {
-        String usernameByToken = getNickname(token, key);
-        return usernameByToken.equals(nickname) && !isTokenExpired(token, key);
+        String nicknameByToken = getNickname(token, key);
+        return nicknameByToken.equals(nickname) && !isTokenExpired(token, key);
     }
 
     public static Claims extractAllClaims(String token, String key) {

@@ -45,4 +45,17 @@ class MemberRepositoryTest extends BaseRepositoryTest {
         assertThat(findMember).isPresent();
     }
 
+        @Test
+        void 닉네임이_중복인지_확인한다(){
+            //given
+            final String nickname = "nickname";
+
+            Member member = MemberFixture.createMemberByNickname(nickname);
+            memberRepository.save(member);
+
+            //when
+            boolean duplicateNickname = memberRepository.existsMemberByNickname(nickname);
+            //then
+            assertThat(duplicateNickname).isTrue();
+        }
 }
