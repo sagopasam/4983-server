@@ -10,9 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import team.dankookie.server4983.common.config.filter.JwtTokenFilter;
-import team.dankookie.server4983.common.exception.CustomAuthenticationEntryPoint;
 import team.dankookie.server4983.jwt.repository.RefreshTokenRepository;
 import team.dankookie.server4983.member.service.MemberService;
 
@@ -36,9 +33,6 @@ public class SpringSecurityConfiguration {
                         .anyRequest().permitAll())
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling((exception) -> exception
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
-                .addFilterBefore(new JwtTokenFilter(memberService, refreshTokenRepository, secretKey), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

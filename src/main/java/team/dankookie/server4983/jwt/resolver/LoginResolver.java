@@ -18,6 +18,7 @@ import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 public class LoginResolver implements HandlerMethodArgumentResolver {
 
     private final TokenSecretKey tokenSecretKey;
+    private final JwtTokenUtils jwtTokenUtils;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -34,7 +35,9 @@ public class LoginResolver implements HandlerMethodArgumentResolver {
             throw new NotAuthorizedException();
         }
 
-        if (JwtTokenUtils.isTokenExpired(accessToken, tokenSecretKey.getSecretKey())) {
+        accessToken = accessToken.split(" ")[1];
+
+        if (jwtTokenUtils.isTokenExpired(accessToken, tokenSecretKey.getSecretKey())) {
 
             log.error("accessToken 토큰이 만료되었습니다.");
             throw new NotAuthorizedException();
