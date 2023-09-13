@@ -1,7 +1,6 @@
 package team.dankookie.server4983.chat.handler;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import team.dankookie.server4983.chat.domain.BuyerChat;
@@ -10,10 +9,7 @@ import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.chat.dto.ChatRequest;
 import team.dankookie.server4983.chat.exception.ChatException;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
-import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.domain.Member;
-
-import java.util.Map;
 
 import static team.dankookie.server4983.chat.constant.ContentType.*;
 
@@ -43,10 +39,10 @@ public class ChatLogicHandler {
             case PAYMENT_CONFIRMATION_COMPLETE: // SELLCHAT_4 입금 확인
                 confirmDeposit(chatRoom);
                 break;
-            case BOOK_PLACEMENT_COMPLETE:
+            case BOOK_PLACEMENT_COMPLETE: // SELLCHAT_5 서적 배치 완료
                 completeSelectLockAndPassword(chatRoom , chatRequest);
                 break;
-            case TRADE_COMPLETE:
+            case TRADE_COMPLETE: // SELLCHAT_6 거래 완료
                 completeTrade(chatRoom);
                 break;
             default:
@@ -94,12 +90,10 @@ public class ChatLogicHandler {
                 "구매자가 “거래 완료\" 버튼을 클릭 후 \n" +
                 "판매 금액이 자동으로 입금될 예정입니다.\n" +
                 "\n" +
-                "책을 넣을 사물함을 선택하고 \n" +
-                "비밀번호를 설정해주세요. \n");
+                "책을 넣을 사물함을 선택하고 비밀번호를 설정해주세요. \n");
         String buyerMessage = String.format("입금이 확인되었습니다.\n" +
                 "\n" +
-                "거래날짜에 판매자가 사물함에 서적을 \n" +
-                "배치할 예정입니다.\n");
+                "거래날짜에 판매자가 사물함에 서적을 배치할 예정입니다.\n");
 
         chatRoom.addSellerChat(SellerChat.buildSellerChat(sellerMessage, PAYMENT_CONFIRMATION_COMPLETE));
         chatRoom.addBuyerChat(BuyerChat.buildBuyerChat(buyerMessage, PAYMENT_CONFIRMATION_COMPLETE));
@@ -112,7 +106,7 @@ public class ChatLogicHandler {
                 "“거래 완료\" 버튼을 눌러야, 판매자에게 판매금액이 입금되오니, 수령 후 버튼을 꼭 눌러주세요 \n" +
                 "\n" +
                 "사물함 번호: %s번\n" +
-                "사물함 비밀번호: %s\n" , request.getData().get("lockerNumber") , request.getData().get("lockerPassworda") );
+                "사물함 비밀번호: %s\n" , request.getData().get("lockerNumber") , request.getData().get("lockerPassword") );
         String buyerMessage = String.format("기입하셨던 거래 날짜에 맞게, 당일 내에 배치 해주시길 바랍니다. \n" +
                 "\n" +
                 "서적 배치 이후 완료 버튼을 눌러주세요.\n" +

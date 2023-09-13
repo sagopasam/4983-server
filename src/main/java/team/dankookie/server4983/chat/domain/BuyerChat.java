@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.chat.constant.ContentType;
@@ -36,7 +37,7 @@ public class BuyerChat {
 
     @Column(updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    @CreatedDate
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     public static BuyerChat buildBuyerChat(String message , ContentType contentType) {
