@@ -3,6 +3,7 @@ package team.dankookie.server4983.chat.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import team.dankookie.server4983.book.domain.UsedBook;
@@ -21,9 +22,11 @@ public class BuyerChat extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ContentType contentType;
 
-    @Column(columnDefinition = "boolean default false")
-    private Boolean isRead;
+    @Column(nullable = false , columnDefinition = "boolean default false")
+    @Builder.Default
+    private Boolean isRead = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private UsedBook usedBook;
+    @Column(nullable = false)
+    private String message;
+
 }

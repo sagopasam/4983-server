@@ -20,6 +20,4 @@ public class ChatRequest {
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     private ContentType contentType;
 
-    private String session;
-
 }
