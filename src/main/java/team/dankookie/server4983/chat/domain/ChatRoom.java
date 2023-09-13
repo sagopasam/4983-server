@@ -30,7 +30,7 @@ public class ChatRoom {
     @OneToMany(cascade = {CascadeType.PERSIST , CascadeType.REMOVE }, orphanRemoval = true)
     private List<SellerChat> sellerChats;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     private UsedBook usedBook;
 
     public static ChatRoom buildChatRoom(Member buyer , Member seller , UsedBook usedBook) {

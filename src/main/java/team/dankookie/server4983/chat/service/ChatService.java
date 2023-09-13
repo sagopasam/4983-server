@@ -40,11 +40,11 @@ public class ChatService {
     private String key;
 
     @Transactional
-    public String chatRequestHandler(ChatRequest chatRequest , HttpServletRequest request) {
+    public void chatRequestHandler(ChatRequest chatRequest , HttpServletRequest request) {
         String token = request.getHeader("Authorization").substring(7);
         String userName = JwtTokenUtils.getNickname(token , key);
 
-        return chatLogicHandler.chatLoginHandler(chatRequest , userName);
+        chatLogicHandler.chatLoginHandler(chatRequest , userName);
     }
 
     @Transactional

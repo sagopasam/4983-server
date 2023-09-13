@@ -23,9 +23,9 @@ public class ChatController {
 
     @PostMapping("/chat")
     public ResponseEntity requestChatBot(@RequestBody ChatRequest chatRequest , HttpServletRequest request) {
-        String result = chatService.chatRequestHandler(chatRequest , request);
+        chatService.chatRequestHandler(chatRequest , request);
 
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/chat/{chatRoomId}/seller")
