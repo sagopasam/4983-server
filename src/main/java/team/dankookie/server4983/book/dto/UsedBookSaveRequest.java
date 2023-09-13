@@ -34,7 +34,7 @@ public record UsedBookSaveRequest(
                 .isUnderlinedOrWrite(isUnderlinedOrWrite)
                 .isDiscolorationAndDamage(isDiscolorationAndDamage)
                 .isCoverDamaged(isCoverDamaged)
-                .buyerMember(member)
+                .sellerMember(member)
                 .bookStatus(BookStatus.SALE)
                 .build();
     }
