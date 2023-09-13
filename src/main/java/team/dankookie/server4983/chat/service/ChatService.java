@@ -9,7 +9,10 @@ import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.book.domain.UsedBook;
+import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
+import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
+import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.chat.dto.ChatRequest;
 import team.dankookie.server4983.chat.dto.ChatRoomRequest;
 import team.dankookie.server4983.chat.handler.ChatLogicHandler;
@@ -21,6 +24,7 @@ import team.dankookie.server4983.member.repository.MemberRepository;
 
 import javax.security.auth.login.AccountException;
 import java.time.LocalDate;
+import java.util.List;
 
 import static team.dankookie.server4983.chat.domain.ChatRoom.buildChatRoom;
 
@@ -31,17 +35,21 @@ public class ChatService {
     private final ChatLogicHandler chatLogicHandler;
     private final ChatRoomRepository chatRoomRepository;
     private final MemberRepository memberRepository;
+    private final UsedBookRepository usedBookRepository;
     @Value("${jwt.secret-key}")
     private String key;
 
     @Transactional
-    public String chatRequestHandler(ChatRequest chatRequest) {
-        return chatLogicHandler.chatLoginHandler(chatRequest , chatRequest.getData());
+    public String chatRequestHandler(ChatRequest chatRequest , HttpServletRequest request) {
+        String token = request.getHeader("Authorization").substring(7);
+        String userName = JwtTokenUtils.getNickname(token , key);
+
+        return chatLogicHandler.chatLoginHandler(chatRequest , userName);
     }
 
     @Transactional
-    public void createChatRoom(ChatRoomRequest chatRoomRequest , HttpServletRequest request) throws AccountException {
-        String token = request.getHeader("Authentication").substring(7);
+    public Long createChatRoom(ChatRoomRequest chatRoomRequest , HttpServletRequest request) throws AccountException {
+        String token = request.getHeader("Authorization").substring(7);
 
         String userName = JwtTokenUtils.getNickname(token , key);
 
@@ -55,27 +63,37 @@ public class ChatService {
 
         */
 
-        // 임시 책 정보
-        UsedBook usedBook = new UsedBook("bookName" , 400 , LocalDate.now() , BookStatus.SALE , null , Department.ACCOUNTING , College.LAW);
-
         // 임시 판매자
         Member seller = memberRepository.findByStudentId("testStudentId")
                 .orElseGet(() -> createTemporaryMember());
+        memberRepository.save(seller);
 
         // 구매자
         Member buyer = memberRepository.findByNickname(userName)
                 .orElseThrow(() -> new AccountException("판매자 정보를 찾을 수 없습니다."));
 
+        // 임시 책 정보
+        UsedBook usedBook = new UsedBook("bookName" , 400 , LocalDate.now() , BookStatus.SALE , seller , Department.ACCOUNTING , College.LAW);
+        usedBookRepository.save(usedBook);
 
         ChatRoom chatRoom = buildChatRoom(buyer , seller , usedBook);
 
-        chatRoomRepository.save(chatRoom);
+        return chatRoomRepository.save(chatRoom).getChatRoomId();
+    }
+
+    public List<SellerChat> getSellerChatting(long chatRoomId) {
+        return chatRoomRepository.getSellerChatting(chatRoomId);
+    }
+
+    public List<BuyerChat> getBuyerChatting(long chatRoomId) {
+        return chatRoomRepository.getBuyerChatting(chatRoomId);
     }
 
     public Member createTemporaryMember() {
         return Member.builder()
                 .studentId("studentIds")
                 .yearOfAdmission(0)
+                .department(Department.DEPARTMENT_OF_LAW)
                 .nickname("DFGgt4t21Rr-351rfvZCVb")
                 .password("password")
                 .phoneNumber("01012341234")

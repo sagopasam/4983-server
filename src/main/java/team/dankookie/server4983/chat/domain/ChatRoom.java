@@ -36,4 +36,12 @@ public class ChatRoom {
     public static ChatRoom buildChatRoom(Member buyer , Member seller , UsedBook usedBook) {
         return ChatRoom.builder().buyer(buyer).seller(seller).usedBook(usedBook).build();
     }
+
+    public void addBuyerChat(BuyerChat chat) {
+        getBuyerChats().add(chat);
+    }
+
+    public void addSellerChat(SellerChat chat) {
+        getSellerChats().add(chat);
+    }
 }

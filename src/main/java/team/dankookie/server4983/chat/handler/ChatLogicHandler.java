@@ -3,22 +3,32 @@ package team.dankookie.server4983.chat.handler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import team.dankookie.server4983.chat.domain.ChatRoom;
+import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.chat.dto.ChatRequest;
+import team.dankookie.server4983.chat.exception.ChatException;
+import team.dankookie.server4983.chat.repository.ChatRoomRepository;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 
 import java.util.Map;
+
+import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PURCHASE_START;
 
 @Component
 @RequiredArgsConstructor
 public class ChatLogicHandler {
 
-    @Value("${jwt.secret-key}")
-    private String key;
+    private final ChatRoomRepository chatRoomRepository;
 
-    public String chatLoginHandler(ChatRequest chatRequest , Map<String , Object> data) {
+    @Transactional
+    public String chatLoginHandler(ChatRequest chatRequest , String userName) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRequest.getChatRoomId())
+                .orElseThrow(() -> new ChatException("채팅방을 찾을 수 없습니다."));
+
         switch(chatRequest.getContentType()) {
             case BOOK_PURCHASE_START:
-                return purchaseBookStart(data);
+                return purchaseBookStart(chatRoom , userName);
             case BOOK_PURCHASE_REQUEST:
 
             case BOOK_SALE_REJECTION:
@@ -38,12 +48,11 @@ public class ChatLogicHandler {
         }
     }
 
-    public String purchaseBookStart(Map<String , Object> data) {
-        System.out.println("데이터 : " + data.get("Authentication"));
-        String token = (String) data.get("Authentication");
-        String userName = JwtTokenUtils.getNickname(token , key);
+    public String purchaseBookStart(ChatRoom chatRoom , String userName) {
+        String message = String.format("\'%s\' 님이 거래 요청을 보냈어요!\n오늘 거래하러 갈래요?" , userName);
 
-        return String.format("\'%s\' 님이 거래 요청을 보냈어요!\n오늘 거래하러 갈래요?" , userName);
+        chatRoom.addSellerChat(SellerChat.buildSellerChat(message , BOOK_PURCHASE_START));
+        return message;
     }
 
 }

@@ -15,6 +15,8 @@ import java.util.Map;
 @Getter
 public class ChatRequest {
 
+    private long chatRoomId;
+
     private Map<String , Object> data;
 
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
