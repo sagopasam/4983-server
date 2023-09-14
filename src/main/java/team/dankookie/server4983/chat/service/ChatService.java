@@ -15,6 +15,7 @@ import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.chat.dto.ChatRequest;
 import team.dankookie.server4983.chat.dto.ChatRoomRequest;
+import team.dankookie.server4983.chat.exception.ChatException;
 import team.dankookie.server4983.chat.handler.ChatLogicHandler;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
@@ -53,7 +54,7 @@ public class ChatService {
 
         String userName = JwtTokenUtils.getNickname(token , key);
 
-        /** Fix-Me
+        /** FIXME
 
          - 추가 구현 -
 
@@ -81,12 +82,37 @@ public class ChatService {
         return chatRoomRepository.save(chatRoom).getChatRoomId();
     }
 
-    public List<SellerChat> getSellerChatting(long chatRoomId) {
-        return chatRoomRepository.getSellerChatting(chatRoomId);
+    @Transactional
+    public Object getChattingData(long chatRoomId , String type) {
+        if(type.equals("seller")) {
+            chatRoomRepository.modifySellerChattingToRead(chatRoomId);
+            List<SellerChat> result = chatRoomRepository.getSellerChatting(chatRoomId);
+
+            return result;
+        } else if(type.equals("buyer")) {
+            chatRoomRepository.modifyBuyerChattingToRead(chatRoomId);
+            List<BuyerChat> result = chatRoomRepository.getBuyerChatting(chatRoomId);
+
+            return result;
+        } else {
+            throw new ChatException("잘못된 타입입니다. seller , buyer 중 하나만 선택해주세요.");
+        }
     }
 
-    public List<BuyerChat> getBuyerChatting(long chatRoomId) {
-        return chatRoomRepository.getBuyerChatting(chatRoomId);
+    public Object getNotReadChattingData(long chatRoomId, String type) {
+        if(type.equals("seller")) {
+            List<SellerChat> result = chatRoomRepository.getNotReadSellerChattingData(chatRoomId);
+            chatRoomRepository.modifySellerChattingToRead(chatRoomId);
+
+            return result;
+        } else if(type.equals("buyer")) {
+            List<BuyerChat> result = chatRoomRepository.getNotReadBuyerChattingData(chatRoomId);
+            chatRoomRepository.modifyBuyerChattingToRead(chatRoomId);
+
+            return result;
+        } else {
+            throw new ChatException("잘못된 타입입니다. seller , buyer 중 하나만 선택해주세요.");
+        }
     }
 
     public Member createTemporaryMember() {
@@ -102,4 +128,5 @@ public class ChatService {
                 .accountNumber("0101010100101010")
                 .build();
     }
+
 }
