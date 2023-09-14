@@ -78,4 +78,20 @@ public class UsedBook extends BaseEntity {
         this.buyerMember = buyerMember;
         this.sellerMember = sellerMember;
     }
+
+    @Builder
+    public UsedBook(String name, Integer price, LocalDate tradeAvailableDate, String publisher, College college, Department department, BookStatus bookStatus, Boolean isUnderlinedOrWrite, Boolean isDiscolorationAndDamage, Boolean isCoverDamaged, Member buyerMember, Member sellerMember) {
+        this.name = name;
+        this.price = price;
+        this.tradeAvailableDate = tradeAvailableDate;
+        this.publisher = publisher;
+        this.college = college;
+        this.department = department;
+        this.bookStatus = bookStatus;
+        this.isUnderlinedOrWrite = isUnderlinedOrWrite;
+        this.isDiscolorationAndDamage = isDiscolorationAndDamage;
+        this.isCoverDamaged = isCoverDamaged;
+        this.buyerMember = buyerMember;
+        this.sellerMember = sellerMember;
+    }
 }
