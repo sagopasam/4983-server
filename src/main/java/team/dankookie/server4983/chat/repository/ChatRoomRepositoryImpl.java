@@ -4,6 +4,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import team.dankookie.server4983.chat.domain.BuyerChat;
+import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.member.domain.Member;
 
@@ -12,6 +13,7 @@ import static team.dankookie.server4983.chat.domain.QBuyerChat.buyerChat;
 import static team.dankookie.server4983.chat.domain.QSellerChat.sellerChat;
 import static team.dankookie.server4983.chat.domain.QChatRoom.chatRoom;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
@@ -87,6 +89,17 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                                 .where(chatRoom.chatRoomId.eq(chatRoomId))
                 ).and(buyerChat.isRead.eq(false)))
                 .execute();
+    }
+
+    @Override
+    public Optional<ChatRoom> findChatRoomAndBookById(long chatRoomId) {
+        ChatRoom result = jpaQueryFactory.select(chatRoom)
+                .from(chatRoom)
+                .innerJoin(chatRoom.usedBook).fetchJoin()
+                .where(chatRoom.chatRoomId.eq(chatRoomId))
+                .fetchOne();
+
+        return Optional.ofNullable(result);
     }
 
 }

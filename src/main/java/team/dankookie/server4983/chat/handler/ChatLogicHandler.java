@@ -21,7 +21,7 @@ public class ChatLogicHandler {
 
     @Transactional
     public void chatLoginHandler(ChatRequest chatRequest, String userName) {
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRequest.getChatRoomId())
+        ChatRoom chatRoom = chatRoomRepository.findChatRoomAndBookById(chatRequest.getChatRoomId())
                 .orElseThrow(() -> new ChatException("채팅방을 찾을 수 없습니다."));
 
         Member seller = chatRoomRepository.getSeller(chatRequest.getChatRoomId());

@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 public class BuyerChat {
 
     @Id @GeneratedValue
-    @JsonIgnore
     private Long id;
 
     @NotNull

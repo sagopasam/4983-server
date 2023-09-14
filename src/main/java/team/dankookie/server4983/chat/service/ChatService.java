@@ -37,13 +37,14 @@ public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final MemberRepository memberRepository;
     private final UsedBookRepository usedBookRepository;
+    private final JwtTokenUtils jwtTokenUtils;
     @Value("${jwt.secret-key}")
     private String key;
 
     @Transactional
     public void chatRequestHandler(ChatRequest chatRequest , HttpServletRequest request) {
         String token = request.getHeader("Authorization").substring(7);
-        String userName = JwtTokenUtils.getNickname(token , key);
+        String userName = jwtTokenUtils.getNickname(token , key);
 
         chatLogicHandler.chatLoginHandler(chatRequest , userName);
     }
@@ -52,7 +53,7 @@ public class ChatService {
     public Long createChatRoom(ChatRoomRequest chatRoomRequest , HttpServletRequest request) throws AccountException {
         String token = request.getHeader("Authorization").substring(7);
 
-        String userName = JwtTokenUtils.getNickname(token , key);
+        String userName = jwtTokenUtils.getNickname(token , key);
 
         /** FIXME
 
@@ -74,8 +75,7 @@ public class ChatService {
                 .orElseThrow(() -> new AccountException("판매자 정보를 찾을 수 없습니다."));
 
         // 임시 책 정보
-        UsedBook usedBook = new UsedBook("bookName" , 400 , LocalDate.now() , BookStatus.SALE , seller , Department.ACCOUNTING , College.LAW);
-        usedBookRepository.save(usedBook);
+        UsedBook usedBook = usedBookRepository.save(new UsedBook(30L , "bookName" , 400 , LocalDate.now() , "publisher" , College.LAW , Department.ACCOUNTING , BookStatus.SALE ,false , false , false, buyer , seller));
 
         ChatRoom chatRoom = buildChatRoom(buyer , seller , usedBook);
 
@@ -99,6 +99,7 @@ public class ChatService {
         }
     }
 
+    @Transactional
     public Object getNotReadChattingData(long chatRoomId, String type) {
         if(type.equals("seller")) {
             List<SellerChat> result = chatRoomRepository.getNotReadSellerChattingData(chatRoomId);

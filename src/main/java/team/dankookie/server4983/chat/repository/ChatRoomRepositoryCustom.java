@@ -1,10 +1,12 @@
 package team.dankookie.server4983.chat.repository;
 
 import team.dankookie.server4983.chat.domain.BuyerChat;
+import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.member.domain.Member;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ChatRoomRepositoryCustom {
 
@@ -21,5 +23,7 @@ public interface ChatRoomRepositoryCustom {
     long modifySellerChattingToRead(long chatRoomId);
 
     long modifyBuyerChattingToRead(long chatRoomId);
+
+    Optional<ChatRoom> findChatRoomAndBookById(long chatRoomId);
 
 }
