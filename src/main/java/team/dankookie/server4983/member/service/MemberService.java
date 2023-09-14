@@ -1,14 +1,20 @@
 package team.dankookie.server4983.member.service;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.common.exception.LoginFailedException;
+import team.dankookie.server4983.jwt.constants.TokenSecretKey;
+import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
+import team.dankookie.server4983.member.constant.AccountBank;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.dto.LoginRequest;
+import team.dankookie.server4983.member.dto.MemberCollegeAndDepartment;
 import team.dankookie.server4983.member.dto.MemberPasswordChangeRequest;
 import team.dankookie.server4983.member.dto.MemberRegisterRequest;
 import team.dankookie.server4983.member.repository.MemberRepository;
@@ -19,11 +25,46 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenUtils jwtTokenUtils;
+    private final TokenSecretKey tokenSecretKey;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
 
-    public Member loadUserByNickname(String nickname) {
+    @PostConstruct
+    public void init() {
+        Member testMember1 = Member.builder()
+                .studentId("202023604")
+                .department(Department.COMPUTER)
+                .yearOfAdmission(2020)
+                .nickname("닉네임1")
+                .password(passwordEncoder.encode("1234"))
+                .phoneNumber("01073352306")
+                .accountHolder("박재완")
+                .accountBank(AccountBank.KB)
+                .accountNumber("12500104097324")
+                .marketingAgree(true)
+                .build();
+
+        Member testMember2 = Member.builder()
+                .studentId("test")
+                .department(Department.COMPUTER)
+                .yearOfAdmission(2020)
+                .nickname("닉네임2")
+                .password(passwordEncoder.encode("1234"))
+                .phoneNumber("01073352306")
+                .accountHolder("박박박")
+                .accountBank(AccountBank.KB)
+                .accountNumber("12500104097324")
+                .marketingAgree(true)
+                .build();
+
+
+        memberRepository.save(testMember1);
+        memberRepository.save(testMember2);
+    }
+
+    public Member findMemberByNickname(String nickname) {
         return memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
@@ -83,7 +124,10 @@ public class MemberService {
 
     @Transactional
     public Member register(MemberRegisterRequest request) {
-        return memberRepository.save(request.toEntity());
+
+        String encodedPassword = passwordEncoder.encode(request.password());
+
+        return memberRepository.save(request.toEntity(encodedPassword));
     }
 
     public Boolean checkNicknameDuplicate(String nickname) {
@@ -91,7 +135,7 @@ public class MemberService {
     }
 
     public boolean isMemberPasswordMatch(String password, String accessToken) {
-        String nickname = JwtTokenUtils.getNickname(accessToken, secretKey);
+        String nickname = jwtTokenUtils.getNickname(accessToken, secretKey);
 
         Member findMember = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
@@ -101,5 +145,12 @@ public class MemberService {
         }else {
             return false;
         }
+    }
+
+    public MemberCollegeAndDepartment findMemberCollegeAndDepartment(AccessToken accessToken) {
+        String nickname = jwtTokenUtils.getNickname(accessToken.value(), tokenSecretKey.getSecretKey());
+        Member member = findMemberByNickname(nickname);
+
+        return MemberCollegeAndDepartment.of(member.getDepartment());
     }
 }

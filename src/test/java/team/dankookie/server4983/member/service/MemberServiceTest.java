@@ -34,6 +34,9 @@ class MemberServiceTest extends BaseServiceTest {
     @Mock
     PasswordEncoder passwordEncoder;
 
+    @Mock
+    JwtTokenUtils jwtTokenUtils;
+
 
     @Test
     void 유저의_학번과_비밀번호가_일치하면_true를_리턴한다() {
@@ -223,8 +226,7 @@ class MemberServiceTest extends BaseServiceTest {
         String nickname = "mockedNickname";
 
 
-        try (MockedStatic<JwtTokenUtils> mockedStatic = Mockito.mockStatic(JwtTokenUtils.class)) {
-            mockedStatic.when(() -> JwtTokenUtils.getNickname(any(), any())).thenReturn(nickname);
+            when(jwtTokenUtils.getNickname(any(), any())).thenReturn(nickname);
 
             when(memberRepository.findByNickname(nickname))
                     .thenThrow(new IllegalArgumentException("존재하지 않는 사용자입니다."));
@@ -234,8 +236,6 @@ class MemberServiceTest extends BaseServiceTest {
                     memberService.isMemberPasswordMatch(password, accessToken))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("존재하지 않는 사용자입니다.");
-
-        }
     }
 
     @Test
@@ -246,9 +246,7 @@ class MemberServiceTest extends BaseServiceTest {
         String nickname = "mockedNickname";
 
         // Mock JwtTokenUtils.getNickname() 메서드 호출
-        try (MockedStatic<JwtTokenUtils> mockedStatic = Mockito.mockStatic(JwtTokenUtils.class)) {
-            mockedStatic.when(() -> JwtTokenUtils.getNickname(Mockito.any(), Mockito.any())).thenReturn(nickname);
-
+            when(jwtTokenUtils.getNickname(Mockito.any(), Mockito.any())).thenReturn(nickname);
 
             Member findMember = Member.builder().nickname("nickname").build();
             when(memberRepository.findByNickname(nickname))
@@ -259,7 +257,6 @@ class MemberServiceTest extends BaseServiceTest {
             boolean result = memberService.isMemberPasswordMatch(password, accessToken);
             //then
             assertThat(result).isTrue();
-        }
     }
 
     @Test
@@ -269,8 +266,7 @@ class MemberServiceTest extends BaseServiceTest {
         String password = "mockedPassword";
         String nickname = "mockedNickname";
 
-        try (MockedStatic<JwtTokenUtils> mockedStatic = Mockito.mockStatic(JwtTokenUtils.class)) {
-            mockedStatic.when(() -> JwtTokenUtils.getNickname(Mockito.any(), Mockito.any())).thenReturn(nickname);
+            when(jwtTokenUtils.getNickname(Mockito.any(), Mockito.any())).thenReturn(nickname);
 
             Member findMember = Member.builder().nickname("nickname").build();
             when(memberRepository.findByNickname(nickname))
@@ -283,7 +279,6 @@ class MemberServiceTest extends BaseServiceTest {
 
             //then
             assertFalse(result);
-        }
     }
 
     }

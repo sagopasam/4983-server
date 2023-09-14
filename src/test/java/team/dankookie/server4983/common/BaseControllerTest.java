@@ -13,6 +13,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import team.dankookie.server4983.jwt.constants.TokenSecretKey;
+import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 
@@ -28,6 +30,12 @@ public abstract class BaseControllerTest extends BaseDisplayNameConfig {
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @Autowired
+    protected JwtTokenUtils jwtTokenUtils;
+
+    @Autowired
+    protected TokenSecretKey tokenSecretKey;
 
     protected final String API = "/api/v1";
 

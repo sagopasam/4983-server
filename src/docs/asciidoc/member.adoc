@@ -227,3 +227,17 @@ include::{snippets}/member-register/success/request-fields.adoc[]
 ==== Response
 
 include::{snippets}/member-register/success/http-response.adoc[]
+
+=== 회원의 단과대 학과 가져오기
+
+==== Request
+
+include::{snippets}/member/collegeAndDepartment/success/http-request.adoc[]
+
+===== RequestHeader
+include::{snippets}/member/collegeAndDepartment/success/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/member/collegeAndDepartment/success/http-response.adoc[]
+include::{snippets}/member/collegeAndDepartment/success/response-fields.adoc[]
