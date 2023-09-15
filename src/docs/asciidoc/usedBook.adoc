@@ -122,7 +122,7 @@ include::{snippets}/used-book/save/success/request-headers.adoc[]
 include::{snippets}/used-book/save/success/http-response.adoc[]
 include::{snippets}/used-book/save/success/response-fields.adoc[]
 
-=== Usedbook 상세 보기
+=== Usedbook 게시물 상세 보기
 
 ==== Request
 
@@ -134,7 +134,46 @@ include::{snippets}/used-book/detail/success/path-parameters.adoc[]
 include::{snippets}/used-book/detail/success/http-response.adoc[]
 include::{snippets}/used-book/detail/success/response-fields.adoc[]
 
+=== Usedbook 게시물 삭제
 
+==== Request
 
+include::{snippets}/used-book/delete/success/http-request.adoc[]
+include::{snippets}/used-book/delete/success/path-parameters.adoc[]
+==== RequestHeader
+include::{snippets}/used-book/delete/success/request-headers.adoc[]
 
+==== Response
+
+include::{snippets}/used-book/delete/success/http-response.adoc[]
+
+=== Usedbook 게시물 개별 이미지 삭제
+
+==== Request
+
+include::{snippets}/used-book/image/delete/success/http-request.adoc[]
+include::{snippets}/used-book/image/delete/success/path-parameters.adoc[]
+==== RequestHeader
+include::{snippets}/used-book/image/delete/success/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/used-book/image/delete/success/http-response.adoc[]
+
+=== Usedbook 게시물 수정
+
+==== Request
+
+include::{snippets}/used-book/update/success/http-request.adoc[]
+include::{snippets}/used-book/update/success/request-parts.adoc[]
+===== usedBook fields 요소  {usedBook : {}}
+include::{snippets}/used-book/update/success/request-part-usedBook-fields.adoc[]
+
+===== RequestHeader
+include::{snippets}/used-book/update/success/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/used-book/update/success/http-response.adoc[]
+include::{snippets}/used-book/update/success/response-fields.adoc[]
 

@@ -6,15 +6,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
+import team.dankookie.server4983.book.dto.UsedBookSaveRequest;
 import team.dankookie.server4983.common.domain.BaseEntity;
 import team.dankookie.server4983.member.domain.Member;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -53,17 +52,33 @@ public class UsedBook extends BaseEntity {
     @Column(columnDefinition = "boolean default false")
     private Boolean isCoverDamaged;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member buyerMember;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Member sellerMember;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+    @Column(columnDefinition = "boolean default false")
+    private Boolean isDeleted;
+
+    public void setIsDeletedTrue() {
+        isDeleted = true;
+    }
+
+    public void updateUsedBook(UsedBookSaveRequest usedBook) {
+        this.name = usedBook.name();
+        this.price = usedBook.price();
+        this.tradeAvailableDate = usedBook.tradeAvailableDate();
+        this.publisher = usedBook.publisher();
+        this.college = usedBook.college();
+        this.department = usedBook.department();
+        this.isUnderlinedOrWrite = usedBook.isUnderlinedOrWrite();
+        this.isDiscolorationAndDamage = usedBook.isDiscolorationAndDamage();
+        this.isCoverDamaged = usedBook.isCoverDamaged();
+    }
 
     @Builder
-    public UsedBook(Long id,String name, Integer price, LocalDate tradeAvailableDate, String publisher, College college, Department department, BookStatus bookStatus, Boolean isUnderlinedOrWrite, Boolean isDiscolorationAndDamage, Boolean isCoverDamaged, Member buyerMember, Member sellerMember) {
+    public UsedBook(Long id, String name, Integer price, LocalDate tradeAvailableDate, String publisher, College college, Department department, BookStatus bookStatus, Boolean isUnderlinedOrWrite, Boolean isDiscolorationAndDamage, Boolean isCoverDamaged, Member buyerMember, Member sellerMember, boolean isDeleted) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -77,13 +92,14 @@ public class UsedBook extends BaseEntity {
         this.isCoverDamaged = isCoverDamaged;
         this.buyerMember = buyerMember;
         this.sellerMember = sellerMember;
+        this.isDeleted = isDeleted;
     }
 
-    @Builder
-    public UsedBook(String name, Integer price, LocalDate tradeAvailableDate, String publisher, College college, Department department, BookStatus bookStatus, Boolean isUnderlinedOrWrite, Boolean isDiscolorationAndDamage, Boolean isCoverDamaged, Member buyerMember, Member sellerMember) {
-        this.name = name;
+    public UsedBook(long id, String bookName, int price, LocalDate now, String publisher, College college, Department department, BookStatus bookStatus, boolean isUnderlinedOrWrite, boolean isDiscolorationAndDamage, boolean isCoverDamaged, Member buyer, Member seller) {
+        this.id = id;
+        this.name = bookName;
         this.price = price;
-        this.tradeAvailableDate = tradeAvailableDate;
+        this.tradeAvailableDate = now;
         this.publisher = publisher;
         this.college = college;
         this.department = department;
@@ -91,7 +107,8 @@ public class UsedBook extends BaseEntity {
         this.isUnderlinedOrWrite = isUnderlinedOrWrite;
         this.isDiscolorationAndDamage = isDiscolorationAndDamage;
         this.isCoverDamaged = isCoverDamaged;
-        this.buyerMember = buyerMember;
-        this.sellerMember = sellerMember;
+        this.buyerMember = buyer;
+        this.sellerMember = seller;
     }
+
 }
