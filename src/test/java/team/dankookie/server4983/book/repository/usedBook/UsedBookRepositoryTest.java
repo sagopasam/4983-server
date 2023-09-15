@@ -1,6 +1,7 @@
 package team.dankookie.server4983.book.repository.usedBook;
 
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import team.dankookie.server4983.book.constant.BookStatus;
@@ -10,6 +11,7 @@ import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.common.BaseRepositoryTest;
 import team.dankookie.server4983.member.constant.AccountBank;
 import team.dankookie.server4983.member.domain.Member;
+import team.dankookie.server4983.member.fixture.MemberFixture;
 import team.dankookie.server4983.member.repository.MemberRepository;
 
 import java.time.LocalDate;
@@ -25,6 +27,12 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @BeforeEach
+    void setUp() {
+        usedBookRepository.deleteAll();
+        memberRepository.deleteAll();
+    }
 
     @Test
     void 모든_서적을_리턴한다() {
@@ -47,7 +55,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
 
         UsedBook usedBookSale = UsedBook.builder()
                 .bookStatus(BookStatus.SALE)
-                .buyerMember(member)
+                .sellerMember(member)
                 .tradeAvailableDate(LocalDate.now())
                 .price(10000)
                 .name("책이름")
@@ -55,7 +63,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
 
         UsedBook usedBookTrade = UsedBook.builder()
                 .bookStatus(BookStatus.TRADE)
-                .buyerMember(member)
+                .sellerMember(member)
                 .tradeAvailableDate(LocalDate.now())
                 .price(10000)
                 .name("책이름")
@@ -63,7 +71,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
 
         UsedBook usedBookSold = UsedBook.builder()
                 .bookStatus(BookStatus.SOLD)
-                .buyerMember(member)
+                .sellerMember(member)
                 .tradeAvailableDate(LocalDate.now())
                 .price(10000)
                 .name("책이름")
@@ -112,7 +120,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
                 .college(collegeList.get(0))
                 .department(departmentList.get(0))
                 .bookStatus(BookStatus.SALE)
-                .buyerMember(member)
+                .sellerMember(member)
                 .tradeAvailableDate(LocalDate.now())
                 .price(10000)
                 .name("책이름")
@@ -122,7 +130,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
                 .college(collegeList.get(0))
                 .department(departmentList.get(0))
                 .bookStatus(BookStatus.SALE)
-                .buyerMember(member)
+                .sellerMember(member)
                 .tradeAvailableDate(LocalDate.now())
                 .price(10000)
                 .name("책이름")
@@ -131,7 +139,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
         UsedBook usedBookElse = UsedBook.builder()
                 .college(College.BUSINESS_AND_ECONOMICS)
                 .department(Department.ACCOUNTING)
-                .buyerMember(member)
+                .sellerMember(member)
                 .tradeAvailableDate(LocalDate.now())
                 .bookStatus(BookStatus.SALE)
                 .price(10000)
@@ -177,7 +185,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
                 .college(collegeList.get(0))
                 .department(departmentList.get(0))
                 .bookStatus(BookStatus.SALE)
-                .buyerMember(member)
+                .sellerMember(member)
                 .tradeAvailableDate(LocalDate.now())
                 .price(10000)
                 .name("책이름")
@@ -187,7 +195,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
                 .college(collegeList.get(0))
                 .department(departmentList.get(0))
                 .bookStatus(BookStatus.SALE)
-                .buyerMember(member)
+                .sellerMember(member)
                 .tradeAvailableDate(LocalDate.now())
                 .price(10000)
                 .name("책이름")
@@ -196,7 +204,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
         UsedBook usedBookElse = UsedBook.builder()
                 .college(College.BUSINESS_AND_ECONOMICS)
                 .department(Department.ACCOUNTING)
-                .buyerMember(member)
+                .sellerMember(member)
                 .tradeAvailableDate(LocalDate.now())
                 .bookStatus(BookStatus.SALE)
                 .price(10000)
@@ -242,7 +250,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
                 .college(collegeList.get(0))
                 .department(departmentList.get(0))
                 .bookStatus(BookStatus.SALE)
-                .buyerMember(member)
+                .sellerMember(member)
                 .tradeAvailableDate(LocalDate.now())
                 .price(10000)
                 .name("책이름")
@@ -252,7 +260,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
                 .college(collegeList.get(0))
                 .department(departmentList.get(0))
                 .bookStatus(BookStatus.SALE)
-                .buyerMember(member)
+                .sellerMember(member)
                 .tradeAvailableDate(LocalDate.now())
                 .price(10000)
                 .name("책이름")
@@ -261,7 +269,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
         UsedBook usedBookElse = UsedBook.builder()
                 .college(College.BUSINESS_AND_ECONOMICS)
                 .department(Department.ACCOUNTING)
-                .buyerMember(member)
+                .sellerMember(member)
                 .tradeAvailableDate(LocalDate.now())
                 .bookStatus(BookStatus.SALE)
                 .price(10000)
@@ -281,5 +289,50 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
         assertThat(usedBookList).hasSize(2);
     }
 
+    @Test
+    void 해당_서적과_올린_판매자가_일치하면_true를_리턴한다() {
+        //given
+        Member member = MemberFixture.createMember();
+        memberRepository.save(member);
+
+        UsedBook usedBook = UsedBook.builder()
+                .bookStatus(BookStatus.SALE)
+                .tradeAvailableDate(LocalDate.now())
+                .price(10000)
+                .name("책이름")
+                .sellerMember(member)
+                .build();
+        usedBookRepository.save(usedBook);
+
+        //when
+        boolean isUsedBookSavedByThisMember = usedBookRepository.existsUsedBookByIdAndSellerMember(usedBook.getId(), member);
+
+        //then
+        assertThat(isUsedBookSavedByThisMember).isTrue();
+    }
+
+    @Test
+    void 해당_서적과_올린_판매자가_일치하지_않으면_false를_리턴한다() {
+        //given
+        Member member = MemberFixture.createMember();
+        Member notMatchMember = MemberFixture.createMemberByNickname("otherNickname");
+        memberRepository.save(member);
+        memberRepository.save(notMatchMember);
+
+        UsedBook usedBook = UsedBook.builder()
+                .bookStatus(BookStatus.SALE)
+                .tradeAvailableDate(LocalDate.now())
+                .price(10000)
+                .name("책이름")
+                .sellerMember(member)
+                .build();
+        usedBookRepository.save(usedBook);
+
+        //when
+        boolean isUsedBookSavedByThisMember = usedBookRepository.existsUsedBookByIdAndSellerMember(usedBook.getId(), notMatchMember);
+
+        //then
+        assertThat(isUsedBookSavedByThisMember).isFalse();
+    }
 
 }

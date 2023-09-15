@@ -1,6 +1,5 @@
 package team.dankookie.server4983.book.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,6 +28,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -88,7 +89,7 @@ class UsedBookServiceTest extends BaseServiceTest {
         UsedBookSaveResponse usedBookSaveResponse = usedBookService.saveAndSaveFiles(multipartFileList, usedBookSaveRequest, accessToken);
 
         //then
-        Assertions.assertThat(usedBookSaveResponse.usedBookId()).isEqualTo(usedBookId);
+        assertThat(usedBookSaveResponse.usedBookId()).isEqualTo(usedBookId);
     }
 
     @Test
@@ -122,12 +123,52 @@ class UsedBookServiceTest extends BaseServiceTest {
         UsedBookResponse usedBookResponse = usedBookService.findByUsedBookId(usedBookId);
 
         //then
-        Assertions.assertThat(usedBookResponse.getBookName()).isEqualTo(bookName);
-        Assertions.assertThat(usedBookResponse.getPublisher()).isEqualTo(publisher);
+        assertThat(usedBookResponse.getBookName()).isEqualTo(bookName);
+        assertThat(usedBookResponse.getPublisher()).isEqualTo(publisher);
 
     }
 
+    @Test
+    void 중고서적을_삭제에_성공한다() {
+        //given
+        Long usedBookId = 1L;
+        String nickname = "nickname";
+        Member member = Member.builder().build();
 
+        when(jwtTokenUtils.getNickname(any(), any()))
+                .thenReturn(nickname);
+        when(memberService.findMemberByNickname(nickname))
+                .thenReturn(member);
+        when(usedBookRepository.existsUsedBookByIdAndSellerMember(usedBookId, member))
+                .thenReturn(true);
+        when(usedBookRepository.findById(any()))
+                .thenReturn(Optional.of(UsedBook.builder().build()));
+        //when
+        boolean isDeleted = usedBookService.deleteUsedBook(usedBookId, AccessToken.of("accessToken"));
 
+        //then
+        assertThat(isDeleted).isTrue();
+    }
 
+    @Test
+    void 해당_사용자가_등록한_게시물이_아니면_삭제가_실패한다() {
+        //given
+        Long usedBookId = 1L;
+        String nickname = "nickname";
+        Member member = Member.builder().build();
+
+        when(jwtTokenUtils.getNickname(any(), any()))
+                .thenReturn(nickname);
+        when(memberService.findMemberByNickname(nickname))
+                .thenReturn(member);
+        when(usedBookRepository.existsUsedBookByIdAndSellerMember(usedBookId, member))
+                .thenReturn(false);
+        //when
+        //then
+        assertThatThrownBy(() -> {
+            usedBookService.deleteUsedBook(usedBookId, AccessToken.of("accessToken"));
+        })
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("글을 올린 사용자만 삭제할 수 있습니다.");
+    }
 }

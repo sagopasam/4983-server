@@ -37,4 +37,31 @@ public class UsedBookController {
         return ResponseEntity.ok().body(usedBookResponse);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUsedBook(@PathVariable Long id, AccessToken accessToken) {
+        boolean isDeleted = usedBookService.deleteUsedBook(id, accessToken);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}/image/{image}")
+    public ResponseEntity<Void> deleteUsedBookImage(@PathVariable Long id, @PathVariable String image, AccessToken accessToken) {
+        boolean isDeleted = usedBookService.deleteUsedBookImage(id, image);
+
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @PostMapping("/{id}")
+    public ResponseEntity<UsedBookSaveResponse> updateUsedBook(
+            @PathVariable Long id,
+            @RequestPart(value = "fileList", required = false) List<MultipartFile> multipartFileList,
+            @RequestPart(value = "usedBook") UsedBookSaveRequest usedBookSaveRequest,
+            AccessToken accessToken
+    ) {
+        UsedBookSaveResponse usedBookResponse = usedBookService.updateUsedBook(id, multipartFileList, usedBookSaveRequest, accessToken);
+
+        return ResponseEntity.ok().body(usedBookResponse);
+    }
+
 }
