@@ -14,8 +14,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.result.StatusResultMatchersExtensionsKt.isEqualTo;
 
 class BookSalesDetailRepositoryTest extends BaseRepositoryTest{
 
@@ -46,7 +44,7 @@ class BookSalesDetailRepositoryTest extends BaseRepositoryTest{
 
         UsedBook bookSalesOn = UsedBook.builder()
                 .bookStatus(BookStatus.SALE)
-                .buyerMember(member)
+                .sellerMember(member)
                 .tradeAvailableDate(LocalDate.now())
                 .price(10000)
                 .name("책이름")
@@ -59,5 +57,41 @@ class BookSalesDetailRepositoryTest extends BaseRepositoryTest{
         //then
         assertThat(mypageBookSalesDetailList).hasSize(1);
         assertThat(mypageBookSalesDetailList.get(0).getBookStatus()).isEqualTo(BookStatus.SALE);
+    }
+
+    @Test
+    void 거래완료인_서적을_리턴한다(){
+        //given
+        final boolean canBuy = false;
+
+        Member member = Member.builder()
+                .accountBank(AccountBank.K)
+                .department(Department.DEPARTMENT_OF_LAW)
+                .accountHolder("홍길동")
+                .phoneNumber("010-1234-5678")
+                .password("password")
+                .nickname("nickname")
+                .yearOfAdmission(2022)
+                .studentId("20151234")
+                .accountNumber("123123123")
+                .build();
+
+        memberRepository.save(member);
+
+        UsedBook bookSalesOn = UsedBook.builder()
+                .bookStatus(BookStatus.SOLD)
+                .sellerMember(member)
+                .tradeAvailableDate(LocalDate.now())
+                .price(10000)
+                .name("책이름")
+                .build();
+
+        bookSalesDetailRepository.save(bookSalesOn);
+
+        //when
+        List<UsedBook> mypageBookSalesDetailList = bookSalesDetailRepository.getMyPageBookSalesDetailList(canBuy, member.getId());
+        //then
+        assertThat(mypageBookSalesDetailList).hasSize(1);
+        assertThat(mypageBookSalesDetailList.get(0).getBookStatus()).isEqualTo(BookStatus.SOLD);
     }
 }

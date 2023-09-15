@@ -53,17 +53,17 @@ public class UsedBook extends BaseEntity {
     @Column(columnDefinition = "boolean default false")
     private Boolean isCoverDamaged;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member buyerMember;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Member sellerMember;
 
     @CreatedDate
     private LocalDateTime createdAt;
 
     @Builder
-    public UsedBook(Long id,String name, Integer price, LocalDate tradeAvailableDate, String publisher, College college, Department department, BookStatus bookStatus, Boolean isUnderlinedOrWrite, Boolean isDiscolorationAndDamage, Boolean isCoverDamaged, Member buyerMember, Member sellerMember) {
+    public UsedBook(Long id, String name, Integer price, LocalDate tradeAvailableDate, String publisher, College college, Department department, BookStatus bookStatus, Boolean isUnderlinedOrWrite, Boolean isDiscolorationAndDamage, Boolean isCoverDamaged, Member buyerMember, Member sellerMember) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -79,11 +79,10 @@ public class UsedBook extends BaseEntity {
         this.sellerMember = sellerMember;
     }
 
-    @Builder
-    public UsedBook(String name, Integer price, LocalDate tradeAvailableDate, String publisher, College college, Department department, BookStatus bookStatus, Boolean isUnderlinedOrWrite, Boolean isDiscolorationAndDamage, Boolean isCoverDamaged, Member buyerMember, Member sellerMember) {
+    public UsedBook(long id, String bookName, int price, LocalDate now, String publisher, College college, Department department, BookStatus bookStatus, boolean isUnderlinedOrWrite, boolean isDiscolorationAndDamage, boolean isCoverDamaged, Member buyer, Member seller) {
+        this.id = id;
         this.name = name;
         this.price = price;
-        this.tradeAvailableDate = tradeAvailableDate;
         this.publisher = publisher;
         this.college = college;
         this.department = department;
@@ -91,7 +90,5 @@ public class UsedBook extends BaseEntity {
         this.isUnderlinedOrWrite = isUnderlinedOrWrite;
         this.isDiscolorationAndDamage = isDiscolorationAndDamage;
         this.isCoverDamaged = isCoverDamaged;
-        this.buyerMember = buyerMember;
-        this.sellerMember = sellerMember;
     }
 }

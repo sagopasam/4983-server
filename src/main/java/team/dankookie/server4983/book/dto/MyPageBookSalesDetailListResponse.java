@@ -10,7 +10,7 @@ public record MyPageBookSalesDetailListResponse(
         String imageUrl,
         BookStatus bookStatus,
         String name,
-        LocalDate tradeAbailableDate,
+        LocalDate tradeAvailableDate,
         LocalDateTime createdAt,
         Integer price
 ) {

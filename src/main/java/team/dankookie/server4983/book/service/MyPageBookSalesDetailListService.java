@@ -7,6 +7,7 @@ import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.book.dto.MyPageBookSalesDetailListResponse;
 import team.dankookie.server4983.book.repository.bookImage.BookImageRepository;
 import team.dankookie.server4983.book.repository.mypageBookSalesDetail.BookSalesDetailRepository;
+import team.dankookie.server4983.jwt.constants.TokenSecretKey;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.repository.MemberRepository;
@@ -21,13 +22,13 @@ public class MyPageBookSalesDetailListService {
     private final BookSalesDetailRepository bookSalesDetailRepository;
     private final BookImageRepository bookImageRepository;
     private final MemberRepository memberRepository;
+    private final JwtTokenUtils jwtTokenUtils;
+    private final TokenSecretKey tokenSecretKey;
 
-    @Value("${jwt.secret-key}")
-    private String secretKey;
 
     public List<MyPageBookSalesDetailListResponse> getMyPageBookSalesDetailList(boolean canBuy, String accessToken) {
 
-        String nickname = JwtTokenUtils.getNickname(accessToken, secretKey);
+        String nickname = jwtTokenUtils.getNickname(accessToken, tokenSecretKey.getSecretKey());
 
         Member member = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -45,7 +46,7 @@ public class MyPageBookSalesDetailListService {
                     .imageUrl(firstImageUrl)
                     .bookStatus(usedBook.getBookStatus())
                     .name(usedBook.getName())
-                    .tradeAbailableDate(usedBook.getTradeAvailableDate())
+                    .tradeAvailableDate(usedBook.getTradeAvailableDate())
                     .createdAt(usedBook.getCreatedAt())
                     .price(usedBook.getPrice())
                     .build();

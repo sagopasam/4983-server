@@ -6,10 +6,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import team.dankookie.server4983.book.service.MyPageBookSalesDetailListService;
 import team.dankookie.server4983.common.BaseControllerTest;
 import team.dankookie.server4983.common.exception.ErrorResponse;
+import team.dankookie.server4983.jwt.constants.TokenDuration;
 
 import static io.jsonwebtoken.lang.Strings.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,7 +17,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -32,7 +33,7 @@ class MyPageBookSalesDetailListControllerTest extends BaseControllerTest {
     @Test
     void 회원이_존재하지_않는경우_에러를_리턴한다() throws Exception{
         //given
-        final String accessToken = "accessToken";
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
         final boolean canBuy = true;
 
         when(myPageBookSalesDetailListService.getMyPageBookSalesDetailList(canBuy, accessToken))
@@ -41,7 +42,7 @@ class MyPageBookSalesDetailListControllerTest extends BaseControllerTest {
         ResultActions resultActions = mockMvc.perform(get(API + "/my-pages/book-sales-detail-list")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("canBuy", String.valueOf(canBuy))
-                        .header("Authorization", accessToken))
+                        .header("Authorization", "Bearer "+accessToken))
                 .andDo(print());
 
 
