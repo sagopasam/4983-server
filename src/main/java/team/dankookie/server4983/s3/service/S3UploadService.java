@@ -23,6 +23,8 @@ public class S3UploadService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    public String s3Bucket = "https://4983-s3.s3.ap-northeast-2.amazonaws.com/";
+
     public S3Response saveFileWithUUID(MultipartFile multipartFile) {
         try {
             String originalFilename = multipartFile.getOriginalFilename();
@@ -37,6 +39,10 @@ public class S3UploadService {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public void deleteFile(String image) {
+        amazonS3.deleteObject(bucket, image);
     }
 
     private PutObjectResult saveImageWithUUID(MultipartFile multipartFile, ObjectMetadata metadata, String uuid) throws IOException {
