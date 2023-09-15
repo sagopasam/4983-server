@@ -35,7 +35,7 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
     private List<UsedBook> getUsedBooksCanBuyElseAll(boolean canBuyElseAll, JPAQuery<UsedBook> query) {
         if (canBuyElseAll) {
             return query
-                    .where(usedBook.bookStatus.eq(BookStatus.SALE))
+                    .where(usedBook.bookStatus.eq(BookStatus.SALE).and(usedBook.isDeleted.eq(false)))
                     .orderBy(usedBook.createdAt.desc()).fetch();
         }else {
             return query
