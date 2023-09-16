@@ -9,6 +9,7 @@ import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.chat.dto.ChatRequest;
 import team.dankookie.server4983.chat.exception.ChatException;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
+import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.member.domain.Member;
 
 import static team.dankookie.server4983.chat.constant.ContentType.*;
@@ -18,6 +19,7 @@ import static team.dankookie.server4983.chat.constant.ContentType.*;
 public class ChatLogicHandler {
 
     private final ChatRoomRepository chatRoomRepository;
+    private final FcmService fcmService;
 
     @Transactional
     public void chatLoginHandler(ChatRequest chatRequest, String userName) {
