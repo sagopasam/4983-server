@@ -52,8 +52,9 @@ public class FcmService {
     public BaseMessageResponse sendChattingNotificationByToken(FcmTargetUserIdRequest request) {
         FcmBaseRequest fcmBaseRequest = FcmBaseRequest.of(
                 request.targetUserId(),
+                //FIXME : title 명 수정 필요
                 "채팅 알림",
-                "테스트 채팅 알림입니다."
+                request.message()
         );
 
         return sendNotificationByToken(fcmBaseRequest);
