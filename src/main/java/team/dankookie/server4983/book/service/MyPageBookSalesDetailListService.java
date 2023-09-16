@@ -1,7 +1,6 @@
 package team.dankookie.server4983.book.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.book.dto.MyPageBookSalesDetailListResponse;
