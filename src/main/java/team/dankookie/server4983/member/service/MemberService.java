@@ -64,6 +64,11 @@ public class MemberService {
         memberRepository.save(testMember2);
     }
 
+    public Member findMemberById(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    }
+
     public Member findMemberByNickname(String nickname) {
         return memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
