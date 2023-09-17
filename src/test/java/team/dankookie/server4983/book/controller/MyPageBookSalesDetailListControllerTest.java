@@ -10,6 +10,7 @@ import team.dankookie.server4983.book.service.MyPageBookSalesDetailListService;
 import team.dankookie.server4983.common.BaseControllerTest;
 import team.dankookie.server4983.common.exception.ErrorResponse;
 import team.dankookie.server4983.jwt.constants.TokenDuration;
+import team.dankookie.server4983.jwt.dto.AccessToken;
 
 import static io.jsonwebtoken.lang.Strings.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +37,7 @@ class MyPageBookSalesDetailListControllerTest extends BaseControllerTest {
         String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
         final boolean canBuy = true;
 
-        when(myPageBookSalesDetailListService.getMyPageBookSalesDetailList(canBuy, accessToken))
+        when(myPageBookSalesDetailListService.getMyPageBookSalesDetailList(canBuy, AccessToken.of(accessToken)))
                 .thenThrow(new IllegalArgumentException("존재하지 않는 회원입니다."));
         //when
         ResultActions resultActions = mockMvc.perform(get(API + "/my-pages/book-sales-detail-list")

@@ -7,6 +7,7 @@ import team.dankookie.server4983.book.dto.MyPageBookSalesDetailListResponse;
 import team.dankookie.server4983.book.repository.bookImage.BookImageRepository;
 import team.dankookie.server4983.book.repository.mypageBookSalesDetail.BookSalesDetailRepository;
 import team.dankookie.server4983.jwt.constants.TokenSecretKey;
+import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.repository.MemberRepository;
@@ -25,9 +26,10 @@ public class MyPageBookSalesDetailListService {
     private final TokenSecretKey tokenSecretKey;
 
 
-    public List<MyPageBookSalesDetailListResponse> getMyPageBookSalesDetailList(boolean canBuy, String accessToken) {
 
-        String nickname = jwtTokenUtils.getNickname(accessToken, tokenSecretKey.getSecretKey());
+    public List<MyPageBookSalesDetailListResponse> getMyPageBookSalesDetailList(boolean canBuy, AccessToken accessToken) {
+
+        String nickname = jwtTokenUtils.getNickname(accessToken.value(), tokenSecretKey.getSecretKey());
 
         Member member = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
