@@ -14,7 +14,8 @@ public record MemberRegisterRequest(
         boolean marketingAgree,
         String accountHolder,
         AccountBank accountBank,
-        String accountNumber
+        String accountNumber,
+        String firebaseToken
 
 ) {
 
@@ -27,7 +28,8 @@ public record MemberRegisterRequest(
                                            boolean marketingAgree,
                                            String accountHolder,
                                            AccountBank accountBank,
-                                           String accountNumber
+                                           String accountNumber,
+                                             String firebaseToken
     ) {
         return new MemberRegisterRequest(
                 studentId,
@@ -39,7 +41,8 @@ public record MemberRegisterRequest(
                 marketingAgree,
                 accountHolder,
                 accountBank,
-                accountNumber
+                accountNumber,
+                firebaseToken
         );
     }
 
@@ -55,6 +58,22 @@ public record MemberRegisterRequest(
                 .accountHolder(accountHolder)
                 .accountBank(accountBank)
                 .accountNumber(accountNumber)
+                .build();
+    }
+
+    public Member toEntity(String password) {
+        return Member.builder()
+                .studentId(studentId)
+                .department(department)
+                .yearOfAdmission(yearOfAdmission)
+                .nickname(nickname)
+                .password(password)
+                .phoneNumber(phoneNumber)
+                .marketingAgree(marketingAgree)
+                .accountHolder(accountHolder)
+                .accountBank(accountBank)
+                .accountNumber(accountNumber)
+                .firebaseToken(firebaseToken)
                 .build();
     }
 }

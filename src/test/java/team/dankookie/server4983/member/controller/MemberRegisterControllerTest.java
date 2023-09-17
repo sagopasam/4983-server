@@ -131,7 +131,8 @@ class MemberRegisterControllerTest extends BaseControllerTest {
                 true,
                 "testAccountHolder",
                 AccountBank.KB,
-                "1234567890"
+                "1234567890",
+                "firebaseToken"
         );
 
         when(memberService.register(request))
@@ -156,7 +157,8 @@ class MemberRegisterControllerTest extends BaseControllerTest {
                                 fieldWithPath("marketingAgree").description("마케팅 동의 여부"),
                                 fieldWithPath("accountHolder").description("계좌주"),
                                 fieldWithPath("accountBank").description("은행"),
-                                fieldWithPath("accountNumber").description("계좌번호")
+                                fieldWithPath("accountNumber").description("계좌번호"),
+                                fieldWithPath("firebaseToken").description("firebase Token")
                         )
                 ));
     }
