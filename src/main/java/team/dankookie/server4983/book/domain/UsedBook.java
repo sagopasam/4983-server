@@ -61,6 +61,10 @@ public class UsedBook extends BaseEntity {
     @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted;
 
+    public UsedBook(long id, String bookName, int price, LocalDate now, String publisher, College college, Department department, BookStatus bookStatus, boolean isUnderlinedOrWrite, boolean isDiscolorationAndDamage, boolean isCoverDamaged, Member buyer, Member seller) {
+        super();
+    }
+
     public void setIsDeletedTrue() {
         isDeleted = true;
     }
