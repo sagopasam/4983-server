@@ -191,3 +191,17 @@ include::{snippets}/used-book/update/success/request-headers.adoc[]
 include::{snippets}/used-book/update/success/http-response.adoc[]
 include::{snippets}/used-book/update/success/response-fields.adoc[]
 
+=== 마이페이지 구매내역 책 리스트 가져오기(회원이 존재하지 않는 경우)
+
+==== Request
+include::{snippets}/my-pages/book-purchase-detail-list/fail/http-request.adoc[]
+
+===== QueryParameter
+include::{snippets}/my-pages/book-purchase-detail-list/fail/query-parameters.adoc[]
+
+==== RequestHeader
+include::{snippets}/my-pages/book-purchase-detail-list/fail/request-headers.adoc[]
+
+==== Response
+include::{snippets}/my-pages/book-purchase-detail-list/fail/http-response.adoc[]
+include::{snippets}/my-pages/book-purchase-detail-list/fail/response-fields.adoc[]
