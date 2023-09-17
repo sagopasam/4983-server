@@ -3,6 +3,7 @@ package team.dankookie.server4983.book.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import team.dankookie.server4983.book.constant.BookStatus;
@@ -62,6 +63,23 @@ public class UsedBook extends BaseEntity {
 
     public void setIsDeletedTrue() {
         isDeleted = true;
+    }
+    @Builder
+    public UsedBook(Long id, String name, Integer price, LocalDate tradeAvailableDate, String publisher, College college, Department department, BookStatus bookStatus, Boolean isUnderlinedOrWrite, Boolean isDiscolorationAndDamage, Boolean isCoverDamaged, Member buyerMember, Member sellerMember, Boolean isDeleted) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.tradeAvailableDate = tradeAvailableDate;
+        this.publisher = publisher;
+        this.college = college;
+        this.department = department;
+        this.bookStatus = bookStatus;
+        this.isUnderlinedOrWrite = isUnderlinedOrWrite;
+        this.isDiscolorationAndDamage = isDiscolorationAndDamage;
+        this.isCoverDamaged = isCoverDamaged;
+        this.buyerMember = buyerMember;
+        this.sellerMember = sellerMember;
+        this.isDeleted = isDeleted;
     }
 
     public void updateUsedBook(UsedBookSaveRequest usedBook) {
