@@ -61,24 +61,15 @@ public class UsedBook extends BaseEntity {
     @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted;
 
+    public UsedBook(long id, String bookName, int price, LocalDate now, String publisher, College college, Department department, BookStatus bookStatus, boolean isUnderlinedOrWrite, boolean isDiscolorationAndDamage, boolean isCoverDamaged, Member buyer, Member seller) {
+        super();
+    }
+
     public void setIsDeletedTrue() {
         isDeleted = true;
     }
-
-    public void updateUsedBook(UsedBookSaveRequest usedBook) {
-        this.name = usedBook.name();
-        this.price = usedBook.price();
-        this.tradeAvailableDate = usedBook.tradeAvailableDate();
-        this.publisher = usedBook.publisher();
-        this.college = usedBook.college();
-        this.department = usedBook.department();
-        this.isUnderlinedOrWrite = usedBook.isUnderlinedOrWrite();
-        this.isDiscolorationAndDamage = usedBook.isDiscolorationAndDamage();
-        this.isCoverDamaged = usedBook.isCoverDamaged();
-    }
-
     @Builder
-    public UsedBook(Long id, String name, Integer price, LocalDate tradeAvailableDate, String publisher, College college, Department department, BookStatus bookStatus, Boolean isUnderlinedOrWrite, Boolean isDiscolorationAndDamage, Boolean isCoverDamaged, Member buyerMember, Member sellerMember, boolean isDeleted) {
+    public UsedBook(Long id, String name, Integer price, LocalDate tradeAvailableDate, String publisher, College college, Department department, BookStatus bookStatus, Boolean isUnderlinedOrWrite, Boolean isDiscolorationAndDamage, Boolean isCoverDamaged, Member buyerMember, Member sellerMember, Boolean isDeleted) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -95,20 +86,15 @@ public class UsedBook extends BaseEntity {
         this.isDeleted = isDeleted;
     }
 
-    public UsedBook(long id, String bookName, int price, LocalDate now, String publisher, College college, Department department, BookStatus bookStatus, boolean isUnderlinedOrWrite, boolean isDiscolorationAndDamage, boolean isCoverDamaged, Member buyer, Member seller) {
-        this.id = id;
-        this.name = bookName;
-        this.price = price;
-        this.tradeAvailableDate = now;
-        this.publisher = publisher;
-        this.college = college;
-        this.department = department;
-        this.bookStatus = bookStatus;
-        this.isUnderlinedOrWrite = isUnderlinedOrWrite;
-        this.isDiscolorationAndDamage = isDiscolorationAndDamage;
-        this.isCoverDamaged = isCoverDamaged;
-        this.buyerMember = buyer;
-        this.sellerMember = seller;
+    public void updateUsedBook(UsedBookSaveRequest usedBook) {
+        this.name = usedBook.name();
+        this.price = usedBook.price();
+        this.tradeAvailableDate = usedBook.tradeAvailableDate();
+        this.publisher = usedBook.publisher();
+        this.college = usedBook.college();
+        this.department = usedBook.department();
+        this.isUnderlinedOrWrite = usedBook.isUnderlinedOrWrite();
+        this.isDiscolorationAndDamage = usedBook.isDiscolorationAndDamage();
+        this.isCoverDamaged = usedBook.isCoverDamaged();
     }
-
 }

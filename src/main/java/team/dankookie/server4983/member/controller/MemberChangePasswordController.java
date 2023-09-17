@@ -18,7 +18,6 @@ public class MemberChangePasswordController {
     public ResponseEntity<MemberPasswordMatchResponse> getCurrentPassword(@RequestBody final String password, HttpServletRequest request){
 
         boolean isPasswordMatch = memberService.isMemberPasswordMatch(password, request.getHeader(HttpHeaders.AUTHORIZATION));
-
         return ResponseEntity.ok(MemberPasswordMatchResponse.of(isPasswordMatch));
     }
 

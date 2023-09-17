@@ -102,6 +102,20 @@ include::{snippets}/used-book-list/getUsedBookListWithCollegeAndDepartment/succe
     COMPOSITION("작곡전공", MUSIC_AND_ARTS),
     GUGAK("국악전공", MUSIC_AND_ARTS);
 
+=== 마이페이지 판매내역 책 리스트 가져오기(회원이 존재하지 않는 경우)
+
+==== Request
+include::{snippets}/my-pages/book-sales-detail-list/fail/http-request.adoc[]
+
+==== query parameters
+include::{snippets}/my-pages/book-sales-detail-list/fail/query-parameters.adoc[]
+
+==== Request Header
+include::{snippets}/my-pages/book-sales-detail-list/fail/request-headers.adoc[]
+
+==== Response
+include::{snippets}/my-pages/book-sales-detail-list/fail/http-response.adoc[]
+include::{snippets}/my-pages/book-sales-detail-list/fail/response-fields.adoc[]
 
 === UsedBook 글쓰기 관련 문서
 

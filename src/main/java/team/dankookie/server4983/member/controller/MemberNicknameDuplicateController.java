@@ -18,11 +18,7 @@ public class MemberNicknameDuplicateController {
     @GetMapping
     public ResponseEntity<NicknameDuplicateResponse> checkNicknameDuplicate(@RequestParam String nickname) {
         boolean isDuplicate = memberService.checkNicknameDuplicate(nickname);
-        /**
-         * {
-         *     isDuplicate : true or false
-         * }
-         */
+
         return ResponseEntity.ok(NicknameDuplicateResponse.of(isDuplicate));
     }
 
