@@ -1,6 +1,7 @@
 package team.dankookie.server4983.book.controller;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -22,14 +23,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -163,5 +162,230 @@ class UsedBookControllerTest extends BaseControllerTest {
                 ));
 
     }
+
+    @Test
+    void 중고서적을_삭제한다() throws Exception {
+        //given
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), 1000L);
+
+        final Long usedBookId = 1L;
+
+        when(usedBookService.deleteUsedBook(usedBookId, AccessToken.of(accessToken)))
+                .thenReturn(true);
+        //when
+        ResultActions resultActions = mockMvc.perform(delete(API + "/used-book/{id}", usedBookId)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        ).andDo(print());
+
+        //then
+        resultActions.andExpect(status().isNoContent())
+                .andDo(document("used-book/delete/success",
+                        pathParameters(
+                                parameterWithName("id").description("중고서적 id")
+                        ),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("accessToken")
+                        )
+                ));
+    }
+
+    @Test
+    void 중고서적을_삭제한다_실패_글을_올린_사용자가_아님() throws Exception {
+        //given
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), 1000L);
+
+        final Long usedBookId = 1L;
+
+        Mockito.
+        when(usedBookService.deleteUsedBook(usedBookId, AccessToken.of(accessToken)))
+                .thenThrow(new IllegalArgumentException("글을 올린 사용자만 삭제할 수 있습니다."));
+
+        //when
+        ResultActions resultActions = mockMvc.perform(delete(API + "/used-book/{id}", usedBookId)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        ).andDo(print());
+
+        //then
+        resultActions.andExpect(status().isBadRequest())
+                .andDo(document("used-book/delete/fail",
+                        pathParameters(
+                                parameterWithName("id").description("중고서적 id")
+                        ),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("accessToken")
+                        )
+                ));
+    }
+
+    @Test
+    void 중고서적의_이미지를_삭제한다() throws Exception {
+        //given
+        final Long usedBookId = 1L;
+        final String image = "image.png";
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), 1000L);
+
+        when(usedBookService.deleteUsedBookImage(usedBookId, image))
+                .thenReturn(true);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(delete(API + "/used-book/{id}/image/{image}", usedBookId, image)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        ).andDo(print());
+
+        //then
+        resultActions.andExpect(status().isNoContent())
+                .andDo(document("used-book/image/delete/success",
+                        pathParameters(
+                                parameterWithName("id").description("중고서적 id"),
+                                parameterWithName("image").description("https://4983-s3.s3.ap-northeast-2.amazonaws.com/ 이후의 이미지 명")
+                        ),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("accessToken")
+                        )
+                ));
+    }
+
+    @Test
+    void 중고서적의_데이터를_전부_덮어씌운다() throws Exception {
+        //given
+        final Long usedBookId = 1L;
+
+        final List<MultipartFile> multipartFileList = List.of();
+        final UsedBookSaveRequest usedBookSaveRequest = UsedBookSaveRequest.of(
+                College.LAW,
+                Department.BUSINESS,
+                15000,
+                LocalDate.of(2023, 9, 13),
+                "책이름",
+                "출판사",
+                false,
+                true,
+                true
+        );
+
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), 1000L);
+
+        MockMultipartFile file1 = new MockMultipartFile("fileList", "file1.png", MediaType.MULTIPART_FORM_DATA_VALUE, "file1".getBytes(UTF_8));
+        MockMultipartFile file2 = new MockMultipartFile("fileList", "file2.png", MediaType.MULTIPART_FORM_DATA_VALUE, "file2".getBytes(UTF_8));
+        MockMultipartFile file3 = new MockMultipartFile("fileList", "file3.png", MediaType.MULTIPART_FORM_DATA_VALUE, "file3".getBytes(UTF_8));
+        MockMultipartFile file4 = new MockMultipartFile("fileList", "file4.png", MediaType.MULTIPART_FORM_DATA_VALUE, "file4".getBytes(UTF_8));
+
+        List<MockMultipartFile> fileList = List.of(file1, file2, file3, file4);
+        MockMultipartFile usedBook = new MockMultipartFile("usedBook", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(usedBookSaveRequest).getBytes(UTF_8));
+        when(usedBookService.updateUsedBook(anyLong(), anyList(), any(UsedBookSaveRequest.class), any(AccessToken.class)))
+                .thenReturn(UsedBookSaveResponse.of(usedBookId));
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                multipart(API + "/used-book/{id}", usedBookId)
+                        .file(file1)
+                        .file(file2)
+                        .file(file3)
+                        .file(file4)
+                        .file(usedBook)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        ).andDo(print());
+
+        //then
+        resultActions.andExpect(status().isOk())
+                .andDo(document("used-book/update/success",
+                        pathParameters(
+                                parameterWithName("id").description("중고서적 id")
+                        ),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("accessToken")
+                        ),
+                        requestParts(
+                                partWithName("fileList").description("새로 저장할 이미지 리스트"),
+                                partWithName("usedBook").description("중고서적 정보")
+                        ),
+                        requestPartFields(
+                                "usedBook",
+                                fieldWithPath("college").description("단과대"),
+                                fieldWithPath("department").description("학과"),
+                                fieldWithPath("price").description("가격"),
+                                fieldWithPath("tradeAvailableDate").description("거래 가능 날짜"),
+                                fieldWithPath("name").description("책 이름"),
+                                fieldWithPath("publisher").description("출판사"),
+                                fieldWithPath("isUnderlinedOrWrite").description("밑줄및 필기흔적 여부"),
+                                fieldWithPath("isDiscolorationAndDamage").description("페이지 변색 및 훼손 여부"),
+                                fieldWithPath("isCoverDamaged").description("겉표지 훼손 여부")
+                        ),
+                        responseFields(
+                                fieldWithPath("usedBookId").description("중고서적 id")
+                        )
+                ));
+    }
+
+    @Test
+    void 중고서적의_데이터를_다른_사용자가_수정하면_에러를_던진다() throws Exception {
+        //given
+        final Long usedBookId = 1L;
+
+        final List<MultipartFile> multipartFileList = List.of();
+        final UsedBookSaveRequest usedBookSaveRequest = UsedBookSaveRequest.of(
+                College.LAW,
+                Department.BUSINESS,
+                15000,
+                LocalDate.of(2023, 9, 13),
+                "책이름",
+                "출판사",
+                false,
+                true,
+                true
+        );
+
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), 1000L);
+
+        MockMultipartFile file1 = new MockMultipartFile("fileList", "file1.png", MediaType.MULTIPART_FORM_DATA_VALUE, "file1".getBytes(UTF_8));
+        MockMultipartFile file2 = new MockMultipartFile("fileList", "file2.png", MediaType.MULTIPART_FORM_DATA_VALUE, "file2".getBytes(UTF_8));
+        MockMultipartFile file3 = new MockMultipartFile("fileList", "file3.png", MediaType.MULTIPART_FORM_DATA_VALUE, "file3".getBytes(UTF_8));
+        MockMultipartFile file4 = new MockMultipartFile("fileList", "file4.png", MediaType.MULTIPART_FORM_DATA_VALUE, "file4".getBytes(UTF_8));
+
+        List<MockMultipartFile> fileList = List.of(file1, file2, file3, file4);
+        MockMultipartFile usedBook = new MockMultipartFile("usedBook", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(usedBookSaveRequest).getBytes(UTF_8));
+        when(usedBookService.updateUsedBook(anyLong(), anyList(), any(UsedBookSaveRequest.class), any(AccessToken.class)))
+                .thenThrow(new IllegalArgumentException("글을 올린 유저만 수정할 수 있습니다."));
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                multipart(API + "/used-book/{id}", usedBookId)
+                        .file(file1)
+                        .file(file2)
+                        .file(file3)
+                        .file(file4)
+                        .file(usedBook)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        ).andDo(print());
+
+        //then
+        resultActions.andExpect(status().isBadRequest())
+                .andDo(document("used-book/update/fail",
+                        pathParameters(
+                                parameterWithName("id").description("중고서적 id")
+                        ),
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("accessToken")
+                        ),
+                        requestParts(
+                                partWithName("fileList").description("새로 저장할 이미지 리스트"),
+                                partWithName("usedBook").description("중고서적 정보")
+                        ),
+                        requestPartFields(
+                                "usedBook",
+                                fieldWithPath("college").description("단과대"),
+                                fieldWithPath("department").description("학과"),
+                                fieldWithPath("price").description("가격"),
+                                fieldWithPath("tradeAvailableDate").description("거래 가능 날짜"),
+                                fieldWithPath("name").description("책 이름"),
+                                fieldWithPath("publisher").description("출판사"),
+                                fieldWithPath("isUnderlinedOrWrite").description("밑줄및 필기흔적 여부"),
+                                fieldWithPath("isDiscolorationAndDamage").description("페이지 변색 및 훼손 여부"),
+                                fieldWithPath("isCoverDamaged").description("겉표지 훼손 여부")
+                        ),
+                        responseFields(
+                                fieldWithPath("message").description("에러 메시지")
+                        )
+                ));
+    }
+
 
 }

@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface BookImageRepository extends JpaRepository<BookImage, Long> , BookImageRepositoryCustom{
     List<BookImage> findByUsedBook(UsedBook usedBook);
+
+    long deleteBookImageByUsedBookAndImageUrl(UsedBook usedBook,String imageUrl);
 }

@@ -60,8 +60,18 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(columnDefinition = "boolean default false")
     private Boolean marketingAgree;
 
+    private String firebaseToken;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
     @Builder
-    public Member(String studentId, Department department, Integer yearOfAdmission, String nickname, String password, String phoneNumber, String accountHolder, AccountBank accountBank, String accountNumber, String imageUrl, Boolean marketingAgree, UserRole role) {
+    public Member(Long id, String studentId, Department department, Integer yearOfAdmission, String nickname, String password, String phoneNumber, String accountHolder, AccountBank accountBank, String accountNumber, String imageUrl, Boolean marketingAgree, String firebaseToken, UserRole role) {
+        this.id = id;
         this.studentId = studentId;
         this.department = department;
         this.yearOfAdmission = yearOfAdmission;
@@ -73,15 +83,9 @@ public class Member extends BaseEntity implements UserDetails {
         this.accountNumber = accountNumber;
         this.imageUrl = imageUrl;
         this.marketingAgree = marketingAgree;
+        this.firebaseToken = firebaseToken;
         this.role = role;
     }
-
-    public void changePassword(String password) {
-        this.password = password;
-    }
-
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

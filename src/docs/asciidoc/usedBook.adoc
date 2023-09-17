@@ -102,6 +102,20 @@ include::{snippets}/used-book-list/getUsedBookListWithCollegeAndDepartment/succe
     COMPOSITION("작곡전공", MUSIC_AND_ARTS),
     GUGAK("국악전공", MUSIC_AND_ARTS);
 
+=== 마이페이지 판매내역 책 리스트 가져오기(회원이 존재하지 않는 경우)
+
+==== Request
+include::{snippets}/my-pages/book-sales-detail-list/fail/http-request.adoc[]
+
+==== query parameters
+include::{snippets}/my-pages/book-sales-detail-list/fail/query-parameters.adoc[]
+
+==== Request Header
+include::{snippets}/my-pages/book-sales-detail-list/fail/request-headers.adoc[]
+
+==== Response
+include::{snippets}/my-pages/book-sales-detail-list/fail/http-response.adoc[]
+include::{snippets}/my-pages/book-sales-detail-list/fail/response-fields.adoc[]
 
 === UsedBook 글쓰기 관련 문서
 
@@ -122,7 +136,7 @@ include::{snippets}/used-book/save/success/request-headers.adoc[]
 include::{snippets}/used-book/save/success/http-response.adoc[]
 include::{snippets}/used-book/save/success/response-fields.adoc[]
 
-=== Usedbook 상세 보기
+=== Usedbook 게시물 상세 보기
 
 ==== Request
 
@@ -134,21 +148,46 @@ include::{snippets}/used-book/detail/success/path-parameters.adoc[]
 include::{snippets}/used-book/detail/success/http-response.adoc[]
 include::{snippets}/used-book/detail/success/response-fields.adoc[]
 
-
-
-
-
-=== 마이페이지 판매내역 책 리스트 가져오기(회원이 존재하지 않는 경우)
+=== Usedbook 게시물 삭제
 
 ==== Request
-include::{snippets}/my-pages/book-sales-detail-list/fail/http-request.adoc[]
 
-==== query parameters
-include::{snippets}/my-pages/book-sales-detail-list/fail/query-parameters.adoc[]
-
-==== Request Header
-include::{snippets}/my-pages/book-sales-detail-list/fail/request-headers.adoc[]
+include::{snippets}/used-book/delete/success/http-request.adoc[]
+include::{snippets}/used-book/delete/success/path-parameters.adoc[]
+==== RequestHeader
+include::{snippets}/used-book/delete/success/request-headers.adoc[]
 
 ==== Response
-include::{snippets}/my-pages/book-sales-detail-list/fail/http-response.adoc[]
-include::{snippets}/my-pages/book-sales-detail-list/fail/response-fields.adoc[]
+
+include::{snippets}/used-book/delete/success/http-response.adoc[]
+
+=== Usedbook 게시물 개별 이미지 삭제
+
+==== Request
+
+include::{snippets}/used-book/image/delete/success/http-request.adoc[]
+include::{snippets}/used-book/image/delete/success/path-parameters.adoc[]
+==== RequestHeader
+include::{snippets}/used-book/image/delete/success/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/used-book/image/delete/success/http-response.adoc[]
+
+=== Usedbook 게시물 수정
+
+==== Request
+
+include::{snippets}/used-book/update/success/http-request.adoc[]
+include::{snippets}/used-book/update/success/request-parts.adoc[]
+===== usedBook fields 요소  {usedBook : {}}
+include::{snippets}/used-book/update/success/request-part-usedBook-fields.adoc[]
+
+===== RequestHeader
+include::{snippets}/used-book/update/success/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/used-book/update/success/http-response.adoc[]
+include::{snippets}/used-book/update/success/response-fields.adoc[]
+

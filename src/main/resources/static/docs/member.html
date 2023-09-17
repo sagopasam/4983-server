@@ -523,8 +523,8 @@ Host: localhost:8080
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk0NjEyMDQ0LCJleHAiOjE2OTQ2MTM4NDR9.OHu3blWLjsOSyfTfLaFjv5MKfJ4GjrPV0S5xNNRMAl0
-Set-Cookie: refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk0NjEyMDQ0LCJleHAiOjE2OTU4MjE2NDR9.ChzI42MbcA1sH9vQveN5njP_si6X3GL1Lp7SgVAxEOk</code></pre>
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk0ODY1Mzc3LCJleHAiOjE2OTQ4NjcxNzd9.lGwSh4aTYwBy7OBJ6I8px7t-fITbG4IEFZT9XIlwHNU
+Set-Cookie: refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk0ODY1Mzc3LCJleHAiOjE2OTYwNzQ5Nzd9.Oz9LRymHb7Oy-sKEslEUHx45ssTOTtj1Li79ERlJ8Ao</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1617,10 +1617,10 @@ Content-Length: 47
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/v1/register HTTP/1.1
 Content-Type: application/json
-Content-Length: 260
+Content-Length: 292
 Host: localhost:8080
 
-{"studentId":"202023604","department":"COMPUTER","yearOfAdmission":2020,"nickname":"testNickname","password":"testPassword","phoneNumber":"010-1234-5678","marketingAgree":true,"accountHolder":"testAccountHolder","accountBank":"KB","accountNumber":"1234567890"}</code></pre>
+{"studentId":"202023604","department":"COMPUTER","yearOfAdmission":2020,"nickname":"testNickname","password":"testPassword","phoneNumber":"010-1234-5678","marketingAgree":true,"accountHolder":"testAccountHolder","accountBank":"KB","accountNumber":"1234567890","firebaseToken":"firebaseToken"}</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -1687,6 +1687,11 @@ Host: localhost:8080
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">계좌번호</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>firebaseToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">firebase Token</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -1706,7 +1711,7 @@ Host: localhost:8080
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/college-department HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk0NjEyMDQ1LCJleHAiOjE2OTQ2MTM4NDV9.WaiU1zW_QmA7yfjsAGINnCl_cKux3u65VruTITt8Y_Q
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk0ODY1Mzc3LCJleHAiOjE2OTQ4NjcxNzd9.lGwSh4aTYwBy7OBJ6I8px7t-fITbG4IEFZT9XIlwHNU
 Host: localhost:8080</code></pre>
 </div>
 </div>
