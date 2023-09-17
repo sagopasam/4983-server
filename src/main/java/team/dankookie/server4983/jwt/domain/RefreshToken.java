@@ -28,4 +28,8 @@ public class RefreshToken {
         this.member = member;
         this.refreshToken = refreshToken;
     }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }

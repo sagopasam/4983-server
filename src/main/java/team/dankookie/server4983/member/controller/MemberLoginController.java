@@ -57,6 +57,7 @@ public class MemberLoginController {
     private void setRefreshTokenToCookie(HttpServletResponse response, Member member) {
         String refreshToken = jwtTokenUtils.generateJwtToken(member.getNickname(), secretKey, REFRESH_TOKEN_DURATION.getDuration());
         refreshTokenService.save(
+                member,
                 RefreshToken.builder()
                         .member(member)
                         .refreshToken(refreshToken)
