@@ -22,7 +22,6 @@ import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.constant.AccountBank;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.repository.MemberRepository;
-import team.dankookie.server4983.member.service.MemberService;
 
 import javax.security.auth.login.AccountException;
 import java.time.LocalDate;
@@ -39,8 +38,6 @@ public class ChatService {
     private final MemberRepository memberRepository;
     private final UsedBookRepository usedBookRepository;
     private final JwtTokenUtils jwtTokenUtils;
-    private final MemberService memberService;
-
     @Value("${jwt.secret-key}")
     private String key;
 
@@ -48,9 +45,8 @@ public class ChatService {
     public void chatRequestHandler(ChatRequest chatRequest , HttpServletRequest request) {
         String token = request.getHeader("Authorization").substring(7);
         String userName = jwtTokenUtils.getNickname(token , key);
-        Member member = memberService.findMemberByNickname(userName);
 
-        chatLogicHandler.chatLoginHandler(chatRequest , member);
+        chatLogicHandler.chatLoginHandler(chatRequest , userName);
     }
 
     @Transactional
