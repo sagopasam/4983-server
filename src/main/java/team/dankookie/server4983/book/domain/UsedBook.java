@@ -18,6 +18,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@Builder
 public class UsedBook extends BaseEntity {
 
     @Id @GeneratedValue
