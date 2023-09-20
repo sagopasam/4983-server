@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team.dankookie.server4983.chat.dto.ChatRequest;
 import team.dankookie.server4983.chat.dto.ChatRoomRequest;
+import team.dankookie.server4983.chat.dto.ChatRoomResponse;
 import team.dankookie.server4983.chat.service.ChatService;
 
 import javax.security.auth.login.AccountException;
@@ -34,9 +35,16 @@ public class ChatController {
 
     @PostMapping("/chat-room")
     public ResponseEntity createChatRoom(@RequestBody ChatRoomRequest chatRoomRequest , HttpServletRequest request) throws AccountException {
-        Long result = chatService.createChatRoom(chatRoomRequest , request);
+        ChatRoomResponse result = chatService.createChatRoom(chatRoomRequest , request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
+    @GetMapping("/chat-room/{chatRoom}")
+    public ResponseEntity getChatRoom(@PathVariable long chatRoom) {
+        ChatRoomResponse result = chatService.getChatRoom(chatRoom);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping("/chat/not-read/{chatRoomId}/{type}")
