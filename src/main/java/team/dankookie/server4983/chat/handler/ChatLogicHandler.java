@@ -34,6 +34,7 @@ public class ChatLogicHandler {
         switch (chatRequest.getContentType()) {
             case BOOK_PURCHASE_START: // SELLCHAT_1_1 판매자 구매 요청
                 String startSellerMessage = purchaseBookStart(chatRoom, buyer.getNickname(), seller.getNickname());
+                purchaseBookWarning(chatRoom);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(seller.getId(), startSellerMessage));
                 break;
             case BOOK_PURCHASE_REQUEST: // SELLCHAT_2 판매자 구매 수락
@@ -57,6 +58,9 @@ public class ChatLogicHandler {
                 String tradeCompleteSellerMessage = completeTrade(chatRoom);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(seller.getId(), tradeCompleteSellerMessage));
                 break;
+            case TRADE_STOP: // SELLCHAT 거래 중지
+
+                break;
             default:
                 throw new ChatException("잘못된 데이터 요청입니다.");
         }
@@ -71,6 +75,19 @@ public class ChatLogicHandler {
         chatRoom.addSellerChat(SellerChat.buildSellerChat(sellerMessage, BOOK_PURCHASE_START));
         chatRoom.addBuyerChat(BuyerChat.buildBuyerChat(buyerMessage, BOOK_PURCHASE_START));
         return sellerMessage;
+    }
+
+    public String purchaseBookWarning(ChatRoom chatRoom) {
+        String message = String.format("전공책은 사물함 설정 이후 “24시간 이내\"에 수령되어야 해요!\n" +
+                "\n" +
+                "불가피한 이유로 “중지\"를 원하실 땐 아래의 정보로 문의 주시길 바랍니다:)\n" +
+                "\n" +
+                "번호) 010-4487-3122 \n" +
+                "메일) 4983service@gmail.com");
+
+        chatRoom.addSellerChat(SellerChat.buildSellerChat(message, BOOK_PURCHASE_START));
+        chatRoom.addBuyerChat(BuyerChat.buildBuyerChat(message, BOOK_PURCHASE_START));
+        return message;
     }
 
     public String purchaseBookApprove(ChatRoom chatRoom, String sellerNickName) {

@@ -9,6 +9,7 @@ public enum ContentType {
     BOOK_SALE_REJECTION, // SELLCHAT_1_2 거래 거절
     PAYMENT_CONFIRMATION_COMPLETE, // SELLCHAT_4 입금 확인
     BOOK_PLACEMENT_COMPLETE, // SELLCHAT_5 서적 배치 완료
-    TRADE_COMPLETE; // SELLCHAT_6 거래 완료
+    TRADE_COMPLETE, // SELLCHAT_6 거래 완료
+    TRADE_STOP; // SELLCHAT 거래 중지
 }
 
