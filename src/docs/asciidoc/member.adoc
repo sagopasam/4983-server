@@ -241,3 +241,10 @@ include::{snippets}/member/collegeAndDepartment/success/request-headers.adoc[]
 
 include::{snippets}/member/collegeAndDepartment/success/http-response.adoc[]
 include::{snippets}/member/collegeAndDepartment/success/response-fields.adoc[]
+
+=== 로그아웃(성공: 쿠키에 남긴 refreshToken 삭제, 클라이언트에서 redirect, accessToken 삭제 필요)
+
+==== Request
+
+include::{snippets}/my-pages/logout/success/http-response.adoc[]
+include::{snippets}/my-pages/logout/success/request-cookies.adoc[]
