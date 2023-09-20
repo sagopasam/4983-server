@@ -15,6 +15,7 @@ import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.chat.dto.ChatRequest;
 import team.dankookie.server4983.chat.dto.ChatRoomRequest;
+import team.dankookie.server4983.chat.dto.ChatRoomResponse;
 import team.dankookie.server4983.chat.exception.ChatException;
 import team.dankookie.server4983.chat.handler.ChatLogicHandler;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
@@ -55,7 +56,7 @@ public class ChatService {
     }
 
     @Transactional
-    public Long createChatRoom(ChatRoomRequest chatRoomRequest , HttpServletRequest request) throws AccountException {
+    public ChatRoomResponse createChatRoom(ChatRoomRequest chatRoomRequest , HttpServletRequest request) throws AccountException {
         String token = request.getHeader("Authorization").substring(7);
         String userName = jwtTokenUtils.getNickname(token , key);
 
@@ -83,11 +84,18 @@ public class ChatService {
 
         Optional<ChatRoom> result = chatRoomRepository.findBookBySellerAndBuyerAndBook(seller , buyer , usedBook);
         if(result.isPresent()) {
-            return result.get().getChatRoomId();
+            return ChatRoomResponse.of(result.get());
         }
         ChatRoom chatRoom = buildChatRoom(buyer , seller , usedBook);
 
-        return chatRoomRepository.save(chatRoom).getChatRoomId();
+        return ChatRoomResponse.of(chatRoomRepository.save(chatRoom));
+    }
+
+    public ChatRoomResponse getChatRoom(long chatRoom) {
+        ChatRoom result = chatRoomRepository.findById(chatRoom)
+                .orElseThrow(() -> new ChatException("존재하지 않는 채팅방 입니다."));
+
+        return ChatRoomResponse.of(result);
     }
 
     @Transactional
@@ -137,4 +145,5 @@ public class ChatService {
                 .accountNumber("0101010100101010")
                 .build();
     }
+
 }
