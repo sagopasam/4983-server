@@ -13,4 +13,7 @@ public class ChatRoomRequest {
 
     private long salesPost;
 
+    // FIXME 테스트용 임시 데이터
+    private String bookName;
+
 }
