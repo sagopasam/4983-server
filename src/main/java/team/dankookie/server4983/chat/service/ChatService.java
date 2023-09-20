@@ -13,11 +13,14 @@ import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
+import team.dankookie.server4983.chat.dto.ChatListResponse;
 import team.dankookie.server4983.chat.dto.ChatRequest;
 import team.dankookie.server4983.chat.dto.ChatRoomRequest;
 import team.dankookie.server4983.chat.exception.ChatException;
 import team.dankookie.server4983.chat.handler.ChatLogicHandler;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
+import team.dankookie.server4983.jwt.constants.TokenSecretKey;
+import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.constant.AccountBank;
 import team.dankookie.server4983.member.domain.Member;
@@ -38,16 +41,14 @@ public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final MemberRepository memberRepository;
     private final UsedBookRepository usedBookRepository;
-    private final JwtTokenUtils jwtTokenUtils;
     private final MemberService memberService;
-
-    @Value("${jwt.secret-key}")
-    private String key;
+    private final JwtTokenUtils jwtTokenUtils;
+    private final TokenSecretKey tokenSecretKey;
 
     @Transactional
     public void chatRequestHandler(ChatRequest chatRequest , HttpServletRequest request) {
         String token = request.getHeader("Authorization").substring(7);
-        String userName = jwtTokenUtils.getNickname(token , key);
+        String userName = jwtTokenUtils.getNickname(token , tokenSecretKey.getSecretKey());
         Member member = memberService.findMemberByNickname(userName);
 
         chatLogicHandler.chatLoginHandler(chatRequest , member);
@@ -57,7 +58,7 @@ public class ChatService {
     public Long createChatRoom(ChatRoomRequest chatRoomRequest , HttpServletRequest request) throws AccountException {
         String token = request.getHeader("Authorization").substring(7);
 
-        String userName = jwtTokenUtils.getNickname(token , key);
+        String userName = jwtTokenUtils.getNickname(token , tokenSecretKey.getSecretKey());
 
         /** FIXME
 
@@ -120,7 +121,13 @@ public class ChatService {
         }
     }
 
-    public Member createTemporaryMember() {
+    public List<ChatListResponse> getChatListWithAccessToken(AccessToken accessToken) {
+        String nickname = jwtTokenUtils.getNickname(accessToken.value() , tokenSecretKey.getSecretKey());
+
+        return chatRoomRepository.findByChatroomWithNickname(nickname);
+    }
+
+    private Member createTemporaryMember() {
         return Member.builder()
                 .studentId("studentIds")
                 .yearOfAdmission(0)
@@ -133,5 +140,6 @@ public class ChatService {
                 .accountNumber("0101010100101010")
                 .build();
     }
+
 
 }

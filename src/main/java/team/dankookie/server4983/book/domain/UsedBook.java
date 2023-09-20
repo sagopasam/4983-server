@@ -14,6 +14,8 @@ import team.dankookie.server4983.common.domain.BaseEntity;
 import team.dankookie.server4983.member.domain.Member;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -61,6 +63,9 @@ public class UsedBook extends BaseEntity {
     @Column(columnDefinition = "boolean default false")
     private Boolean isDeleted;
 
+    @OneToMany(mappedBy = "usedBook", cascade = CascadeType.ALL)
+    private List<BookImage> bookImageList = new ArrayList<>();
+
     public UsedBook(long id, String bookName, int price, LocalDate now, String publisher, College college, Department department, BookStatus bookStatus, boolean isUnderlinedOrWrite, boolean isDiscolorationAndDamage, boolean isCoverDamaged, Member buyer, Member seller) {
         super();
     }
@@ -68,6 +73,7 @@ public class UsedBook extends BaseEntity {
     public void setIsDeletedTrue() {
         isDeleted = true;
     }
+
     @Builder
     public UsedBook(Long id, String name, Integer price, LocalDate tradeAvailableDate, String publisher, College college, Department department, BookStatus bookStatus, Boolean isUnderlinedOrWrite, Boolean isDiscolorationAndDamage, Boolean isCoverDamaged, Member buyerMember, Member sellerMember, Boolean isDeleted) {
         this.id = id;

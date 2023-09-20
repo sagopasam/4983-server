@@ -3,6 +3,7 @@ package team.dankookie.server4983.chat.repository;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
+import team.dankookie.server4983.chat.dto.ChatListResponse;
 import team.dankookie.server4983.member.domain.Member;
 
 import java.util.List;
@@ -25,5 +26,7 @@ public interface ChatRoomRepositoryCustom {
     long modifyBuyerChattingToRead(long chatRoomId);
 
     Optional<ChatRoom> findChatRoomAndBookById(long chatRoomId);
+
+    List<ChatListResponse> findByChatroomWithNickname(String nickname);
 
 }

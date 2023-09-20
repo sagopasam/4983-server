@@ -1,17 +1,21 @@
 package team.dankookie.server4983.chat.repository;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
+import team.dankookie.server4983.chat.dto.ChatListResponse;
 import team.dankookie.server4983.member.domain.Member;
 
 import static team.dankookie.server4983.member.domain.QMember.member;
 import static team.dankookie.server4983.chat.domain.QBuyerChat.buyerChat;
 import static team.dankookie.server4983.chat.domain.QSellerChat.sellerChat;
 import static team.dankookie.server4983.chat.domain.QChatRoom.chatRoom;
+
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -102,4 +106,43 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
         return Optional.ofNullable(result);
     }
 
+    @Override
+    public List<ChatListResponse> findByChatroomWithNickname(String nickname) {
+        List<ChatListResponse> chatInfoList = jpaQueryFactory
+                .select(Projections.constructor(ChatListResponse.class,
+                        chatRoom.usedBook.bookImageList.get(0).imageUrl,
+                        chatRoom.usedBook.name,
+                        chatRoom.buyerChats.get(0).message,
+                        chatRoom.buyerChats.get(0).createdAt,
+                        chatRoom.buyerChats.get(0).isRead
+                        ))
+                .from(chatRoom)
+                .innerJoin(chatRoom.buyerChats)
+                .innerJoin(chatRoom.usedBook).fetchJoin()
+                .where(
+                        chatRoom.buyer.nickname.eq(nickname)
+                )
+                .orderBy(chatRoom.buyerChats.get(0).createdAt.desc())
+                .fetch();
+
+        chatInfoList.addAll(jpaQueryFactory
+                .select(Projections.constructor(ChatListResponse.class,
+                        chatRoom.usedBook.bookImageList.get(0).imageUrl,
+                        chatRoom.usedBook.name,
+                        chatRoom.buyerChats.get(0).message,
+                        chatRoom.buyerChats.get(0).createdAt,
+                        chatRoom.buyerChats.get(0).isRead
+                ))
+                .from(chatRoom)
+                .innerJoin(chatRoom.sellerChats)
+                .innerJoin(chatRoom.usedBook).fetchJoin()
+                .where(
+                        chatRoom.seller.nickname.eq(nickname)
+                )
+                .orderBy(chatRoom.sellerChats.any().createdAt.desc())
+                .fetch());
+
+        chatInfoList.sort(Comparator.comparing(ChatListResponse::createdAt).reversed());
+        return chatInfoList;
+    }
 }
