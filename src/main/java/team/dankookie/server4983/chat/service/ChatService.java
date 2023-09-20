@@ -27,6 +27,7 @@ import team.dankookie.server4983.member.service.MemberService;
 import javax.security.auth.login.AccountException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static team.dankookie.server4983.chat.domain.ChatRoom.buildChatRoom;
 
@@ -56,7 +57,6 @@ public class ChatService {
     @Transactional
     public Long createChatRoom(ChatRoomRequest chatRoomRequest , HttpServletRequest request) throws AccountException {
         String token = request.getHeader("Authorization").substring(7);
-
         String userName = jwtTokenUtils.getNickname(token , key);
 
         /** FIXME
@@ -70,17 +70,21 @@ public class ChatService {
         */
 
         // 임시 판매자
-        Member seller = memberRepository.findByStudentId("testStudentId")
-                .orElseGet(() -> createTemporaryMember());
-        memberRepository.save(seller);
+        Member seller = memberRepository.findByNickname("DFGgt4t21Rr-351rfvZCVb")
+                .orElseGet(() -> memberRepository.save(createTemporaryMember()));
 
         // 구매자
         Member buyer = memberRepository.findByNickname(userName)
                 .orElseThrow(() -> new AccountException("판매자 정보를 찾을 수 없습니다."));
 
         // 임시 책 정보
-        UsedBook usedBook = usedBookRepository.save(new UsedBook(30L , "bookName" , 400 , LocalDate.now() , "publisher" , College.LAW , Department.ACCOUNTING , BookStatus.SALE ,false , false , false, buyer , seller));
+        UsedBook usedBook = usedBookRepository.findByName(chatRoomRequest.getBookName())
+                .orElseGet(() -> usedBookRepository.save((new UsedBook(30L , chatRoomRequest.getBookName() , 400 , LocalDate.now() , "publisher" , College.LAW , Department.ACCOUNTING , BookStatus.SALE ,false , false , false, buyer , seller))));
 
+        Optional<ChatRoom> result = chatRoomRepository.findBookBySellerAndBuyerAndBook(seller , buyer , usedBook);
+        if(result.isPresent()) {
+            return result.get().getChatRoomId();
+        }
         ChatRoom chatRoom = buildChatRoom(buyer , seller , usedBook);
 
         return chatRoomRepository.save(chatRoom).getChatRoomId();
@@ -133,5 +137,4 @@ public class ChatService {
                 .accountNumber("0101010100101010")
                 .build();
     }
-
 }

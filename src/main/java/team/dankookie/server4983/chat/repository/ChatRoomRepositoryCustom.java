@@ -1,5 +1,6 @@
 package team.dankookie.server4983.chat.repository;
 
+import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
@@ -25,5 +26,7 @@ public interface ChatRoomRepositoryCustom {
     long modifyBuyerChattingToRead(long chatRoomId);
 
     Optional<ChatRoom> findChatRoomAndBookById(long chatRoomId);
+
+    Optional<ChatRoom> findBookBySellerAndBuyerAndBook(Member seller, Member buyer, UsedBook usedBook);
 
 }

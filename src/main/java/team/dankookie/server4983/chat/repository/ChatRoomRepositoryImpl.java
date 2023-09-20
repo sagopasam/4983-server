@@ -3,10 +3,13 @@ package team.dankookie.server4983.chat.repository;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import static  team.dankookie.server4983.book.domain.QUsedBook.usedBook;
+import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.member.domain.Member;
+import team.dankookie.server4983.member.domain.QMember;
 
 import static team.dankookie.server4983.member.domain.QMember.member;
 import static team.dankookie.server4983.chat.domain.QBuyerChat.buyerChat;
@@ -97,6 +100,20 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                 .from(chatRoom)
                 .innerJoin(chatRoom.usedBook).fetchJoin()
                 .where(chatRoom.chatRoomId.eq(chatRoomId))
+                .fetchOne();
+
+        return Optional.ofNullable(result);
+    }
+
+    @Override
+    public Optional<ChatRoom> findBookBySellerAndBuyerAndBook(Member seller, Member buyer, UsedBook usedBookData) {
+        QMember QSeller = new QMember("seller");
+
+        ChatRoom result = jpaQueryFactory.select(chatRoom)
+                .from(chatRoom)
+                .innerJoin(chatRoom.usedBook , usedBook).on(usedBook.eq(usedBookData))
+                .innerJoin(chatRoom.buyer , member).on(member.eq(buyer))
+                .innerJoin(chatRoom.seller , QSeller).on(QSeller.eq(seller))
                 .fetchOne();
 
         return Optional.ofNullable(result);
