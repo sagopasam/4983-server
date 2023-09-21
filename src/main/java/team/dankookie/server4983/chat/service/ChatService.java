@@ -60,42 +60,33 @@ public class ChatService {
         String token = request.getHeader("Authorization").substring(7);
         String userName = jwtTokenUtils.getNickname(token , key);
 
-        /** FIXME
-
-         - 추가 구현 -
-
-         거래 ID -> 거래 글 가져오기
-         거래 글 -> 책 정보와 구매자 정보 추출
-         책 정보와 구매자 정보 추출
-
-        */
-
-        // 임시 판매자
-        Member seller = memberRepository.findByNickname("DFGgt4t21Rr-351rfvZCVb")
-                .orElseGet(() -> memberRepository.save(createTemporaryMember()));
-
-        // 구매자
+        UsedBook usedBook = usedBookRepository.findById(chatRoomRequest.getSalesPost())
+                .orElseThrow(() -> new ChatException("거래 글을 찾을 수 없습니다."));
+        Member seller = usedBook.getSellerMember();
         Member buyer = memberRepository.findByNickname(userName)
-                .orElseThrow(() -> new AccountException("판매자 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ChatException("사용자를 찾을 수 없습니다."));
 
-        // 임시 책 정보
-        UsedBook usedBook = usedBookRepository.findByName(chatRoomRequest.getBookName())
-                .orElseGet(() -> usedBookRepository.save((new UsedBook(30L , chatRoomRequest.getBookName() , 400 , LocalDate.now() , "publisher" , College.LAW , Department.ACCOUNTING , BookStatus.SALE ,false , false , false, buyer , seller))));
+        if(seller.getNickname().equals(userName)) {
+            throw new ChatException("자신의 판매글에 거래요청을 할 수 없습니다.");
+        }
 
         Optional<ChatRoom> result = chatRoomRepository.findBookBySellerAndBuyerAndBook(seller , buyer , usedBook);
         if(result.isPresent()) {
-            return ChatRoomResponse.of(result.get());
+            return ChatRoomResponse.of(result.get() , userName);
         }
         ChatRoom chatRoom = buildChatRoom(buyer , seller , usedBook);
 
-        return ChatRoomResponse.of(chatRoomRepository.save(chatRoom));
+        return ChatRoomResponse.of(chatRoomRepository.save(chatRoom) , userName);
     }
 
-    public ChatRoomResponse getChatRoom(long chatRoom) {
+    public ChatRoomResponse getChatRoom(long chatRoom , HttpServletRequest request) {
+        String token = request.getHeader("Authorization").substring(7);
+        String userName = jwtTokenUtils.getNickname(token , key);
+
         ChatRoom result = chatRoomRepository.findById(chatRoom)
                 .orElseThrow(() -> new ChatException("존재하지 않는 채팅방 입니다."));
 
-        return ChatRoomResponse.of(result);
+        return ChatRoomResponse.of(result , userName);
     }
 
     @Transactional
