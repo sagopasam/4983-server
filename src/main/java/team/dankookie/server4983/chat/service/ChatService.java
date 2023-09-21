@@ -2,22 +2,23 @@ package team.dankookie.server4983.chat.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team.dankookie.server4983.book.constant.BookStatus;
-import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
+import team.dankookie.server4983.chat.dto.ChatListResponse;
 import team.dankookie.server4983.chat.dto.ChatRequest;
 import team.dankookie.server4983.chat.dto.ChatRoomRequest;
+import team.dankookie.server4983.chat.dto.ChatRoomResponse;
 import team.dankookie.server4983.chat.exception.ChatException;
 import team.dankookie.server4983.chat.handler.ChatLogicHandler;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
+import team.dankookie.server4983.jwt.constants.TokenSecretKey;
+import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.constant.AccountBank;
 import team.dankookie.server4983.member.domain.Member;
@@ -25,8 +26,8 @@ import team.dankookie.server4983.member.repository.MemberRepository;
 import team.dankookie.server4983.member.service.MemberService;
 
 import javax.security.auth.login.AccountException;
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static team.dankookie.server4983.chat.domain.ChatRoom.buildChatRoom;
 
@@ -54,7 +55,7 @@ public class ChatService {
     @Transactional
     public ChatRoomResponse createChatRoom(ChatRoomRequest chatRoomRequest , HttpServletRequest request) throws AccountException {
         String token = request.getHeader("Authorization").substring(7);
-        String userName = jwtTokenUtils.getNickname(token , key);
+        String userName = jwtTokenUtils.getNickname(token , tokenSecretKey.getSecretKey());
 
         UsedBook usedBook = usedBookRepository.findById(chatRoomRequest.getSalesPost())
                 .orElseThrow(() -> new ChatException("거래 글을 찾을 수 없습니다."));
@@ -77,7 +78,7 @@ public class ChatService {
 
     public ChatRoomResponse getChatRoom(long chatRoom , HttpServletRequest request) {
         String token = request.getHeader("Authorization").substring(7);
-        String userName = jwtTokenUtils.getNickname(token , key);
+        String userName = jwtTokenUtils.getNickname(token , tokenSecretKey.getSecretKey());
 
         ChatRoom result = chatRoomRepository.findById(chatRoom)
                 .orElseThrow(() -> new ChatException("존재하지 않는 채팅방 입니다."));
