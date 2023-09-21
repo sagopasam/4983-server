@@ -11,6 +11,8 @@ import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
+import team.dankookie.server4983.chat.domain.ChatRoom;
+import team.dankookie.server4983.chat.repository.ChatRoomRepository;
 import team.dankookie.server4983.common.exception.LoginFailedException;
 import team.dankookie.server4983.jwt.constants.TokenSecretKey;
 import team.dankookie.server4983.jwt.dto.AccessToken;
@@ -25,6 +27,8 @@ import team.dankookie.server4983.member.repository.MemberRepository;
 
 import java.time.LocalDate;
 
+import static team.dankookie.server4983.chat.domain.ChatRoom.buildChatRoom;
+
 @RequiredArgsConstructor
 @Service
 public class MemberService {
@@ -33,6 +37,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
     private final TokenSecretKey tokenSecretKey;
+    private final ChatRoomRepository chatRoomRepository;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -206,6 +211,12 @@ public class MemberService {
         usedBookRepository.save(usedBook8);
         usedBookRepository.save(usedBook9);
         usedBookRepository.save(usedBook10);
+
+        ChatRoom chatRoom_1 = buildChatRoom(testMember1 , testMember2 , usedBook1);
+        ChatRoom chatRoom_2 = buildChatRoom(testMember2 , testMember1 , usedBook2);
+        chatRoomRepository.save(chatRoom_1);
+        chatRoomRepository.save(chatRoom_2);
+
     }
 
     public Member findMemberById(Long id) {

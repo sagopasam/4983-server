@@ -20,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@Builder
 public class UsedBook extends BaseEntity {
 
     @Id @GeneratedValue
@@ -66,14 +67,27 @@ public class UsedBook extends BaseEntity {
     @OneToMany(mappedBy = "usedBook", cascade = CascadeType.ALL)
     private List<BookImage> bookImageList = new ArrayList<>();
 
+    // FIXME 테스트 용 USEDBOOK 생성자 ( 테스트 데이터가 필요 없어진게 아니면 절대 수정하지 마세요!! )
     public UsedBook(long id, String bookName, int price, LocalDate now, String publisher, College college, Department department, BookStatus bookStatus, boolean isUnderlinedOrWrite, boolean isDiscolorationAndDamage, boolean isCoverDamaged, Member buyer, Member seller) {
-        super();
+        this.id = id;
+        this.name = bookName;
+        this.price = price;
+        this.tradeAvailableDate = now;
+        this.publisher = publisher;
+        this.college = college;
+        this.department = department;
+        this.bookStatus = bookStatus;
+        this.isUnderlinedOrWrite = isUnderlinedOrWrite;
+        this.isDiscolorationAndDamage = isDiscolorationAndDamage;
+        this.isCoverDamaged = isCoverDamaged;
+        this.buyerMember = buyer;
+        this.sellerMember = seller;
+        this.isDeleted = false;
     }
 
     public void setIsDeletedTrue() {
         isDeleted = true;
     }
-
     @Builder
     public UsedBook(Long id, String name, Integer price, LocalDate tradeAvailableDate, String publisher, College college, Department department, BookStatus bookStatus, Boolean isUnderlinedOrWrite, Boolean isDiscolorationAndDamage, Boolean isCoverDamaged, Member buyerMember, Member sellerMember, Boolean isDeleted) {
         this.id = id;

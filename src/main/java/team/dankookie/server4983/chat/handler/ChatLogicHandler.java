@@ -3,6 +3,8 @@ package team.dankookie.server4983.chat.handler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import team.dankookie.server4983.book.domain.Locker;
+import team.dankookie.server4983.book.repository.locker.LockerRepository;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
@@ -13,6 +15,7 @@ import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
 import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.member.domain.Member;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static team.dankookie.server4983.chat.constant.ContentType.*;
@@ -23,6 +26,7 @@ public class ChatLogicHandler {
 
     private final ChatRoomRepository chatRoomRepository;
     private final FcmService fcmService;
+    private final LockerRepository lockerRepository;
 
     @Transactional
     public void chatLoginHandler(ChatRequest chatRequest, Member buyer) {
@@ -34,6 +38,7 @@ public class ChatLogicHandler {
         switch (chatRequest.getContentType()) {
             case BOOK_PURCHASE_START: // SELLCHAT_1_1 판매자 구매 요청
                 String startSellerMessage = purchaseBookStart(chatRoom, buyer.getNickname(), seller.getNickname());
+                purchaseBookWarning(chatRoom);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(seller.getId(), startSellerMessage));
                 break;
             case BOOK_PURCHASE_REQUEST: // SELLCHAT_2 판매자 구매 수락
@@ -50,6 +55,7 @@ public class ChatLogicHandler {
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(buyer.getId(), paymentConfirmationCompleteMessageList.get(1)));
                 break;
             case BOOK_PLACEMENT_COMPLETE: // SELLCHAT_5 서적 배치 완료
+                saveLockerData(chatRequest);
                 String bookPlacementCompleteBuyerMessage = completeSelectLockAndPassword(chatRoom, chatRequest);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(buyer.getId(), bookPlacementCompleteBuyerMessage));
                 break;
@@ -57,9 +63,26 @@ public class ChatLogicHandler {
                 String tradeCompleteSellerMessage = completeTrade(chatRoom);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(seller.getId(), tradeCompleteSellerMessage));
                 break;
+            case TRADE_STOP: // SELLCHAT 거래 중지
+
+                break;
             default:
                 throw new ChatException("잘못된 데이터 요청입니다.");
         }
+    }
+
+    public Locker saveLockerData(ChatRequest chatRequest) {
+        int lockerNumber = Integer.parseInt(chatRequest.getData().get("lockerNumber").toString());
+        String lockerPassword = chatRequest.getData().get("lockerPassword").toString();
+
+        Locker locker = Locker.builder()
+                .lockerNumber(lockerNumber)
+                .password(lockerPassword)
+                .isExists(true)
+                .tradeDate(LocalDate.now())
+                .build();
+
+        return lockerRepository.save(locker);
     }
 
     public String purchaseBookStart(ChatRoom chatRoom, String userName, String sellerNickName) {
@@ -71,6 +94,19 @@ public class ChatLogicHandler {
         chatRoom.addSellerChat(SellerChat.buildSellerChat(sellerMessage, BOOK_PURCHASE_START));
         chatRoom.addBuyerChat(BuyerChat.buildBuyerChat(buyerMessage, BOOK_PURCHASE_START));
         return sellerMessage;
+    }
+
+    public String purchaseBookWarning(ChatRoom chatRoom) {
+        String message = String.format("전공책은 사물함 설정 이후 “24시간 이내\"에 수령되어야 해요!\n" +
+                "\n" +
+                "불가피한 이유로 “중지\"를 원하실 땐 아래의 정보로 문의 주시길 바랍니다:)\n" +
+                "\n" +
+                "번호) 010-4487-3122 \n" +
+                "메일) 4983service@gmail.com");
+
+        chatRoom.addSellerChat(SellerChat.buildSellerChat(message, BOOK_PURCHASE_START));
+        chatRoom.addBuyerChat(BuyerChat.buildBuyerChat(message, BOOK_PURCHASE_START));
+        return message;
     }
 
     public String purchaseBookApprove(ChatRoom chatRoom, String sellerNickName) {
