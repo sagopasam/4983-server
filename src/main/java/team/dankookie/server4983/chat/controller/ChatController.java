@@ -41,8 +41,8 @@ public class ChatController {
     }
 
     @GetMapping("/chat-room/{chatRoom}")
-    public ResponseEntity getChatRoom(@PathVariable long chatRoom) {
-        ChatRoomResponse result = chatService.getChatRoom(chatRoom);
+    public ResponseEntity getChatRoom(@PathVariable long chatRoom , HttpServletRequest request) {
+        ChatRoomResponse result = chatService.getChatRoom(chatRoom , request);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

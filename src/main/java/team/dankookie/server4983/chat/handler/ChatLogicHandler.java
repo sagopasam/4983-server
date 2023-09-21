@@ -3,6 +3,8 @@ package team.dankookie.server4983.chat.handler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import team.dankookie.server4983.book.domain.Locker;
+import team.dankookie.server4983.book.repository.locker.LockerRepository;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
@@ -13,6 +15,7 @@ import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
 import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.member.domain.Member;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static team.dankookie.server4983.chat.constant.ContentType.*;
@@ -23,6 +26,7 @@ public class ChatLogicHandler {
 
     private final ChatRoomRepository chatRoomRepository;
     private final FcmService fcmService;
+    private final LockerRepository lockerRepository;
 
     @Transactional
     public void chatLoginHandler(ChatRequest chatRequest, Member buyer) {
@@ -51,6 +55,7 @@ public class ChatLogicHandler {
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(buyer.getId(), paymentConfirmationCompleteMessageList.get(1)));
                 break;
             case BOOK_PLACEMENT_COMPLETE: // SELLCHAT_5 서적 배치 완료
+                saveLockerData(chatRequest);
                 String bookPlacementCompleteBuyerMessage = completeSelectLockAndPassword(chatRoom, chatRequest);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(buyer.getId(), bookPlacementCompleteBuyerMessage));
                 break;
@@ -64,6 +69,20 @@ public class ChatLogicHandler {
             default:
                 throw new ChatException("잘못된 데이터 요청입니다.");
         }
+    }
+
+    public Locker saveLockerData(ChatRequest chatRequest) {
+        int lockerNumber = Integer.parseInt(chatRequest.getData().get("lockerNumber").toString());
+        String lockerPassword = chatRequest.getData().get("lockerPassword").toString();
+
+        Locker locker = Locker.builder()
+                .lockerNumber(lockerNumber)
+                .password(lockerPassword)
+                .isExists(true)
+                .tradeDate(LocalDate.now())
+                .build();
+
+        return lockerRepository.save(locker);
     }
 
     public String purchaseBookStart(ChatRoom chatRoom, String userName, String sellerNickName) {
