@@ -31,7 +31,7 @@ class MemberReadControllerTest extends BaseControllerTest {
         //given
         String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
-        when(memberService.findMemberCollegeAndDepartment(AccessToken.of(accessToken)))
+        when(memberService.findMemberCollegeAndDepartment(AccessToken.of(accessToken, "nickname")))
                 .thenReturn(MemberCollegeAndDepartment.of(Department.BUSINESS));
         //when
         ResultActions resultActions = mockMvc.perform(get("/api/v1/college-department")

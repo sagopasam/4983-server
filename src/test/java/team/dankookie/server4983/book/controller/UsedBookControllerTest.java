@@ -170,7 +170,7 @@ class UsedBookControllerTest extends BaseControllerTest {
 
         final Long usedBookId = 1L;
 
-        when(usedBookService.deleteUsedBook(usedBookId, AccessToken.of(accessToken)))
+        when(usedBookService.deleteUsedBook(usedBookId, AccessToken.of(accessToken, "nickname")))
                 .thenReturn(true);
         //when
         ResultActions resultActions = mockMvc.perform(delete(API + "/used-book/{id}", usedBookId)
@@ -197,7 +197,7 @@ class UsedBookControllerTest extends BaseControllerTest {
         final Long usedBookId = 1L;
 
         Mockito.
-        when(usedBookService.deleteUsedBook(usedBookId, AccessToken.of(accessToken)))
+        when(usedBookService.deleteUsedBook(usedBookId, AccessToken.of(accessToken, "nickname")))
                 .thenThrow(new IllegalArgumentException("글을 올린 사용자만 삭제할 수 있습니다."));
 
         //when
