@@ -11,6 +11,7 @@ import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.repository.MemberRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -45,7 +46,7 @@ class BookSalesDetailRepositoryTest extends BaseRepositoryTest{
         UsedBook bookSalesOn = UsedBook.builder()
                 .bookStatus(BookStatus.SALE)
                 .sellerMember(member)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .price(10000)
                 .name("책이름")
                 .build();
@@ -81,7 +82,7 @@ class BookSalesDetailRepositoryTest extends BaseRepositoryTest{
         UsedBook bookSalesOn = UsedBook.builder()
                 .bookStatus(BookStatus.SOLD)
                 .sellerMember(member)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .price(10000)
                 .name("책이름")
                 .build();

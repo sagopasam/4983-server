@@ -70,7 +70,7 @@ public class UsedBookService {
                 bookImageUrlList,
                 usedBook.getName(),
                 usedBook.getPublisher(),
-                usedBook.getTradeAvailableDate(),
+                usedBook.getTradeAvailableDatetime(),
                 usedBook.getIsUnderlinedOrWrite(),
                 usedBook.getIsDiscolorationAndDamage(),
                 usedBook.getIsCoverDamaged(),

@@ -40,7 +40,7 @@ class UsedBookListControllerTest extends BaseControllerTest {
                 .imageUrl("imageUrl")
                 .bookStatus(BookStatus.SALE)
                 .name("책이름")
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .createdAt(LocalDateTime.now())
                 .price(10000)
                 .build();
@@ -49,7 +49,7 @@ class UsedBookListControllerTest extends BaseControllerTest {
                 .imageUrl("imageUrl")
                 .bookStatus(BookStatus.TRADE)
                 .name("책이름")
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .createdAt(LocalDateTime.now())
                 .price(100000)
                 .build();
@@ -77,7 +77,7 @@ class UsedBookListControllerTest extends BaseControllerTest {
                                         fieldWithPath("[].imageUrl").description("책 이미지"),
                                         fieldWithPath("[].bookStatus").description("책 상태"),
                                         fieldWithPath("[].name").description("책 이름"),
-                                        fieldWithPath("[].tradeAvailableDate").description("거래 가능 날짜"),
+                                        fieldWithPath("[].tradeAvailableDatetime").description("거래 가능 날짜"),
                                         fieldWithPath("[].createdAt").description("책 등록 날짜"),
                                         fieldWithPath("[].price").description("책 가격")
                                 )
@@ -95,7 +95,7 @@ class UsedBookListControllerTest extends BaseControllerTest {
                 .imageUrl("imageUrl")
                 .bookStatus(BookStatus.SALE)
                 .name("책이름")
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .createdAt(LocalDateTime.now())
                 .price(10000)
                 .build();
@@ -104,7 +104,7 @@ class UsedBookListControllerTest extends BaseControllerTest {
                 .imageUrl("imageUrl")
                 .bookStatus(BookStatus.TRADE)
                 .name("책이름")
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .createdAt(LocalDateTime.now())
                 .price(100000)
                 .build();
@@ -140,7 +140,7 @@ class UsedBookListControllerTest extends BaseControllerTest {
                                         fieldWithPath("[].imageUrl").description("책 이미지"),
                                         fieldWithPath("[].bookStatus").description("책 상태"),
                                         fieldWithPath("[].name").description("책 이름"),
-                                        fieldWithPath("[].tradeAvailableDate").description("거래 가능 날짜"),
+                                        fieldWithPath("[].tradeAvailableDatetime").description("거래 가능 날짜"),
                                         fieldWithPath("[].createdAt").description("책 등록 날짜"),
                                         fieldWithPath("[].price").description("책 가격")
                                 )

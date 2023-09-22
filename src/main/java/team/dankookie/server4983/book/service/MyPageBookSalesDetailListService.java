@@ -47,7 +47,7 @@ public class MyPageBookSalesDetailListService {
                     .imageUrl(firstImageUrl)
                     .bookStatus(usedBook.getBookStatus())
                     .name(usedBook.getName())
-                    .tradeAvailableDate(usedBook.getTradeAvailableDate())
+                    .tradeAvailableDatetime(usedBook.getTradeAvailableDatetime())
                     .createdAt(usedBook.getCreatedAt())
                     .price(usedBook.getPrice())
                     .build();
