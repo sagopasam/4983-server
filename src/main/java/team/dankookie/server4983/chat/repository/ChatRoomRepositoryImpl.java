@@ -1,22 +1,29 @@
 package team.dankookie.server4983.chat.repository;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import static  team.dankookie.server4983.book.domain.QUsedBook.usedBook;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
+import team.dankookie.server4983.chat.dto.ChatListResponse;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.domain.QMember;
 
-import static team.dankookie.server4983.member.domain.QMember.member;
-import static team.dankookie.server4983.chat.domain.QBuyerChat.buyerChat;
-import static team.dankookie.server4983.chat.domain.QSellerChat.sellerChat;
-import static team.dankookie.server4983.chat.domain.QChatRoom.chatRoom;
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+
+import static team.dankookie.server4983.book.domain.QBookImage.bookImage;
+import static team.dankookie.server4983.book.domain.QUsedBook.usedBook;
+import static team.dankookie.server4983.chat.domain.QBuyerChat.buyerChat;
+import static team.dankookie.server4983.chat.domain.QChatRoom.chatRoom;
+import static team.dankookie.server4983.chat.domain.QSellerChat.sellerChat;
+import static team.dankookie.server4983.member.domain.QMember.member;
 
 @RequiredArgsConstructor
 public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
@@ -117,6 +124,103 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                 .fetchOne();
 
         return Optional.ofNullable(result);
+    }
+
+    @Override
+    public List<ChatListResponse> findByChatroomWithNickname(String nickname) {
+        List<ChatListResponse> chatListResponseList = jpaQueryFactory
+                .select(
+                        Projections.constructor(
+                                ChatListResponse.class,
+                                chatRoom.chatRoomId,
+                                usedBook.name,
+                                getLastBuyerMessage(),
+                                getLastBuyerMessageCreatedAt(),
+                                getLastBuyerMessageIsRead(),
+                                getFirstUsedBookImageUrl()
+                        ))
+                .from(chatRoom)
+                .join(chatRoom.usedBook, usedBook)
+                .where(chatRoom.buyer.nickname.eq(nickname))
+                .fetch();
+
+        chatListResponseList.addAll(jpaQueryFactory
+                .select(
+                        Projections.constructor(
+                                ChatListResponse.class,
+                                chatRoom.chatRoomId,
+                                usedBook.name,
+                                getLastSellerMessage(),
+                                getLastSellerMessageCreatedAt(),
+                                getLastSellerMessageIsRead(),
+                                getFirstUsedBookImageUrl()
+                        ))
+                .from(chatRoom)
+                .join(chatRoom.usedBook, usedBook)
+                .where(chatRoom.seller.nickname.eq(nickname))
+                .fetch());
+
+        if (chatListResponseList.size() == 0) {
+            return chatListResponseList;
+        }
+        chatListResponseList.sort(Comparator.comparing(ChatListResponse::createdAt).reversed());
+        return chatListResponseList;
+    }
+
+    private static JPQLQuery<Boolean> getLastSellerMessageIsRead() {
+        return JPAExpressions.select(sellerChat.isRead)
+                .from(sellerChat)
+                .where(sellerChat.chatRoom.chatRoomId.eq(chatRoom.chatRoomId))
+                .orderBy(sellerChat.createdAt.desc())
+                .limit(1);
+    }
+
+    private static JPQLQuery<LocalDateTime> getLastSellerMessageCreatedAt() {
+        return JPAExpressions.select(sellerChat.createdAt)
+                .from(sellerChat)
+                .where(sellerChat.chatRoom.chatRoomId.eq(chatRoom.chatRoomId))
+                .orderBy(sellerChat.createdAt.desc())
+                .limit(1);
+    }
+
+    private static JPQLQuery<String> getLastSellerMessage() {
+        return JPAExpressions.select(sellerChat.message)
+                .from(sellerChat)
+                .where(sellerChat.chatRoom.chatRoomId.eq(chatRoom.chatRoomId))
+                .orderBy(sellerChat.createdAt.desc())
+                .limit(1);
+    }
+
+    private static JPQLQuery<String> getFirstUsedBookImageUrl() {
+        return JPAExpressions.select(bookImage.imageUrl)
+                .from(bookImage)
+                .where(bookImage.usedBook.id.eq(usedBook.id))
+                .orderBy(bookImage.id.asc())
+                .limit(1);
+    }
+
+    private static JPQLQuery<Boolean> getLastBuyerMessageIsRead() {
+        return JPAExpressions.select(buyerChat.isRead)
+                .from(buyerChat)
+                .where(buyerChat.chatRoom.chatRoomId.eq(chatRoom.chatRoomId))
+                .orderBy(buyerChat.createdAt.desc())
+                .limit(1);
+    }
+
+    private static JPQLQuery<LocalDateTime> getLastBuyerMessageCreatedAt() {
+        return JPAExpressions.select(buyerChat.createdAt)
+                .from(buyerChat)
+                .where(buyerChat.chatRoom.chatRoomId.eq(chatRoom.chatRoomId))
+                .orderBy(buyerChat.createdAt.desc())
+                .limit(1);
+    }
+
+    private static JPQLQuery<String> getLastBuyerMessage() {
+        return JPAExpressions.select(buyerChat.message)
+                .from(buyerChat)
+                .where(buyerChat.chatRoom.chatRoomId.eq(chatRoom.chatRoomId))
+                .orderBy(buyerChat.createdAt.desc())
+                .limit(1);
     }
 
 }

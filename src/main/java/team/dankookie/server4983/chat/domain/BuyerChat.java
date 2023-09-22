@@ -39,10 +39,22 @@ public class BuyerChat {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_room_id")
+    private ChatRoom chatRoom;
+
     public static BuyerChat buildBuyerChat(String message , ContentType contentType) {
         return BuyerChat.builder()
                 .message(message)
                 .contentType(contentType)
+                .build();
+    }
+
+    public static BuyerChat buildBuyerChat(String message , ContentType contentType, ChatRoom chatRoom) {
+        return BuyerChat.builder()
+                .message(message)
+                .contentType(contentType)
+                .chatRoom(chatRoom)
                 .build();
     }
 
