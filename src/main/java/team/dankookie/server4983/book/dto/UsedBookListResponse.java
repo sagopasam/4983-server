@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record UsedBookListResponse (
+        Long usedBookId,
         String imageUrl,
         BookStatus bookStatus,
         String name,

@@ -490,9 +490,9 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 306
+Content-Length: 337
 
-[{"imageUrl":"imageUrl","bookStatus":"SALE","name":"책이름","tradeAvailableDate":"2023-09-22","createdAt":"2023-09-22T16:43:38.94651","price":10000},{"imageUrl":"imageUrl","bookStatus":"TRADE","name":"책이름","tradeAvailableDate":"2023-09-22","createdAt":"2023-09-22T16:43:38.946525","price":100000}]</code></pre>
+[{"usedBookId":1,"imageUrl":"imageUrl","bookStatus":"SALE","name":"책이름","tradeAvailableDate":"2023-09-22","createdAt":"2023-09-22T18:22:11.847366","price":10000},{"usedBookId":2,"imageUrl":"imageUrl","bookStatus":"TRADE","name":"책이름","tradeAvailableDate":"2023-09-22","createdAt":"2023-09-22T18:22:11.847376","price":100000}]</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -509,6 +509,11 @@ Content-Length: 306
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].usedBookId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">책 게시글 id</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].imageUrl</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
@@ -592,9 +597,9 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 307
+Content-Length: 337
 
-[{"imageUrl":"imageUrl","bookStatus":"SALE","name":"책이름","tradeAvailableDate":"2023-09-22","createdAt":"2023-09-22T16:43:38.960222","price":10000},{"imageUrl":"imageUrl","bookStatus":"TRADE","name":"책이름","tradeAvailableDate":"2023-09-22","createdAt":"2023-09-22T16:43:38.960226","price":100000}]</code></pre>
+[{"usedBookId":1,"imageUrl":"imageUrl","bookStatus":"SALE","name":"책이름","tradeAvailableDate":"2023-09-22","createdAt":"2023-09-22T18:22:11.856714","price":10000},{"usedBookId":2,"imageUrl":"imageUrl","bookStatus":"TRADE","name":"책이름","tradeAvailableDate":"2023-09-22","createdAt":"2023-09-22T18:22:11.856718","price":100000}]</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -611,6 +616,11 @@ Content-Length: 307
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].usedBookId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">책 게시글 id</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>[].imageUrl</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
@@ -748,7 +758,7 @@ GUGAK("국악전공", MUSIC_AND_ARTS);</pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/my-pages/book-sales-detail-list?canBuy=true HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk1MzY4NjE3LCJleHAiOjE2OTUzNzA0MTd9.LvsWsIeLJCwsKYdMJJ-jnRXEd3kB-IOuZwXuFoJeY_Q
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk1Mzc0NTMwLCJleHAiOjE2OTUzNzYzMzB9.D0ugPzYCEccSUbinge3QsSfFpQKiqxzkYZBy1mFyo3o
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -841,7 +851,7 @@ Content-Length: 50
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/v1/used-book HTTP/1.1
 Content-Type: multipart/form-data; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk1MzY4NjE4LCJleHAiOjE2OTUzNjg2MTl9.ppSOZGJHlA8A8ko2OOeS6z5cjrijaogXrCcCkj34AF4
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk1Mzc0NTMxLCJleHAiOjE2OTUzNzQ1MzJ9.4sDsfaknh88-4rnTtGfCZ5IoXprPmKKCuYXOQan-eJ4
 Host: localhost:8080
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
@@ -1150,7 +1160,7 @@ Content-Length: 378
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/v1/used-book/1 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk1MzY4NjE4LCJleHAiOjE2OTUzNjg2MTl9.ppSOZGJHlA8A8ko2OOeS6z5cjrijaogXrCcCkj34AF4
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk1Mzc0NTMxLCJleHAiOjE2OTUzNzQ1MzJ9.4sDsfaknh88-4rnTtGfCZ5IoXprPmKKCuYXOQan-eJ4
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1211,7 +1221,7 @@ Host: localhost:8080</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/v1/used-book/1/image/image.png HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk1MzY4NjE4LCJleHAiOjE2OTUzNjg2MTl9.ppSOZGJHlA8A8ko2OOeS6z5cjrijaogXrCcCkj34AF4
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk1Mzc0NTMxLCJleHAiOjE2OTUzNzQ1MzJ9.4sDsfaknh88-4rnTtGfCZ5IoXprPmKKCuYXOQan-eJ4
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1277,7 +1287,7 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/v1/used-book/1 HTTP/1.1
 Content-Type: multipart/form-data; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk1MzY4NjE4LCJleHAiOjE2OTUzNjg2MTl9.ppSOZGJHlA8A8ko2OOeS6z5cjrijaogXrCcCkj34AF4
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk1Mzc0NTMxLCJleHAiOjE2OTUzNzQ1MzJ9.4sDsfaknh88-4rnTtGfCZ5IoXprPmKKCuYXOQan-eJ4
 Host: localhost:8080
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
@@ -1458,7 +1468,7 @@ Content-Length: 16
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/my-pages/book-purchase-detail-list?bookStatus=SOLD HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk1MzY4NjE2LCJleHAiOjE2OTUzNzA0MTZ9.1M5vrc_bkgrdEs2ynbaHY6wHxVAqMO9GMTU70zePB2g
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk1Mzc0NTI5LCJleHAiOjE2OTUzNzYzMjl9.ZX-vfI5JDNn_EM_wgdoWJTH2nVn8P7pAsI8OyBtBWsY
 Host: localhost:8080</code></pre>
 </div>
 </div>

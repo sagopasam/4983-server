@@ -37,6 +37,7 @@ class UsedBookListControllerTest extends BaseControllerTest {
         final boolean canBuyElseAll = false;
 
         UsedBookListResponse usedBookListResponse1 = UsedBookListResponse.builder()
+                .usedBookId(1L)
                 .imageUrl("imageUrl")
                 .bookStatus(BookStatus.SALE)
                 .name("책이름")
@@ -46,6 +47,7 @@ class UsedBookListControllerTest extends BaseControllerTest {
                 .build();
 
         UsedBookListResponse usedBookListResponse2 = UsedBookListResponse.builder()
+                .usedBookId(2L)
                 .imageUrl("imageUrl")
                 .bookStatus(BookStatus.TRADE)
                 .name("책이름")
@@ -74,6 +76,7 @@ class UsedBookListControllerTest extends BaseControllerTest {
                                         parameterWithName("canBuyElseAll").description("구매 가능 여부")
                                 ),
                                 responseFields(
+                                        fieldWithPath("[].usedBookId").description("책 게시글 id"),
                                         fieldWithPath("[].imageUrl").description("책 이미지"),
                                         fieldWithPath("[].bookStatus").description("책 상태"),
                                         fieldWithPath("[].name").description("책 이름"),
@@ -92,6 +95,7 @@ class UsedBookListControllerTest extends BaseControllerTest {
         final boolean canBuyElseAll = false;
 
         UsedBookListResponse usedBookListResponse1 = UsedBookListResponse.builder()
+                .usedBookId(1L)
                 .imageUrl("imageUrl")
                 .bookStatus(BookStatus.SALE)
                 .name("책이름")
@@ -101,6 +105,7 @@ class UsedBookListControllerTest extends BaseControllerTest {
                 .build();
 
         UsedBookListResponse usedBookListResponse2 = UsedBookListResponse.builder()
+                .usedBookId(2L)
                 .imageUrl("imageUrl")
                 .bookStatus(BookStatus.TRADE)
                 .name("책이름")
@@ -132,11 +137,13 @@ class UsedBookListControllerTest extends BaseControllerTest {
                 .andDo(
                         document("used-book-list/getUsedBookListWithCollegeAndDepartment/success",
                                 queryParameters(
+
                                         parameterWithName("college").description("단과대학 enum 리스트"),
                                         parameterWithName("department").description("학과 enum 리스트"),
                                         parameterWithName("canBuyElseAll").description("구매 가능 여부")
                                 ),
                                 responseFields(
+                                        fieldWithPath("[].usedBookId").description("책 게시글 id"),
                                         fieldWithPath("[].imageUrl").description("책 이미지"),
                                         fieldWithPath("[].bookStatus").description("책 상태"),
                                         fieldWithPath("[].name").description("책 이름"),
