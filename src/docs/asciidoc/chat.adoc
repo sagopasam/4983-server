@@ -21,3 +21,18 @@ include::{snippets}/chat-list/success/request-headers.adoc[]
 
 include::{snippets}/chat-list/success/http-response.adoc[]
 include::{snippets}/chat-list/success/response-fields.adoc[]
+
+=== 유저의 채팅 메시지 리스트 반환 (성공)
+
+==== Request
+
+include::{snippets}/chat/get-chatting-data/success/http-request.adoc[]
+PathVariable::
+include::{snippets}/chat/get-chatting-data/success/path-parameters.adoc[]
+RequestHeader::
+include::{snippets}/chat/get-chatting-data/success/request-headers.adoc[]
+
+==== Response
+
+include::{snippets}/chat/get-chatting-data/success/http-response.adoc[]
+include::{snippets}/chat/get-chatting-data/success/response-fields.adoc[]
