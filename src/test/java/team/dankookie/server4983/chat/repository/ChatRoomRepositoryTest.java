@@ -81,4 +81,28 @@ class ChatRoomRepositoryTest extends BaseRepositoryTest {
         assertThat(chatListResponseList).hasSize(1);
     }
 
+    @Test
+    void chatRoom에_구매자의_닉네임과_일치하는지_검증() throws Exception {
+        String nickname = "testNickname";
+        Member member = MemberFixture.createMemberByNickname(nickname);
+        Member otherMember = MemberFixture.createMember();
+        memberRepository.save(member);
+        memberRepository.save(otherMember);
+
+        UsedBook usedBook1 = UsedBook.builder()
+                .bookStatus(BookStatus.SALE)
+                .name("사회과학통계방법")
+                .buyerMember(otherMember)
+                .sellerMember(member)
+                .price(1000)
+                .tradeAvailableDate(LocalDate.now())
+                .build();
+        usedBookRepository.save(usedBook1);
+
+        ChatRoom chatRoom = ChatRoom.buildChatRoom(member, otherMember, usedBook1);
+        chatRoomRepository.save(chatRoom);
+
+        boolean isExists = chatRoomRepository.existsByChatRoomIdAndBuyer_Nickname(1L, "testNickname");
+    }
+
 }

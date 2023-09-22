@@ -10,6 +10,7 @@ import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.chat.dto.ChatListResponse;
+import team.dankookie.server4983.chat.dto.ChatMessageResponse;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.domain.QMember;
 
@@ -165,6 +166,53 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
         }
         chatListResponseList.sort(Comparator.comparing(ChatListResponse::createdAt).reversed());
         return chatListResponseList;
+    }
+
+    @Override
+    public List<ChatMessageResponse> findChatMessageByChatroomIdWithBuyerNickname(long chatRoomId, String nickname) {
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                        ChatMessageResponse.class,
+                        buyerChat.message,
+                        buyerChat.contentType,
+                        buyerChat.createdAt
+                )).from(buyerChat)
+                .where(buyerChat.chatRoom.chatRoomId.eq(chatRoomId),
+                        buyerChat.chatRoom.buyer.nickname.eq(nickname)
+                )
+                .orderBy(buyerChat.createdAt.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<ChatMessageResponse> findChatMessageByChatroomIdWithSellerNickname(long chatRoomId, String nickname) {
+        return jpaQueryFactory
+                .select(Projections.constructor(
+                        ChatMessageResponse.class,
+                        sellerChat.message,
+                        sellerChat.contentType,
+                        sellerChat.createdAt
+                )).from(sellerChat)
+                .where(sellerChat.chatRoom.chatRoomId.eq(chatRoomId),
+                        sellerChat.chatRoom.seller.nickname.eq(nickname)
+                ).orderBy(sellerChat.createdAt.desc())
+                .fetch();
+    }
+
+    @Override
+    public void updateSellerChattingToRead(long chatRoomId) {
+        jpaQueryFactory.update(sellerChat)
+                .set(sellerChat.isRead, true)
+                .where(sellerChat.chatRoom.chatRoomId.eq(chatRoomId))
+                .execute();
+    }
+
+    @Override
+    public void updateBuyerChattingToRead(long chatRoomId) {
+        jpaQueryFactory.update(buyerChat)
+                .set(buyerChat.isRead, true)
+                .where(buyerChat.chatRoom.chatRoomId.eq(chatRoomId))
+                .execute();
     }
 
     private static JPQLQuery<Boolean> getLastSellerMessageIsRead() {

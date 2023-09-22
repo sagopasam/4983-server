@@ -10,10 +10,7 @@ import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
-import team.dankookie.server4983.chat.dto.ChatListResponse;
-import team.dankookie.server4983.chat.dto.ChatRequest;
-import team.dankookie.server4983.chat.dto.ChatRoomRequest;
-import team.dankookie.server4983.chat.dto.ChatRoomResponse;
+import team.dankookie.server4983.chat.dto.*;
 import team.dankookie.server4983.chat.exception.ChatException;
 import team.dankookie.server4983.chat.handler.ChatLogicHandler;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
@@ -87,19 +84,25 @@ public class ChatService {
     }
 
     @Transactional
-    public Object getChattingData(long chatRoomId , String type) {
-        if(type.equals("seller")) {
-            chatRoomRepository.modifySellerChattingToRead(chatRoomId);
-            List<SellerChat> result = chatRoomRepository.getSellerChatting(chatRoomId);
+    public List<ChatMessageResponse> getChattingData(long chatRoomId, AccessToken accessToken) {
 
-            return result;
-        } else if(type.equals("buyer")) {
-            chatRoomRepository.modifyBuyerChattingToRead(chatRoomId);
-            List<BuyerChat> result = chatRoomRepository.getBuyerChatting(chatRoomId);
+        String nickname = accessToken.nickname();
 
-            return result;
-        } else {
-            throw new ChatException("잘못된 타입입니다. seller , buyer 중 하나만 선택해주세요.");
+        boolean isMemberBuyer = chatRoomRepository.existsByChatRoomIdAndBuyer_Nickname(chatRoomId, nickname);
+
+        if (!isMemberBuyer) {
+            boolean isMemberSeller = chatRoomRepository.existsByChatRoomIdAndSeller_Nickname(chatRoomId, nickname);
+
+            if (!isMemberSeller) {
+                throw new ChatException("채팅방에 속해있지 않습니다.");
+            } else {
+                chatRoomRepository.updateSellerChattingToRead(chatRoomId);
+                return chatRoomRepository.findChatMessageByChatroomIdWithSellerNickname(chatRoomId, nickname);
+            }
+
+        }else {
+            chatRoomRepository.updateBuyerChattingToRead(chatRoomId);
+            return chatRoomRepository.findChatMessageByChatroomIdWithBuyerNickname(chatRoomId, nickname);
         }
     }
 

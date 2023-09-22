@@ -5,12 +5,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import team.dankookie.server4983.chat.dto.ChatMessageResponse;
 import team.dankookie.server4983.chat.dto.ChatRequest;
 import team.dankookie.server4983.chat.dto.ChatRoomRequest;
 import team.dankookie.server4983.chat.dto.ChatRoomResponse;
 import team.dankookie.server4983.chat.service.ChatService;
+import team.dankookie.server4983.jwt.dto.AccessToken;
 
 import javax.security.auth.login.AccountException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,11 +29,11 @@ public class ChatController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/chat/{chatRoomId}/{type}")
-    public ResponseEntity getChattingData(@PathVariable long chatRoomId , @PathVariable String type) {
-        Object result = chatService.getChattingData(chatRoomId , type);
+    @GetMapping("/chat/{chatRoomId}")
+    public ResponseEntity<List<ChatMessageResponse>> getChattingData(@PathVariable long chatRoomId, AccessToken accessToken) {
+        List<ChatMessageResponse> chattingMessageList = chatService.getChattingData(chatRoomId, accessToken);
 
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok().body(chattingMessageList);
     }
 
     @PostMapping("/chat-room")
