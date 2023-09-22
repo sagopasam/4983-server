@@ -71,7 +71,7 @@ class UsedBookServiceTest extends BaseServiceTest {
                 true,
                 true
         );
-        final AccessToken accessToken = AccessToken.of("accessToken");
+        final AccessToken accessToken = AccessToken.of("accessToken", "nickname");
         final String nickname = "nickname";
         final Member member = Member.builder().build();
         final long usedBookId = 1L;
@@ -144,7 +144,7 @@ class UsedBookServiceTest extends BaseServiceTest {
         when(usedBookRepository.findById(any()))
                 .thenReturn(Optional.of(UsedBook.builder().build()));
         //when
-        boolean isDeleted = usedBookService.deleteUsedBook(usedBookId, AccessToken.of("accessToken"));
+        boolean isDeleted = usedBookService.deleteUsedBook(usedBookId, AccessToken.of("accessToken", nickname));
 
         //then
         assertThat(isDeleted).isTrue();
@@ -166,7 +166,7 @@ class UsedBookServiceTest extends BaseServiceTest {
         //when
         //then
         assertThatThrownBy(() -> {
-            usedBookService.deleteUsedBook(usedBookId, AccessToken.of("accessToken"));
+            usedBookService.deleteUsedBook(usedBookId, AccessToken.of("accessToken", nickname));
         })
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("글을 올린 사용자만 삭제할 수 있습니다.");

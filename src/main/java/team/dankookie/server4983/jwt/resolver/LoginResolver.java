@@ -43,6 +43,8 @@ public class LoginResolver implements HandlerMethodArgumentResolver {
             throw new NotAuthorizedException();
         }
 
-        return AccessToken.of(accessToken);
+        String nickname = jwtTokenUtils.getNickname(accessToken, tokenSecretKey.getSecretKey());
+
+        return AccessToken.of(accessToken, nickname);
     }
 }
