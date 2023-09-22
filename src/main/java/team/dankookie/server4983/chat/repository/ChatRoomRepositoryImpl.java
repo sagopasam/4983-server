@@ -180,7 +180,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                 .where(buyerChat.chatRoom.chatRoomId.eq(chatRoomId),
                         buyerChat.chatRoom.buyer.nickname.eq(nickname)
                 )
-                .orderBy(buyerChat.createdAt.desc())
+                .orderBy(buyerChat.createdAt.asc())
                 .fetch();
     }
 
@@ -195,7 +195,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                 )).from(sellerChat)
                 .where(sellerChat.chatRoom.chatRoomId.eq(chatRoomId),
                         sellerChat.chatRoom.seller.nickname.eq(nickname)
-                ).orderBy(sellerChat.createdAt.desc())
+                ).orderBy(sellerChat.createdAt.asc())
                 .fetch();
     }
 
