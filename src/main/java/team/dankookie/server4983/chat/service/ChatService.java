@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
+import team.dankookie.server4983.chat.constant.ContentType;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
@@ -41,36 +42,42 @@ public class ChatService {
     private final TokenSecretKey tokenSecretKey;
 
     @Transactional
-    public void chatRequestHandler(ChatRequest chatRequest , HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
-        String userName = jwtTokenUtils.getNickname(token , tokenSecretKey.getSecretKey());
+    public void chatRequestHandler(ChatRequest chatRequest , AccessToken accessToken) {
+        String userName = accessToken.nickname();
         Member member = memberService.findMemberByNickname(userName);
 
         chatLogicHandler.chatLoginHandler(chatRequest , member);
     }
 
     @Transactional
-    public ChatRoomResponse createChatRoom(ChatRoomRequest chatRoomRequest , HttpServletRequest request) throws AccountException {
-        String token = request.getHeader("Authorization").substring(7);
-        String userName = jwtTokenUtils.getNickname(token , tokenSecretKey.getSecretKey());
+    public ChatRoomResponse createChatRoom(ChatRoomRequest chatRoomRequest , AccessToken accessToken) throws AccountException {
+        String nickname = accessToken.nickname();
 
         UsedBook usedBook = usedBookRepository.findById(chatRoomRequest.getSalesPost())
                 .orElseThrow(() -> new ChatException("거래 글을 찾을 수 없습니다."));
         Member seller = usedBook.getSellerMember();
-        Member buyer = memberRepository.findByNickname(userName)
+        Member buyer = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new ChatException("사용자를 찾을 수 없습니다."));
 
-        if(seller.getNickname().equals(userName)) {
+        if(seller.getNickname().equals(nickname)) {
             throw new ChatException("자신의 판매글에 거래요청을 할 수 없습니다.");
         }
 
         Optional<ChatRoom> result = chatRoomRepository.findBookBySellerAndBuyerAndBook(seller , buyer , usedBook);
         if(result.isPresent()) {
-            return ChatRoomResponse.of(result.get() , userName);
+            return ChatRoomResponse.of(result.get() , nickname);
         }
         ChatRoom chatRoom = buildChatRoom(buyer , seller , usedBook);
 
-        return ChatRoomResponse.of(chatRoomRepository.save(chatRoom) , userName);
+
+        ChatRoom savedChatroom = chatRoomRepository.save(chatRoom);
+        ChatRequest chatRequest = ChatRequest.builder()
+                .chatRoomId(savedChatroom.getChatRoomId())
+                .contentType(ContentType.BOOK_PURCHASE_START)
+                .build();
+        chatRequestHandler(chatRequest , accessToken);
+
+        return ChatRoomResponse.of(savedChatroom , nickname);
     }
 
     public ChatRoomResponse getChatRoom(long chatRoom , HttpServletRequest request) {
