@@ -41,7 +41,6 @@ public class ChatService {
     private final JwtTokenUtils jwtTokenUtils;
     private final TokenSecretKey tokenSecretKey;
 
-    @Transactional
     public void chatRequestHandler(ChatRequest chatRequest , AccessToken accessToken) {
         String userName = accessToken.nickname();
         Member member = memberService.findMemberByNickname(userName);
@@ -49,7 +48,7 @@ public class ChatService {
         chatLogicHandler.chatLoginHandler(chatRequest , member);
     }
 
-    @Transactional
+//    @Transactional
     public ChatRoomResponse createChatRoom(ChatRoomRequest chatRoomRequest , AccessToken accessToken) throws AccountException {
         String nickname = accessToken.nickname();
 
@@ -69,8 +68,8 @@ public class ChatService {
         }
         ChatRoom chatRoom = buildChatRoom(buyer , seller , usedBook);
 
-
         ChatRoom savedChatroom = chatRoomRepository.save(chatRoom);
+
         ChatRequest chatRequest = ChatRequest.builder()
                 .chatRoomId(savedChatroom.getChatRoomId())
                 .contentType(ContentType.BOOK_PURCHASE_START)
