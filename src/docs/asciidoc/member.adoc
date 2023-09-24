@@ -241,3 +241,16 @@ include::{snippets}/member/collegeAndDepartment/success/request-headers.adoc[]
 
 include::{snippets}/member/collegeAndDepartment/success/http-response.adoc[]
 include::{snippets}/member/collegeAndDepartment/success/response-fields.adoc[]
+
+=== 회원 탈퇴 로직(성공)
+
+==== Request
+
+include::{snippets}/my-pages/member-withdraw/success/http-request.adoc[]
+
+==== queryParameter
+
+include::{snippets}/my-pages/member-withdraw/success/query-parameters.adoc[]
+
+==== Response
+include::{snippets}/my-pages/member-withdraw/success/http-response.adoc[]
