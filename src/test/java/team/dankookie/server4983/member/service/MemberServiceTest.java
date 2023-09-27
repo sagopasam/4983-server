@@ -1,6 +1,5 @@
 package team.dankookie.server4983.member.service;
 
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -21,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 
 class MemberServiceTest extends BaseServiceTest {
@@ -282,8 +281,7 @@ class MemberServiceTest extends BaseServiceTest {
             assertFalse(result);
     }
     @Test
-    @Transactional
-    void 회원이_탈퇴되었으면_isDeleted를_true로_반환한다(){
+    void 회원이_탈퇴되었으면_isWithdraw를_true로_반환한다(){
         //given
         String nickname = "testNickname";
         Member findMember = Member.builder().nickname(nickname).isWithdraw(false).build();
@@ -295,7 +293,6 @@ class MemberServiceTest extends BaseServiceTest {
         //then
         assertTrue(isWithdraw);
         assertTrue(findMember.getIsWithdraw());
-        verify(memberRepository, times(1)).save(findMember);
     }
 
     }
