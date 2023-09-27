@@ -1,9 +1,9 @@
 package team.dankookie.server4983.member.service;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import team.dankookie.server4983.common.BaseServiceTest;
@@ -19,8 +19,9 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 class MemberServiceTest extends BaseServiceTest {
@@ -279,6 +280,22 @@ class MemberServiceTest extends BaseServiceTest {
 
             //then
             assertFalse(result);
+    }
+    @Test
+    @Transactional
+    void 회원이_탈퇴되었으면_isDeleted를_true로_반환한다(){
+        //given
+        String nickname = "testNickname";
+        Member findMember = Member.builder().nickname(nickname).isWithdraw(false).build();
+        when(memberRepository.findByNickname("testNickname"))
+                .thenReturn(Optional.of(findMember));
+
+        //when
+        boolean isWithdraw = memberService.checkMemberAndWithdraw(nickname);
+        //then
+        assertTrue(isWithdraw);
+        assertTrue(findMember.getIsWithdraw());
+        verify(memberRepository, times(1)).save(findMember);
     }
 
     }

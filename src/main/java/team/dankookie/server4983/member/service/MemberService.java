@@ -1,6 +1,7 @@
 package team.dankookie.server4983.member.service;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -313,4 +314,16 @@ public class MemberService {
 
         return MemberCollegeAndDepartment.of(member.getDepartment());
     }
-}
+
+    @Transactional
+    public boolean checkMemberAndWithdraw(String nickname){
+        Member member = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+        if (!member.getIsWithdraw()) {
+            member.withdraw();
+            memberRepository.save(member);
+        }
+        return member.getIsWithdraw();
+    }
+    }
+

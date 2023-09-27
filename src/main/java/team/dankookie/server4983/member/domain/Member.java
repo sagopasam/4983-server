@@ -65,12 +65,15 @@ public class Member extends BaseEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @Column(columnDefinition = "boolean default false")
+    private Boolean isWithdraw;
+
     public void changePassword(String password) {
         this.password = password;
     }
 
     @Builder
-    public Member(Long id, String studentId, Department department, Integer yearOfAdmission, String nickname, String password, String phoneNumber, String accountHolder, AccountBank accountBank, String accountNumber, String imageUrl, Boolean marketingAgree, String firebaseToken, UserRole role) {
+    public Member(Long id, String studentId, Department department, Integer yearOfAdmission, String nickname, String password, String phoneNumber, String accountHolder, AccountBank accountBank, String accountNumber, String imageUrl, Boolean marketingAgree, String firebaseToken, UserRole role, Boolean isWithdraw) {
         this.id = id;
         this.studentId = studentId;
         this.department = department;
@@ -85,6 +88,12 @@ public class Member extends BaseEntity implements UserDetails {
         this.marketingAgree = marketingAgree;
         this.firebaseToken = firebaseToken;
         this.role = role;
+        this.isWithdraw = isWithdraw;
+    }
+    public void withdraw() {
+        if (!this.isWithdraw) {
+            this.isWithdraw = true;
+        }
     }
 
     @Override
