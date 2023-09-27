@@ -4,6 +4,8 @@ import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
+import team.dankookie.server4983.chat.dto.ChatListResponse;
+import team.dankookie.server4983.chat.dto.ChatMessageResponse;
 import team.dankookie.server4983.member.domain.Member;
 
 import java.util.List;
@@ -29,4 +31,12 @@ public interface ChatRoomRepositoryCustom {
 
     Optional<ChatRoom> findBookBySellerAndBuyerAndBook(Member seller, Member buyer, UsedBook usedBook);
 
+    List<ChatListResponse> findByChatroomWithNickname(String nickname);
+
+    List<ChatMessageResponse> findChatMessageByChatroomIdWithBuyerNickname(long chatRoomId, String nickname);
+    List<ChatMessageResponse> findChatMessageByChatroomIdWithSellerNickname(long chatRoomId, String nickname);
+
+    void updateSellerChattingToRead(long chatRoomId);
+
+    void updateBuyerChattingToRead(long chatRoomId);
 }

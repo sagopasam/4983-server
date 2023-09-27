@@ -2,23 +2,21 @@ package team.dankookie.server4983.chat.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team.dankookie.server4983.book.constant.BookStatus;
-import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
+import team.dankookie.server4983.chat.constant.ContentType;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
-import team.dankookie.server4983.chat.dto.ChatRequest;
-import team.dankookie.server4983.chat.dto.ChatRoomRequest;
-import team.dankookie.server4983.chat.dto.ChatRoomResponse;
+import team.dankookie.server4983.chat.dto.*;
 import team.dankookie.server4983.chat.exception.ChatException;
 import team.dankookie.server4983.chat.handler.ChatLogicHandler;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
+import team.dankookie.server4983.jwt.constants.TokenSecretKey;
+import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.constant.AccountBank;
 import team.dankookie.server4983.member.domain.Member;
@@ -26,7 +24,6 @@ import team.dankookie.server4983.member.repository.MemberRepository;
 import team.dankookie.server4983.member.service.MemberService;
 
 import javax.security.auth.login.AccountException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,78 +37,78 @@ public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final MemberRepository memberRepository;
     private final UsedBookRepository usedBookRepository;
-    private final JwtTokenUtils jwtTokenUtils;
     private final MemberService memberService;
+    private final JwtTokenUtils jwtTokenUtils;
+    private final TokenSecretKey tokenSecretKey;
 
-    @Value("${jwt.secret-key}")
-    private String key;
-
-    @Transactional
-    public void chatRequestHandler(ChatRequest chatRequest , HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
-        String userName = jwtTokenUtils.getNickname(token , key);
+    public void chatRequestHandler(ChatRequest chatRequest , AccessToken accessToken) {
+        String userName = accessToken.nickname();
         Member member = memberService.findMemberByNickname(userName);
 
         chatLogicHandler.chatLoginHandler(chatRequest , member);
     }
 
-    @Transactional
-    public ChatRoomResponse createChatRoom(ChatRoomRequest chatRoomRequest , HttpServletRequest request) throws AccountException {
-        String token = request.getHeader("Authorization").substring(7);
-        String userName = jwtTokenUtils.getNickname(token , key);
+//    @Transactional
+    public ChatRoomResponse createChatRoom(ChatRoomRequest chatRoomRequest , AccessToken accessToken) throws AccountException {
+        String nickname = accessToken.nickname();
 
-        /** FIXME
+        UsedBook usedBook = usedBookRepository.findById(chatRoomRequest.getSalesPost())
+                .orElseThrow(() -> new ChatException("거래 글을 찾을 수 없습니다."));
+        Member seller = usedBook.getSellerMember();
+        Member buyer = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new ChatException("사용자를 찾을 수 없습니다."));
 
-         - 추가 구현 -
-
-         거래 ID -> 거래 글 가져오기
-         거래 글 -> 책 정보와 구매자 정보 추출
-         책 정보와 구매자 정보 추출
-
-        */
-
-        // 임시 판매자
-        Member seller = memberRepository.findByNickname("DFGgt4t21Rr-351rfvZCVb")
-                .orElseGet(() -> memberRepository.save(createTemporaryMember()));
-
-        // 구매자
-        Member buyer = memberRepository.findByNickname(userName)
-                .orElseThrow(() -> new AccountException("판매자 정보를 찾을 수 없습니다."));
-
-        // 임시 책 정보
-        UsedBook usedBook = usedBookRepository.findByName(chatRoomRequest.getBookName())
-                .orElseGet(() -> usedBookRepository.save((new UsedBook(30L , chatRoomRequest.getBookName() , 400 , LocalDate.now() , "publisher" , College.LAW , Department.ACCOUNTING , BookStatus.SALE ,false , false , false, buyer , seller))));
+        if(seller.getNickname().equals(nickname)) {
+            throw new ChatException("자신의 판매글에 거래요청을 할 수 없습니다.");
+        }
 
         Optional<ChatRoom> result = chatRoomRepository.findBookBySellerAndBuyerAndBook(seller , buyer , usedBook);
         if(result.isPresent()) {
-            return ChatRoomResponse.of(result.get());
+            return ChatRoomResponse.of(result.get() , nickname);
         }
         ChatRoom chatRoom = buildChatRoom(buyer , seller , usedBook);
 
-        return ChatRoomResponse.of(chatRoomRepository.save(chatRoom));
+        ChatRoom savedChatroom = chatRoomRepository.save(chatRoom);
+
+        ChatRequest chatRequest = ChatRequest.builder()
+                .chatRoomId(savedChatroom.getChatRoomId())
+                .contentType(ContentType.BOOK_PURCHASE_START)
+                .build();
+        chatRequestHandler(chatRequest , accessToken);
+
+        return ChatRoomResponse.of(savedChatroom , nickname);
     }
 
-    public ChatRoomResponse getChatRoom(long chatRoom) {
+    public ChatRoomResponse getChatRoom(long chatRoom , HttpServletRequest request) {
+        String token = request.getHeader("Authorization").substring(7);
+        String userName = jwtTokenUtils.getNickname(token , tokenSecretKey.getSecretKey());
+
         ChatRoom result = chatRoomRepository.findById(chatRoom)
                 .orElseThrow(() -> new ChatException("존재하지 않는 채팅방 입니다."));
 
-        return ChatRoomResponse.of(result);
+        return ChatRoomResponse.of(result , userName);
     }
 
     @Transactional
-    public Object getChattingData(long chatRoomId , String type) {
-        if(type.equals("seller")) {
-            chatRoomRepository.modifySellerChattingToRead(chatRoomId);
-            List<SellerChat> result = chatRoomRepository.getSellerChatting(chatRoomId);
+    public List<ChatMessageResponse> getChattingData(long chatRoomId, AccessToken accessToken) {
 
-            return result;
-        } else if(type.equals("buyer")) {
-            chatRoomRepository.modifyBuyerChattingToRead(chatRoomId);
-            List<BuyerChat> result = chatRoomRepository.getBuyerChatting(chatRoomId);
+        String nickname = accessToken.nickname();
 
-            return result;
-        } else {
-            throw new ChatException("잘못된 타입입니다. seller , buyer 중 하나만 선택해주세요.");
+        boolean isMemberBuyer = chatRoomRepository.existsByChatRoomIdAndBuyer_Nickname(chatRoomId, nickname);
+
+        if (!isMemberBuyer) {
+            boolean isMemberSeller = chatRoomRepository.existsByChatRoomIdAndSeller_Nickname(chatRoomId, nickname);
+
+            if (!isMemberSeller) {
+                throw new ChatException("채팅방에 속해있지 않습니다.");
+            } else {
+                chatRoomRepository.updateSellerChattingToRead(chatRoomId);
+                return chatRoomRepository.findChatMessageByChatroomIdWithSellerNickname(chatRoomId, nickname);
+            }
+
+        }else {
+            chatRoomRepository.updateBuyerChattingToRead(chatRoomId);
+            return chatRoomRepository.findChatMessageByChatroomIdWithBuyerNickname(chatRoomId, nickname);
         }
     }
 
@@ -132,7 +129,13 @@ public class ChatService {
         }
     }
 
-    public Member createTemporaryMember() {
+    public List<ChatListResponse> getChatListWithAccessToken(AccessToken accessToken) {
+        String nickname = jwtTokenUtils.getNickname(accessToken.value() , tokenSecretKey.getSecretKey());
+
+        return chatRoomRepository.findByChatroomWithNickname(nickname);
+    }
+
+    private Member createTemporaryMember() {
         return Member.builder()
                 .studentId("studentIds")
                 .yearOfAdmission(0)

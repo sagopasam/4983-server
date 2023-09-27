@@ -12,23 +12,35 @@ import team.dankookie.server4983.member.domain.Member;
 @NoArgsConstructor
 @Getter
 public class ChatRoomResponse {
-    long roomId;
+    private long roomId;
 
-    long buyerId;
+    private long buyerId;
 
-    String buyerNickname;
+    private String buyerNickname;
 
-    long sellerId;
+    private long sellerId;
 
-    String sellerNickname;
+    private String sellerNickname;
 
-    public static ChatRoomResponse of(ChatRoom chatRoom) {
+    private String position;
+
+    public static ChatRoomResponse of(ChatRoom chatRoom , String userNickname) {
+        String postition = "unknown";
+        String buyerNickname = chatRoom.getBuyer().getNickname();
+        String sellerNickname = chatRoom.getSeller().getNickname();
+        if(buyerNickname.equals(userNickname)) {
+            postition = "buyer";
+        } else if(sellerNickname.equals(userNickname)) {
+            postition = "seller";
+        }
+
         return ChatRoomResponse.builder()
                 .roomId(chatRoom.getChatRoomId())
                 .buyerId(chatRoom.getBuyer().getId())
-                .buyerNickname(chatRoom.getBuyer().getNickname())
+                .buyerNickname(buyerNickname)
                 .sellerId(chatRoom.getSeller().getId())
-                .sellerNickname(chatRoom.getSeller().getNickname())
+                .sellerNickname(sellerNickname)
+                .position(postition)
                 .build();
     }
 

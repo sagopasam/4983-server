@@ -16,3 +16,7 @@
 == Member 문서
 
 * link:member.html[Member 문서]
+
+== Chat 문서
+
+* link:chat.html[Chat 문서]

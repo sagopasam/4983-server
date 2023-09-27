@@ -37,7 +37,7 @@ class MyPageBookPurchaseDetailListControllerTest extends BaseControllerTest {
         String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
         final BookStatus bookstatus = BookStatus.SOLD;
 
-        when(myPageBookPurchaseDetailListService.getMyPageBookPurchaseDetailList(bookstatus, AccessToken.of(accessToken)))
+        when(myPageBookPurchaseDetailListService.getMyPageBookPurchaseDetailList(bookstatus, AccessToken.of(accessToken, "nickname")))
                 .thenThrow(new IllegalArgumentException("존재하지 않는 회원입니다."));
         //when
         ResultActions resultActions = mockMvc.perform(get(API + "/my-pages/book-purchase-detail-list")
