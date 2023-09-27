@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +19,7 @@ import team.dankookie.server4983.member.constant.UserRole;
 import java.util.Collection;
 import java.util.List;
 
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -57,7 +60,7 @@ public class Member extends BaseEntity implements UserDetails {
 
     private String imageUrl;
 
-    @Column(columnDefinition = "boolean default false")
+    @ColumnDefault("false")
     private Boolean marketingAgree;
 
     private String firebaseToken;
@@ -65,7 +68,7 @@ public class Member extends BaseEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Column(columnDefinition = "boolean default false")
+    @ColumnDefault("false")
     private Boolean isWithdraw;
 
     public void changePassword(String password) {
