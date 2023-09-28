@@ -16,6 +16,8 @@ import team.dankookie.server4983.chat.repository.SellerChatRepository;
 import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
 import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.member.domain.Member;
+import team.dankookie.server4983.scheduler.repository.SchedulerRepository;
+import team.dankookie.server4983.scheduler.service.SchedulerService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 
 import static team.dankookie.server4983.chat.constant.ContentType.*;
+import static team.dankookie.server4983.scheduler.constant.ScheduleType.*;
 
 @Component
 @RequiredArgsConstructor
@@ -33,6 +36,8 @@ public class ChatLogicHandler {
     private final SellerChatRepository sellerChatRepository;
     private final FcmService fcmService;
     private final LockerRepository lockerRepository;
+    private final SchedulerService schedulerService;
+    private final SchedulerRepository schedulerRepository;
 
     public void chatLoginHandler(ChatRequest chatRequest, Member buyer) {
         ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRequest.getChatRoomId())
@@ -44,10 +49,13 @@ public class ChatLogicHandler {
             case BOOK_PURCHASE_START: // SELLCHAT_1_1 판매자 구매 요청
                 String startSellerMessage = purchaseBookStart(chatRoom);
                 purchaseBookWarning(chatRoom);
+                schedulerService.setSchedulerAboutNotReply(chatRoom , chatRoom.getUsedBook().getTradeAvailableDate());
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(seller.getId(), startSellerMessage));
                 break;
             case BOOK_PURCHASE_REQUEST: // SELLCHAT_2 판매자 구매 수락
                 String requestBuyerMessage = purchaseBookApprove(chatRoom, seller.getNickname());
+                schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , SELLER_CASE_2);
+                schedulerService.setSchedulerAboutNotDeposit(chatRoom , chatRoom.getUsedBook().getTradeAvailableDate());
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(buyer.getId(), requestBuyerMessage));
                 break;
             case BOOK_SALE_REJECTION: // SELLCHAT_1_2 거래 거절
@@ -56,16 +64,21 @@ public class ChatLogicHandler {
                 break;
             case PAYMENT_CONFIRMATION_COMPLETE: // SELLCHAT_4 입금 확인
                 List<String> paymentConfirmationCompleteMessageList = confirmDeposit(chatRoom);
+                schedulerService.setSchedulerAboutNotComplete(chatRoom , chatRoom.getUsedBook().getTradeAvailableDate());
+                schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , BUYER_CASE_1);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(seller.getId(), paymentConfirmationCompleteMessageList.get(0)));
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(buyer.getId(), paymentConfirmationCompleteMessageList.get(1)));
                 break;
             case BOOK_PLACEMENT_COMPLETE: // SELLCHAT_5 서적 배치 완료
                 saveLockerData(chatRequest);
                 String bookPlacementCompleteBuyerMessage = completeSelectLockAndPassword(chatRoom, chatRequest);
+                schedulerService.setSchedulerAboutDontPressDone(chatRoom , chatRoom.getUsedBook().getTradeAvailableDate());
+                schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , SELLER_CASE_3);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(buyer.getId(), bookPlacementCompleteBuyerMessage));
                 break;
             case TRADE_COMPLETE: // SELLCHAT_6 거래 완료
                 String tradeCompleteSellerMessage = completeTrade(chatRoom);
+                schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , BUYER_CASE_2);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(seller.getId(), tradeCompleteSellerMessage));
                 break;
             case TRADE_STOP: // SELLCHAT 거래 중지
@@ -106,7 +119,7 @@ public class ChatLogicHandler {
     }
 
     public String purchaseBookWarning(ChatRoom chatRoom) {
-        String message = String.format("전공서적은 거래 날짜와 시간에 맞게\n" +
+        String sellerMessage = String.format("전공서적은 거래 날짜와 시간에 맞게\n" +
                 "사물함에 배치되어야 해요!\n" +
                 "\n" +
                 "사물함 위치:\u2028상경관 2층 GS25 옆 초록색 사물함을 찾아주세요!\n" +
@@ -120,13 +133,24 @@ public class ChatLogicHandler {
                 "메일) 4983service@gmail.com\n" +
                 "\n");
 
-        SellerChat sellerChat = SellerChat.buildSellerChat(message, BOOK_PURCHASE_START, chatRoom);
-        BuyerChat buyerChat = BuyerChat.buildBuyerChat(message, BOOK_PURCHASE_START, chatRoom);
+        String buyerMessage = String.format("전공서적은 거래 날짜와 시간 기준 “24시간 이내\"에 수령되어야 해요!\n" +
+                "사물함 위치: 상경관 2층 GS25 옆 초록색 사물함을 찾아주세요!\n" +
+                "\n" +
+                "수령 후에는 “거래 완료\"를 클릭해야, 판매자에게 판매 금액이 송금되니, 꼭 클릭해 주시길 바랍니다!\n" +
+                "\n" +
+                "불가피하게 책을 수령하지 못할 경우, 아래의 번호/메일로 문의해주세요!\n" +
+                "\n" +
+                "휴대폰) 010-4487-3122\n" +
+                "메일) 4983service@gmail.com\n" +
+                "\n");
+
+        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage , BOOK_PURCHASE_START, chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_PURCHASE_START, chatRoom);
         chatRoom.addSellerChat(sellerChat);
         chatRoom.addBuyerChat(buyerChat);
         buyerChatRepository.save(buyerChat);
         sellerChatRepository.save(sellerChat);
-        return message;
+        return buyerMessage;
     }
 
     public String purchaseBookApprove(ChatRoom chatRoom, String sellerNickName) {
