@@ -1,13 +1,13 @@
 package team.dankookie.server4983.book.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import team.dankookie.server4983.chat.domain.ChatRoom;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -19,8 +19,11 @@ public class Locker {
     @Id @GeneratedValue
     private Long id;
 
+    @OneToOne
+    private ChatRoom chatRoom;
+
     @NotNull
-    private Integer lockerNumber;
+    private String lockerNumber;
 
     @NotNull
     private String password;
@@ -28,6 +31,6 @@ public class Locker {
     @Column(columnDefinition = "boolean default false")
     private Boolean isExists;
 
-    private LocalDate tradeDate;
+    private LocalDateTime tradeDate;
 
 }

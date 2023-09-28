@@ -18,7 +18,9 @@ import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.member.domain.Member;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 
 import static team.dankookie.server4983.chat.constant.ContentType.*;
 
@@ -75,14 +77,14 @@ public class ChatLogicHandler {
     }
 
     public Locker saveLockerData(ChatRequest chatRequest) {
-        int lockerNumber = Integer.parseInt(chatRequest.getData().get("lockerNumber").toString());
+        String lockerNumber = chatRequest.getData().get("lockerNumber").toString();
         String lockerPassword = chatRequest.getData().get("lockerPassword").toString();
 
         Locker locker = Locker.builder()
                 .lockerNumber(lockerNumber)
                 .password(lockerPassword)
                 .isExists(true)
-                .tradeDate(LocalDate.now())
+                .tradeDate(LocalDateTime.now())
                 .build();
 
         return lockerRepository.save(locker);
@@ -104,12 +106,19 @@ public class ChatLogicHandler {
     }
 
     public String purchaseBookWarning(ChatRoom chatRoom) {
-        String message = String.format("전공책은 사물함 설정 이후 “24시간 이내\"에 수령되어야 해요!\n" +
+        String message = String.format("전공서적은 거래 날짜와 시간에 맞게\n" +
+                "사물함에 배치되어야 해요!\n" +
                 "\n" +
-                "불가피한 이유로 “중지\"를 원하실 땐 아래의 정보로 문의 주시길 바랍니다:)\n" +
+                "사물함 위치:\u2028상경관 2층 GS25 옆 초록색 사물함을 찾아주세요!\n" +
                 "\n" +
-                "번호) 010-4487-3122 \n" +
-                "메일) 4983service@gmail.com");
+                "배치 후에는 “서적 배치 완료\"를 클릭해야, 구매자에게 사물함 정보가 전송되오니 꼭 클릭해 주시길 바랍니다!\n" +
+                "\n" +
+                "불가피하게 책을 배치 못할 경우,\n" +
+                "아래의 번호/메일로 문의해 주세요!\n" +
+                "\n" +
+                "휴대폰) 010-4487-3122\n" +
+                "메일) 4983service@gmail.com\n" +
+                "\n");
 
         SellerChat sellerChat = SellerChat.buildSellerChat(message, BOOK_PURCHASE_START, chatRoom);
         BuyerChat buyerChat = BuyerChat.buildBuyerChat(message, BOOK_PURCHASE_START, chatRoom);
@@ -175,12 +184,17 @@ public class ChatLogicHandler {
     }
 
     public String completeSelectLockAndPassword(ChatRoom chatRoom , ChatRequest request) {
+        Locker locker = lockerRepository.findByChatRoom(chatRoom);
+
         String sellerMessage = String.format("기입하셨던 거래 날짜에 맞게, 당일 내에 배치 해주시길 바랍니다. \n" +
                 "\n" +
                 "서적 배치 이후 완료 버튼을 눌러주세요.\n" +
                 "\n" +
-                "구매자가 배치된 서적을 수령한 후, “거래 완료” 버튼을 클릭하면 판매금액이 자동으로 입금됩니다.\n" +
-                "\n");
+                "구매자가 배치된 서적을 수령한 후, “거래 완료” 버튼을 클릭하면 판매금액이 자동으로 입금됩니다.\n \n" +
+                "사물함은 상경관 2층 GS25 편의점 옆 초록색 사물함을 찾아주세요:) \n \n" +
+                "사물함 번호 : %s번 \n 거래 날짜 및 시간: %d월 %d일 %d:%d" +
+                "\n",
+                locker.getLockerNumber() , locker.getTradeDate().getMonthValue() , locker.getTradeDate().getDayOfMonth() , locker.getTradeDate().getHour() , locker.getTradeDate().getMinute());
         String buyerMessage = String.format("서적 배치가 완료되었습니다.\n" +
                 "금일 내 수령해주시길 바랍니다.\n" +
                 "\n" +

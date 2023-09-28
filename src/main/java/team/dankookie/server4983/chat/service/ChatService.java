@@ -48,7 +48,6 @@ public class ChatService {
         chatLogicHandler.chatLoginHandler(chatRequest , member);
     }
 
-//    @Transactional
     public ChatRoomResponse createChatRoom(ChatRoomRequest chatRoomRequest , AccessToken accessToken) throws AccountException {
         String nickname = accessToken.nickname();
 
@@ -105,7 +104,6 @@ public class ChatService {
                 chatRoomRepository.updateSellerChattingToRead(chatRoomId);
                 return chatRoomRepository.findChatMessageByChatroomIdWithSellerNickname(chatRoomId, nickname);
             }
-
         }else {
             chatRoomRepository.updateBuyerChattingToRead(chatRoomId);
             return chatRoomRepository.findChatMessageByChatroomIdWithBuyerNickname(chatRoomId, nickname);
@@ -133,20 +131,6 @@ public class ChatService {
         String nickname = jwtTokenUtils.getNickname(accessToken.value() , tokenSecretKey.getSecretKey());
 
         return chatRoomRepository.findByChatroomWithNickname(nickname);
-    }
-
-    private Member createTemporaryMember() {
-        return Member.builder()
-                .studentId("studentIds")
-                .yearOfAdmission(0)
-                .department(Department.DEPARTMENT_OF_LAW)
-                .nickname("DFGgt4t21Rr-351rfvZCVb")
-                .password("password")
-                .phoneNumber("01012341234")
-                .accountHolder("accountHolder")
-                .accountBank(AccountBank.IBK)
-                .accountNumber("0101010100101010")
-                .build();
     }
 
 }
