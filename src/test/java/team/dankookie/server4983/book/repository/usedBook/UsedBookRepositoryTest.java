@@ -15,6 +15,7 @@ import team.dankookie.server4983.member.fixture.MemberFixture;
 import team.dankookie.server4983.member.repository.MemberRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,7 +57,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
         UsedBook usedBookSale = UsedBook.builder()
                 .bookStatus(BookStatus.SALE)
                 .sellerMember(member)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .price(10000)
                 .name("책이름")
                 .build();
@@ -64,7 +65,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
         UsedBook usedBookTrade = UsedBook.builder()
                 .bookStatus(BookStatus.TRADE)
                 .sellerMember(member)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .price(10000)
                 .name("책이름")
                 .build();
@@ -72,7 +73,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
         UsedBook usedBookSold = UsedBook.builder()
                 .bookStatus(BookStatus.SOLD)
                 .sellerMember(member)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .price(10000)
                 .name("책이름")
                 .build();
@@ -121,7 +122,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
                 .department(departmentList.get(0))
                 .bookStatus(BookStatus.SALE)
                 .sellerMember(member)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .price(10000)
                 .name("책이름")
                 .build();
@@ -131,7 +132,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
                 .department(departmentList.get(0))
                 .bookStatus(BookStatus.SALE)
                 .sellerMember(member)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .price(10000)
                 .name("책이름")
                 .build();
@@ -140,8 +141,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
                 .college(College.BUSINESS_AND_ECONOMICS)
                 .department(Department.ACCOUNTING)
                 .sellerMember(member)
-                .tradeAvailableDate(LocalDate.now())
-                .bookStatus(BookStatus.SALE)
+                .tradeAvailableDatetime(LocalDateTime.now())                .bookStatus(BookStatus.SALE)
                 .price(10000)
                 .name("책이름")
                 .build();
@@ -186,7 +186,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
                 .department(departmentList.get(0))
                 .bookStatus(BookStatus.SALE)
                 .sellerMember(member)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .price(10000)
                 .name("책이름")
                 .build();
@@ -196,7 +196,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
                 .department(departmentList.get(0))
                 .bookStatus(BookStatus.SALE)
                 .sellerMember(member)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .price(10000)
                 .name("책이름")
                 .build();
@@ -205,7 +205,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
                 .college(College.BUSINESS_AND_ECONOMICS)
                 .department(Department.ACCOUNTING)
                 .sellerMember(member)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .bookStatus(BookStatus.SALE)
                 .price(10000)
                 .name("책이름")
@@ -251,7 +251,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
                 .department(departmentList.get(0))
                 .bookStatus(BookStatus.SALE)
                 .sellerMember(member)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .price(10000)
                 .name("책이름")
                 .build();
@@ -261,7 +261,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
                 .department(departmentList.get(0))
                 .bookStatus(BookStatus.SALE)
                 .sellerMember(member)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .price(10000)
                 .name("책이름")
                 .build();
@@ -270,7 +270,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
                 .college(College.BUSINESS_AND_ECONOMICS)
                 .department(Department.ACCOUNTING)
                 .sellerMember(member)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .bookStatus(BookStatus.SALE)
                 .price(10000)
                 .name("책이름")
@@ -297,7 +297,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
 
         UsedBook usedBook = UsedBook.builder()
                 .bookStatus(BookStatus.SALE)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .price(10000)
                 .name("책이름")
                 .sellerMember(member)
@@ -321,7 +321,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
 
         UsedBook usedBook = UsedBook.builder()
                 .bookStatus(BookStatus.SALE)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .price(10000)
                 .name("책이름")
                 .sellerMember(member)

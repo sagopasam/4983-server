@@ -16,6 +16,7 @@ import team.dankookie.server4983.member.fixture.MemberFixture;
 import team.dankookie.server4983.member.repository.MemberRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,7 +53,7 @@ class ChatRoomRepositoryTest extends BaseRepositoryTest {
                 .buyerMember(otherMember)
                 .sellerMember(member)
                 .price(1000)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .build();
         usedBookRepository.save(usedBook1);
 
@@ -62,7 +63,7 @@ class ChatRoomRepositoryTest extends BaseRepositoryTest {
                 .buyerMember(member)
                 .sellerMember(otherMember)
                 .price(1000)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .build();
         usedBookRepository.save(usedBook2);
 
@@ -95,7 +96,7 @@ class ChatRoomRepositoryTest extends BaseRepositoryTest {
                 .buyerMember(otherMember)
                 .sellerMember(member)
                 .price(1000)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .build();
         usedBookRepository.save(usedBook1);
 

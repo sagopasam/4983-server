@@ -20,14 +20,14 @@ public class UsedBookResponse {
     private final List<String> bookImage;
     private final String bookName;
     private final String publisher;
-    private final LocalDate tradeAvailableDate;
+    private final LocalDateTime tradeAvailableDatetime;
     private final boolean underlinedOrWrite;
     private final boolean discolorationAndDamage;
     private final boolean coverDamaged;
     private final Integer price;
     private final BookStatus bookStatus;
 
-    public static UsedBookResponse of(String college, String department, String sellerUserNickname, String sellerProfileImageUrl, LocalDateTime createdAt, List<String> bookImage, String bookName, String publisher, LocalDate tradeAvailableDate, boolean isUnderlinedOrWrite, boolean isDiscolorationAndDamage, boolean isCoverDamaged, Integer price, BookStatus bookStatus) {
+    public static UsedBookResponse of(String college, String department, String sellerUserNickname, String sellerProfileImageUrl, LocalDateTime createdAt, List<String> bookImage, String bookName, String publisher, LocalDateTime tradeAvailableDate, boolean isUnderlinedOrWrite, boolean isDiscolorationAndDamage, boolean isCoverDamaged, Integer price, BookStatus bookStatus) {
         return new UsedBookResponse(college, department, sellerUserNickname, sellerProfileImageUrl, createdAt, bookImage, bookName, publisher, tradeAvailableDate, isUnderlinedOrWrite, isDiscolorationAndDamage, isCoverDamaged, price, bookStatus);
     }
 }
