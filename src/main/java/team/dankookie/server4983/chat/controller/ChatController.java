@@ -23,8 +23,8 @@ public class ChatController {
     private final ChatService chatService;
 
     @PostMapping("/chat")
-    public ResponseEntity requestChatBot(@RequestBody ChatRequest chatRequest , HttpServletRequest request) {
-        chatService.chatRequestHandler(chatRequest , request);
+    public ResponseEntity requestChatBot(@RequestBody ChatRequest chatRequest , AccessToken accessToken) {
+        chatService.chatRequestHandler(chatRequest , accessToken);
 
         return ResponseEntity.ok().build();
     }
@@ -37,8 +37,8 @@ public class ChatController {
     }
 
     @PostMapping("/chat-room")
-    public ResponseEntity createChatRoom(@RequestBody ChatRoomRequest chatRoomRequest , HttpServletRequest request) throws AccountException {
-        ChatRoomResponse result = chatService.createChatRoom(chatRoomRequest , request);
+    public ResponseEntity createChatRoom(@RequestBody ChatRoomRequest chatRoomRequest ,AccessToken accessToken) throws AccountException {
+        ChatRoomResponse result = chatService.createChatRoom(chatRoomRequest , accessToken);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }

@@ -40,6 +40,7 @@ public class UsedBookListService {
         for (UsedBook usedBook : usedBookList) {
             String firstImageUrl = bookImageRepository.getBookImageUrlByUsedBookId(usedBook.getId());
             UsedBookListResponse usedBookListResponse = UsedBookListResponse.builder()
+                    .usedBookId(usedBook.getId())
                     .imageUrl(firstImageUrl)
                     .bookStatus(usedBook.getBookStatus())
                     .name(usedBook.getName())

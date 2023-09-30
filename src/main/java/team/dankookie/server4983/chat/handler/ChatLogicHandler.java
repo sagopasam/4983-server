@@ -10,7 +10,9 @@ import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.chat.dto.ChatRequest;
 import team.dankookie.server4983.chat.exception.ChatException;
+import team.dankookie.server4983.chat.repository.BuyerChatRepository;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
+import team.dankookie.server4983.chat.repository.SellerChatRepository;
 import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
 import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.member.domain.Member;
@@ -25,19 +27,20 @@ import static team.dankookie.server4983.chat.constant.ContentType.*;
 public class ChatLogicHandler {
 
     private final ChatRoomRepository chatRoomRepository;
+    private final BuyerChatRepository buyerChatRepository;
+    private final SellerChatRepository sellerChatRepository;
     private final FcmService fcmService;
     private final LockerRepository lockerRepository;
 
-    @Transactional
     public void chatLoginHandler(ChatRequest chatRequest, Member buyer) {
-        ChatRoom chatRoom = chatRoomRepository.findChatRoomAndBookById(chatRequest.getChatRoomId())
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRequest.getChatRoomId())
                 .orElseThrow(() -> new ChatException("채팅방을 찾을 수 없습니다."));
 
         Member seller = chatRoomRepository.getSeller(chatRequest.getChatRoomId());
 
         switch (chatRequest.getContentType()) {
             case BOOK_PURCHASE_START: // SELLCHAT_1_1 판매자 구매 요청
-                String startSellerMessage = purchaseBookStart(chatRoom, buyer.getNickname(), seller.getNickname());
+                String startSellerMessage = purchaseBookStart(chatRoom);
                 purchaseBookWarning(chatRoom);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(seller.getId(), startSellerMessage));
                 break;
@@ -85,14 +88,18 @@ public class ChatLogicHandler {
         return lockerRepository.save(locker);
     }
 
-    public String purchaseBookStart(ChatRoom chatRoom, String userName, String sellerNickName) {
+    public String purchaseBookStart(ChatRoom chatRoom) {
         String sellerMessage = String.format("\'%s\' 님이 거래 요청을 보냈어요! \n" +
-                "오늘 거래하러 갈래요?", userName);
+                "오늘 거래하러 갈래요?", chatRoom.getSeller().getNickname());
         String buyerMessage = String.format("\'%s\' 님께 \'%s\' 서적 거래를 요청했습니다. \n\n" +
-                " 판매자의 응답을 기다려주세요. :)", sellerNickName, chatRoom.getUsedBook().getName());
+                " 판매자의 응답을 기다려주세요. :)", chatRoom.getSeller().getNickname(), chatRoom.getUsedBook().getName());
 
-        chatRoom.addSellerChat(SellerChat.buildSellerChat(sellerMessage, BOOK_PURCHASE_START));
-        chatRoom.addBuyerChat(BuyerChat.buildBuyerChat(buyerMessage, BOOK_PURCHASE_START));
+        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, BOOK_PURCHASE_START, chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_PURCHASE_START, chatRoom);
+        chatRoom.addSellerChat(sellerChat);
+        chatRoom.addBuyerChat(buyerChat);
+        buyerChatRepository.save(buyerChat);
+        sellerChatRepository.save(sellerChat);
         return sellerMessage;
     }
 
@@ -104,8 +111,12 @@ public class ChatLogicHandler {
                 "번호) 010-4487-3122 \n" +
                 "메일) 4983service@gmail.com");
 
-        chatRoom.addSellerChat(SellerChat.buildSellerChat(message, BOOK_PURCHASE_START));
-        chatRoom.addBuyerChat(BuyerChat.buildBuyerChat(message, BOOK_PURCHASE_START));
+        SellerChat sellerChat = SellerChat.buildSellerChat(message, BOOK_PURCHASE_START, chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(message, BOOK_PURCHASE_START, chatRoom);
+        chatRoom.addSellerChat(sellerChat);
+        chatRoom.addBuyerChat(buyerChat);
+        buyerChatRepository.save(buyerChat);
+        sellerChatRepository.save(sellerChat);
         return message;
     }
 
@@ -118,8 +129,12 @@ public class ChatLogicHandler {
                 "우리 은행 1002-3597-18283 (사고팔삼)\n" +
                 "결제 금액 : %d원", sellerNickName, chatRoom.getUsedBook().getName(), chatRoom.getUsedBook().getPrice());
 
-        chatRoom.addSellerChat(SellerChat.buildSellerChat(sellerMessage, BOOK_PURCHASE_REQUEST));
-        chatRoom.addBuyerChat(BuyerChat.buildBuyerChat(buyerMessage, BOOK_PURCHASE_REQUEST));
+        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, BOOK_PURCHASE_REQUEST, chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_PURCHASE_REQUEST, chatRoom);
+        chatRoom.addSellerChat(sellerChat);
+        chatRoom.addBuyerChat(buyerChat);
+        buyerChatRepository.save(buyerChat);
+        sellerChatRepository.save(sellerChat);
         return buyerMessage;
     }
 
@@ -131,8 +146,12 @@ public class ChatLogicHandler {
         String buyerMessage = String.format("아쉽게도 '%s' 님과의 서적 거래가 \n" +
                 "이루어지지 못했습니다. \n", sellerNickName);
 
-        chatRoom.addSellerChat(SellerChat.buildSellerChat(sellerMessage, BOOK_SALE_REJECTION));
-        chatRoom.addBuyerChat(BuyerChat.buildBuyerChat(buyerMessage, BOOK_SALE_REJECTION));
+        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, BOOK_SALE_REJECTION, chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_SALE_REJECTION, chatRoom);
+        chatRoom.addSellerChat(sellerChat);
+        chatRoom.addBuyerChat(buyerChat);
+        sellerChatRepository.save(sellerChat);
+        buyerChatRepository.save(buyerChat);
         return buyerMessage;
     }
 
@@ -146,8 +165,12 @@ public class ChatLogicHandler {
                 "\n" +
                 "거래날짜에 판매자가 사물함에 서적을 배치할 예정입니다.\n");
 
-        chatRoom.addSellerChat(SellerChat.buildSellerChat(sellerMessage, PAYMENT_CONFIRMATION_COMPLETE));
-        chatRoom.addBuyerChat(BuyerChat.buildBuyerChat(buyerMessage, PAYMENT_CONFIRMATION_COMPLETE));
+        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, PAYMENT_CONFIRMATION_COMPLETE, chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, PAYMENT_CONFIRMATION_COMPLETE, chatRoom);
+        chatRoom.addSellerChat(sellerChat);
+        chatRoom.addBuyerChat(buyerChat);
+        sellerChatRepository.save(sellerChat);
+        buyerChatRepository.save(buyerChat);
         return List.of(sellerMessage, buyerMessage);
     }
 
@@ -165,8 +188,12 @@ public class ChatLogicHandler {
                 "\n" +
                 "사물함 번호: %s번\n" +
                 "사물함 비밀번호: %s\n" , request.getData().get("lockerNumber") , request.getData().get("lockerPassword") );
-        chatRoom.addSellerChat(SellerChat.buildSellerChat(sellerMessage, BOOK_PLACEMENT_COMPLETE));
-        chatRoom.addBuyerChat(BuyerChat.buildBuyerChat(buyerMessage, BOOK_PLACEMENT_COMPLETE));
+        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, BOOK_PLACEMENT_COMPLETE, chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_PLACEMENT_COMPLETE, chatRoom);
+        chatRoom.addSellerChat(sellerChat);
+        chatRoom.addBuyerChat(buyerChat);
+        sellerChatRepository.save(sellerChat);
+        buyerChatRepository.save(buyerChat);
         return buyerMessage;
     }
 
@@ -175,8 +202,12 @@ public class ChatLogicHandler {
                 "이용해주셔서 감사합니다.\n" +
                 "\n" +
                 "-사고파삼-\n");
-        chatRoom.addSellerChat(SellerChat.buildSellerChat(message, TRADE_COMPLETE));
-        chatRoom.addBuyerChat(BuyerChat.buildBuyerChat(message, TRADE_COMPLETE));
+        SellerChat sellerChat = SellerChat.buildSellerChat(message, TRADE_COMPLETE, chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(message, TRADE_COMPLETE, chatRoom);
+        chatRoom.addBuyerChat(buyerChat);
+        chatRoom.addSellerChat(sellerChat);
+        sellerChatRepository.save(sellerChat);
+        buyerChatRepository.save(buyerChat);
         return message;
     }
 

@@ -5,6 +5,7 @@ import lombok.*;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.member.domain.Member;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,11 +25,11 @@ public class ChatRoom {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member seller;
 
-    @OneToMany(cascade = {CascadeType.PERSIST , CascadeType.REMOVE }, orphanRemoval = true)
-    private List<BuyerChat> buyerChats;
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BuyerChat> buyerChats = new ArrayList<>();
 
-    @OneToMany(cascade = {CascadeType.PERSIST , CascadeType.REMOVE }, orphanRemoval = true)
-    private List<SellerChat> sellerChats;
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SellerChat> sellerChats = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     private UsedBook usedBook;
@@ -38,10 +39,20 @@ public class ChatRoom {
     }
 
     public void addBuyerChat(BuyerChat chat) {
-        getBuyerChats().add(chat);
+        if (this.getBuyerChats() == null) {
+            this.buyerChats = new ArrayList<>();
+            this.getBuyerChats().add(chat);
+        }else {
+            this.getBuyerChats().add(chat);
+        }
     }
 
     public void addSellerChat(SellerChat chat) {
-        getSellerChats().add(chat);
+        if (this.getSellerChats() == null) {
+            this.sellerChats = new ArrayList<>();
+            this.getSellerChats().add(chat);
+        }else {
+            this.getSellerChats().add(chat);
+        }
     }
 }

@@ -6,6 +6,7 @@ import team.dankookie.server4983.book.constant.BookStatus;
 import java.time.LocalDateTime;
 
 public record UsedBookListResponse (
+        Long usedBookId,
         String imageUrl,
         BookStatus bookStatus,
         String name,
