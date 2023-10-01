@@ -67,19 +67,22 @@ public class ChatLogicHandler {
                 break;
             case PAYMENT_CONFIRMATION_COMPLETE: // SELLCHAT_4 입금 확인
                 List<String> paymentConfirmationCompleteMessageList = chatBotInteract.confirmDeposit(chatRoom);
-                schedulerService.setSchedulerAboutNotComplete(chatRoom , chatRoom.getUsedBook().getTradeAvailableDate());
 
                 schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , BUYER_CASE_1);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(seller.getId(), paymentConfirmationCompleteMessageList.get(0)));
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(buyer.getId(), paymentConfirmationCompleteMessageList.get(1)));
                 break;
-            case BOOK_PLACEMENT_COMPLETE: // SELLCHAT_5 서적 배치 완료
+            case BOOK_PLACEMENT_SET : // 서적 위치 설정 완료
                 Locker locker = saveLockerData(chatRequest , chatRoom);
                 String bookPlacementCompleteBuyerMessage = chatBotInteract.completeSelectLockAndPassword(chatRoom, chatRequest , locker);
-                schedulerService.setSchedulerAboutDontPressDone(chatRoom , chatRoom.getUsedBook().getTradeAvailableDate());
 
-                schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , SELLER_CASE_3);
+                schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , SELLER_CASE_2);
+                schedulerService.setSchedulerAboutNotComplete(chatRoom , chatRoom.getUsedBook().getTradeAvailableDate() , locker);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(buyer.getId(), bookPlacementCompleteBuyerMessage));
+                break;
+            case BOOK_PLACEMENT_COMPLETE: // SELLCHAT_5 서적 배치 완료
+                schedulerService.setSchedulerAboutDontPressDone(chatRoom , chatRoom.getUsedBook().getTradeAvailableDate());
+                schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , SELLER_CASE_3);
                 break;
             case TRADE_COMPLETE: // SELLCHAT_6 거래 완료
                 String tradeCompleteSellerMessage = chatBotInteract.completeTrade(chatRoom);

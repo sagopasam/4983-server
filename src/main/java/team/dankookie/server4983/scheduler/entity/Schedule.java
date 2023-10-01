@@ -1,11 +1,7 @@
 package team.dankookie.server4983.scheduler.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import team.dankookie.server4983.chat.constant.ContentType;
+import lombok.*;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.scheduler.constant.ScheduleType;
 
@@ -16,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Getter
+@ToString
 public class Schedule {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
