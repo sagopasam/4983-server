@@ -51,7 +51,7 @@ public class ChatLogicHandler {
                 String startSellerMessage = chatBotInteract.purchaseBookStart(chatRoom);
                 chatBotInteract.purchaseBookWarning(chatRoom);
 
-                schedulerService.setSchedulerAboutNotReply(chatRoom , chatRoom.getUsedBook().getTradeAvailableDatetime());
+                schedulerService.setSchedulerAboutNotReply(chatRoom);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(seller.getId(), startSellerMessage));
                 break;
             case BOOK_PURCHASE_REQUEST: // SELLCHAT_2 판매자 구매 수락
