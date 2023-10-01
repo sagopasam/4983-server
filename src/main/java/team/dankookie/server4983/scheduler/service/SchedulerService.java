@@ -27,21 +27,13 @@ public class SchedulerService {
     private final LockerRepository lockerRepository;
 
     @Scheduled(cron = "0 0/10 * * * *")
+    @Transactional
     public void execute() {
         List<Schedule> result = schedulerRepository.findByAlertTime(LocalDateTime.now());
 
         for (Schedule schedule : result) {
             fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(schedule.getTargetId(), schedule.getMessage()));
-        }
-    }
-
-    @Scheduled(cron = "0/1 * * * * *")
-    @Transactional
-    public void executes() {
-        List<Schedule> result = schedulerRepository.findAll();
-
-        for (Schedule schedule : result) {
-            System.out.println(schedule);
+            schedulerRepository.deleteById(schedule.getId());
         }
     }
 
