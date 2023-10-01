@@ -51,14 +51,15 @@ public class ChatLogicHandler {
                 String startSellerMessage = chatBotInteract.purchaseBookStart(chatRoom);
                 chatBotInteract.purchaseBookWarning(chatRoom);
 
-                schedulerService.setSchedulerAboutNotReply(chatRoom , chatRoom.getUsedBook().getTradeAvailableDate());
+                schedulerService.setSchedulerAboutNotReply(chatRoom , chatRoom.getUsedBook().getTradeAvailableDatetime());
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(seller.getId(), startSellerMessage));
                 break;
             case BOOK_PURCHASE_REQUEST: // SELLCHAT_2 판매자 구매 수락
                 String requestBuyerMessage = chatBotInteract.purchaseBookApprove(chatRoom, seller.getNickname());
                 schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , SELLER_CASE_2);
 
-                schedulerService.setSchedulerAboutNotDeposit(chatRoom , chatRoom.getUsedBook().getTradeAvailableDate());
+                schedulerService.setSchedulerAboutSetPlacement(chatRoom);
+                schedulerService.setSchedulerAboutNotDeposit(chatRoom , chatRoom.getUsedBook().getTradeAvailableDatetime());
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(buyer.getId(), requestBuyerMessage));
                 break;
             case BOOK_SALE_REJECTION: // SELLCHAT_1_2 거래 거절
@@ -77,11 +78,11 @@ public class ChatLogicHandler {
                 String bookPlacementCompleteBuyerMessage = chatBotInteract.completeSelectLockAndPassword(chatRoom, chatRequest , locker);
 
                 schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , SELLER_CASE_2);
-                schedulerService.setSchedulerAboutNotComplete(chatRoom , chatRoom.getUsedBook().getTradeAvailableDate() , locker);
+                schedulerService.setSchedulerAboutNotComplete(chatRoom , chatRoom.getUsedBook().getTradeAvailableDatetime() , locker);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(buyer.getId(), bookPlacementCompleteBuyerMessage));
                 break;
             case BOOK_PLACEMENT_COMPLETE: // SELLCHAT_5 서적 배치 완료
-                schedulerService.setSchedulerAboutDontPressDone(chatRoom , chatRoom.getUsedBook().getTradeAvailableDate());
+                schedulerService.setSchedulerAboutDontPressDone(chatRoom , chatRoom.getUsedBook().getTradeAvailableDatetime());
                 schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , SELLER_CASE_3);
                 break;
             case TRADE_COMPLETE: // SELLCHAT_6 거래 완료

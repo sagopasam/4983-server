@@ -39,10 +39,10 @@ public class SchedulerService {
 
     // 판매자
     @Transactional
-    public void setSchedulerAboutNotReply(ChatRoom chatRoom, LocalDate tradeAvailableDate) {
-        LocalDateTime time = LocalDateTime.of(tradeAvailableDate , LocalTime.now().plusHours(2));
+    public void setSchedulerAboutNotReply(ChatRoom chatRoom, LocalDateTime tradeAvailableDate) {
+        tradeAvailableDate.plusHours(2);
 
-        Schedule schedule = Schedule.builder().targetId(chatRoom.getSeller().getId()).chatRoom(chatRoom).time(time).scheduleType(ScheduleType.SELLER_CASE_2)
+        Schedule schedule = Schedule.builder().targetId(chatRoom.getSeller().getId()).chatRoom(chatRoom).time(tradeAvailableDate).scheduleType(ScheduleType.SELLER_CASE_2)
                 .message("아직 사물함 설정이 완료되지 않았어요!\n " +
                         "\"거래하러 가기\" 버튼을 클릭하여 사물함 번호와 비밀번호를 꼭 선택해 주세요!")
                 .build();
@@ -51,10 +51,11 @@ public class SchedulerService {
     }
 
     @Transactional
-    public void setSchedulerAboutNotComplete(ChatRoom chatRoom, LocalDate tradeAvailableDate , Locker locker) {
-        LocalDateTime time = LocalDateTime.of(tradeAvailableDate , LocalTime.of(8 , 30));
+    public void setSchedulerAboutNotComplete(ChatRoom chatRoom, LocalDateTime tradeAvailableDate , Locker locker) {
+        tradeAvailableDate.withHour(8);
+        tradeAvailableDate.withMinute(30);
 
-        Schedule schedule = Schedule.builder().targetId(chatRoom.getSeller().getId()).chatRoom(chatRoom).time(time).scheduleType(ScheduleType.SELLER_CASE_3)
+        Schedule schedule = Schedule.builder().targetId(chatRoom.getSeller().getId()).chatRoom(chatRoom).time(tradeAvailableDate).scheduleType(ScheduleType.SELLER_CASE_3)
                 .message(String.format("오늘은 거래 하는 날이에요!\n" +
                         "수업 가는 길에 전공 책을 꼭 챙겨주세요!\n" +
                         "\n" +
@@ -83,10 +84,10 @@ public class SchedulerService {
 
     // 구매자
     @Transactional
-    public void setSchedulerAboutNotDeposit(ChatRoom chatRoom, LocalDate tradeAvailableDate) {
-        LocalDateTime time = LocalDateTime.of(tradeAvailableDate.minusDays(2) , LocalTime.now());
+    public void setSchedulerAboutNotDeposit(ChatRoom chatRoom, LocalDateTime tradeAvailableDate) {
+        tradeAvailableDate.minusDays(2);
 
-        Schedule schedule = Schedule.builder().targetId(chatRoom.getBuyer().getId()).chatRoom(chatRoom).time(time).scheduleType(ScheduleType.BUYER_CASE_1)
+        Schedule schedule = Schedule.builder().targetId(chatRoom.getBuyer().getId()).chatRoom(chatRoom).time(tradeAvailableDate).scheduleType(ScheduleType.BUYER_CASE_1)
                 .message(String.format("아직 입금 확인이 안되었어요! \n" +
                                 "입금이 완료되어야, 판매자가 사물함에 서적을 배치할 수 있어요! "))
                 .build();
@@ -95,11 +96,12 @@ public class SchedulerService {
     }
 
     @Transactional
-    public void setSchedulerAboutDontPressDone(ChatRoom chatRoom, LocalDate tradeAvailableDate) {
+    public void setSchedulerAboutDontPressDone(ChatRoom chatRoom, LocalDateTime tradeAvailableDate) {
         Locker locker = lockerRepository.findByChatRoom(chatRoom);
-        LocalDateTime time = LocalDateTime.of(tradeAvailableDate , LocalTime.of(8 , 30));
+        tradeAvailableDate.withHour(8);
+        tradeAvailableDate.withMinute(30);
 
-        Schedule schedule = Schedule.builder().targetId(chatRoom.getBuyer().getId()).chatRoom(chatRoom).time(time).scheduleType(ScheduleType.BUYER_CASE_2)
+        Schedule schedule = Schedule.builder().targetId(chatRoom.getBuyer().getId()).chatRoom(chatRoom).time(tradeAvailableDate).scheduleType(ScheduleType.BUYER_CASE_2)
                 .message(String.format("오늘은 거래 하는 날이에요!\n" +
                                 "수업 가는 길에 전공 책을 꼭 수령해주세요!\n" +
                                 "\n" +
