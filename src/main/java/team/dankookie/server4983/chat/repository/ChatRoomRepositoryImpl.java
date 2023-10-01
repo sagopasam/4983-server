@@ -215,6 +215,15 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                 .execute();
     }
 
+    @Override
+    public Member getBuyer(long chatRoomId) {
+        return jpaQueryFactory.select(member)
+                .from(chatRoom)
+                .innerJoin(chatRoom.buyer , member)
+                .where(chatRoom.chatRoomId.eq(chatRoomId))
+                .fetchOne();
+    }
+
     private static JPQLQuery<Boolean> getLastSellerMessageIsRead() {
         return JPAExpressions.select(sellerChat.isRead)
                 .from(sellerChat)

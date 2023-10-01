@@ -51,18 +51,13 @@ public class SchedulerService {
 
     @Transactional
     public void setSchedulerAboutNotComplete(ChatRoom chatRoom, LocalDate tradeAvailableDate) {
-        Locker locker = lockerRepository.findByChatRoom(chatRoom);
         LocalDateTime time = LocalDateTime.of(tradeAvailableDate , LocalTime.of(8 , 30));
 
         Schedule schedule = Schedule.builder().chatRoom(chatRoom).time(time).scheduleType(ScheduleType.SELLER_CASE_3)
                 .message(String.format("오늘은 거래 하는 날이에요!\n" +
                         "수업 가는 길에 전공 책을 꼭 챙겨주세요!\n" +
                         "\n" +
-                        "사물함은 상경관 2층 GS25 편의점 옆에 초록색 사물함을 찾아주세요:) \n" +
-                        "\n" +
-                        "사물함 번호 : %s번 \n " +
-                        "거래 약속 시간: %d:%d \n",
-                locker.getLockerNumber(), locker.getTradeDate().getHour() , locker.getTradeDate().getMinute()))
+                        "사물함은 상경관 2층 GS25 편의점 옆에 초록색 사물함을 찾아주세요:) \n"))
                 .build();
 
         schedulerRepository.save(schedule);

@@ -29,6 +29,13 @@ public class ChatController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/chat-stop")
+    public ResponseEntity stopTrade(@RequestBody ChatRequest chatRequest) {
+        chatService.stopTrade(chatRequest);
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/chat/{chatRoomId}")
     public ResponseEntity<List<ChatMessageResponse>> getChattingData(@PathVariable long chatRoomId, AccessToken accessToken) {
         List<ChatMessageResponse> chattingMessageList = chatService.getChattingData(chatRoomId, accessToken);

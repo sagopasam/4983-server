@@ -13,8 +13,11 @@ import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.chat.dto.*;
 import team.dankookie.server4983.chat.exception.ChatException;
+import team.dankookie.server4983.chat.handler.ChatBotAdmin;
 import team.dankookie.server4983.chat.handler.ChatLogicHandler;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
+import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
+import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.jwt.constants.TokenSecretKey;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
@@ -40,6 +43,7 @@ public class ChatService {
     private final MemberService memberService;
     private final JwtTokenUtils jwtTokenUtils;
     private final TokenSecretKey tokenSecretKey;
+    private final ChatBotAdmin chatBotAdmin;
 
     public void chatRequestHandler(ChatRequest chatRequest , AccessToken accessToken) {
         String userName = accessToken.nickname();
@@ -133,4 +137,20 @@ public class ChatService {
         return chatRoomRepository.findByChatroomWithNickname(nickname);
     }
 
+    public void stopTrade(ChatRequest chatRequest) {
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRequest.getChatRoomId())
+                .orElseThrow(() -> new ChatException("채팅방을 찾을 수 없습니다."));
+
+        Member seller = chatRoomRepository.getSeller(chatRequest.getChatRoomId());
+        Member buyer = chatRoomRepository.getBuyer(chatRequest.getChatRoomId());
+        String target = chatRequest.getData().get("target").toString();
+
+        if(target.equals("buyer")) {
+            chatBotAdmin.tradeStopByBuyer(chatRoom , seller , buyer);
+        } else if(target.equals("seller")) {
+            chatBotAdmin.tradeStopBySeller(chatRoom , seller , buyer);
+        } else {
+            return;
+        }
+    }
 }

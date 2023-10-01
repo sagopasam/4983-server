@@ -3,6 +3,7 @@ package team.dankookie.server4983.chat.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import team.dankookie.server4983.book.domain.UsedBook;
+import team.dankookie.server4983.chat.constant.ContentType;
 import team.dankookie.server4983.member.domain.Member;
 
 import java.util.ArrayList;
@@ -33,6 +34,10 @@ public class ChatRoom {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private UsedBook usedBook;
+
+    @Setter
+    @Builder.Default
+    private int interactStep = 0; // ContentType 에 따른 1 ~ 5 단계
 
     public static ChatRoom buildChatRoom(Member buyer , Member seller , UsedBook usedBook) {
         return ChatRoom.builder().buyer(buyer).seller(seller).usedBook(usedBook).build();
