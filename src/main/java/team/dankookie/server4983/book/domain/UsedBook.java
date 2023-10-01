@@ -13,7 +13,7 @@ import team.dankookie.server4983.book.dto.UsedBookSaveRequest;
 import team.dankookie.server4983.common.domain.BaseEntity;
 import team.dankookie.server4983.member.domain.Member;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class UsedBook extends BaseEntity {
     private Integer price;
 
     @NotNull
-    private LocalDate tradeAvailableDate;
+    private LocalDateTime tradeAvailableDatetime;
 
     private String publisher;
 
@@ -68,11 +68,11 @@ public class UsedBook extends BaseEntity {
 
 
     // FIXME 테스트 용 USEDBOOK 생성자 ( 테스트 데이터가 필요 없어진게 아니면 절대 수정하지 마세요!! )
-    public UsedBook(long id, String bookName, int price, LocalDate now, String publisher, College college, Department department, BookStatus bookStatus, boolean isUnderlinedOrWrite, boolean isDiscolorationAndDamage, boolean isCoverDamaged, Member buyer, Member seller) {
+    public UsedBook(long id, String bookName, int price, LocalDateTime tradeAvailableDateTime, String publisher, College college, Department department, BookStatus bookStatus, boolean isUnderlinedOrWrite, boolean isDiscolorationAndDamage, boolean isCoverDamaged, Member buyer, Member seller) {
         this.id = id;
         this.name = bookName;
         this.price = price;
-        this.tradeAvailableDate = now;
+        this.tradeAvailableDatetime = tradeAvailableDateTime;
         this.publisher = publisher;
         this.college = college;
         this.department = department;
@@ -90,11 +90,11 @@ public class UsedBook extends BaseEntity {
     }
 
     @Builder
-    public UsedBook(Long id, String name, Integer price, LocalDate tradeAvailableDate, String publisher, College college, Department department, BookStatus bookStatus, Boolean isUnderlinedOrWrite, Boolean isDiscolorationAndDamage, Boolean isCoverDamaged, Member buyerMember, Member sellerMember, Boolean isDeleted) {
+    public UsedBook(Long id, String name, Integer price, LocalDateTime tradeAvailableDatetime, String publisher, College college, Department department, BookStatus bookStatus, Boolean isUnderlinedOrWrite, Boolean isDiscolorationAndDamage, Boolean isCoverDamaged, Member buyerMember, Member sellerMember, Boolean isDeleted) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.tradeAvailableDate = tradeAvailableDate;
+        this.tradeAvailableDatetime = tradeAvailableDatetime;
         this.publisher = publisher;
         this.college = college;
         this.department = department;
@@ -110,7 +110,7 @@ public class UsedBook extends BaseEntity {
     public void updateUsedBook(UsedBookSaveRequest usedBook) {
         this.name = usedBook.name();
         this.price = usedBook.price();
-        this.tradeAvailableDate = usedBook.tradeAvailableDate();
+        this.tradeAvailableDatetime = usedBook.tradeAvailableDatetime();
         this.publisher = usedBook.publisher();
         this.college = usedBook.college();
         this.department = usedBook.department();

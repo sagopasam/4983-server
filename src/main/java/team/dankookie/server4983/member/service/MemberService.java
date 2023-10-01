@@ -27,6 +27,7 @@ import team.dankookie.server4983.member.dto.MemberRegisterRequest;
 import team.dankookie.server4983.member.repository.MemberRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static team.dankookie.server4983.chat.domain.ChatRoom.buildChatRoom;
 
@@ -79,7 +80,7 @@ public class MemberService {
         UsedBook usedBook1 = UsedBook.builder()
                 .bookStatus(BookStatus.SALE)
                 .name("사회과학통계방법")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12,30,30))
                 .price(13000)
                 .isUnderlinedOrWrite(false)
                 .isCoverDamaged(true)
@@ -92,7 +93,7 @@ public class MemberService {
         UsedBook usedBook2 = UsedBook.builder()
                 .bookStatus(BookStatus.SALE)
                 .name("생명과학 길라잡이")
-                .tradeAvailableDate(LocalDate.of(2023, 8, 9))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 8, 9, 12,30,30))
                 .price(9000)
                 .isUnderlinedOrWrite(true)
                 .isCoverDamaged(true)
@@ -105,7 +106,7 @@ public class MemberService {
         UsedBook usedBook3 = UsedBook.builder()
                 .bookStatus(BookStatus.SALE)
                 .name("경영학 원론")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12, 30, 30))
                 .price(9000)
                 .isUnderlinedOrWrite(false)
                 .isCoverDamaged(false)
@@ -118,7 +119,7 @@ public class MemberService {
         UsedBook usedBook4 = UsedBook.builder()
                 .bookStatus(BookStatus.TRADE)
                 .name("컴퓨터 개론")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29,11,11,11))
                 .price(14000)
                 .isUnderlinedOrWrite(false)
                 .isCoverDamaged(false)
@@ -131,7 +132,7 @@ public class MemberService {
         UsedBook usedBook5 = UsedBook.builder()
                 .bookStatus(BookStatus.SOLD)
                 .name("일반 화학")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12, 30, 00))
                 .price(7000)
                 .isUnderlinedOrWrite(true)
                 .isCoverDamaged(true)
@@ -144,7 +145,7 @@ public class MemberService {
         UsedBook usedBook6 = UsedBook.builder()
                 .bookStatus(BookStatus.SOLD)
                 .name("일반 화학2")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 13,00,00))
                 .price(70002)
                 .isUnderlinedOrWrite(true)
                 .isCoverDamaged(true)
@@ -156,7 +157,7 @@ public class MemberService {
         UsedBook usedBook7 = UsedBook.builder()
                 .bookStatus(BookStatus.SOLD)
                 .name("일반 화학3")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 11,0))
                 .price(100)
                 .isUnderlinedOrWrite(true)
                 .isCoverDamaged(true)
@@ -168,7 +169,7 @@ public class MemberService {
         UsedBook usedBook8 = UsedBook.builder()
                 .bookStatus(BookStatus.SOLD)
                 .name("일반 화학4")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 15,0))
                 .price(100)
                 .isUnderlinedOrWrite(true)
                 .isCoverDamaged(true)
@@ -180,7 +181,7 @@ public class MemberService {
         UsedBook usedBook9 = UsedBook.builder()
                 .bookStatus(BookStatus.SOLD)
                 .name("일반 화학5")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29,8,0))
                 .price(100)
                 .isUnderlinedOrWrite(true)
                 .isCoverDamaged(true)
@@ -192,7 +193,7 @@ public class MemberService {
         UsedBook usedBook10 = UsedBook.builder()
                 .bookStatus(BookStatus.SOLD)
                 .name("일반 화학6")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29,6,0))
                 .price(100)
                 .isUnderlinedOrWrite(true)
                 .isCoverDamaged(true)
@@ -321,7 +322,6 @@ public class MemberService {
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
         if (!member.getIsWithdraw()) {
             member.withdraw();
-            memberRepository.save(member);
         }
         return member.getIsWithdraw();
     }

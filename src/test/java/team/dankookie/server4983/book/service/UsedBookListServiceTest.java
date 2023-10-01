@@ -16,6 +16,7 @@ import team.dankookie.server4983.common.BaseServiceTest;
 import team.dankookie.server4983.member.domain.Member;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,7 +61,7 @@ class UsedBookListServiceTest extends BaseServiceTest {
                 .name("book")
                 .price(10000)
                 .bookStatus(BookStatus.SALE)
-                .tradeAvailableDate(LocalDate.now())
+                .tradeAvailableDatetime(LocalDateTime.now())
                 .buyerMember(Member.builder().build())
                 .build();
     }
