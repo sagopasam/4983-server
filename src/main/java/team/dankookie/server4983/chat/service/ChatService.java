@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.dankookie.server4983.book.constant.Department;
+import team.dankookie.server4983.book.domain.Locker;
 import team.dankookie.server4983.book.domain.UsedBook;
+import team.dankookie.server4983.book.repository.locker.LockerRepository;
 import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
 import team.dankookie.server4983.chat.constant.ContentType;
 import team.dankookie.server4983.chat.domain.BuyerChat;
@@ -44,6 +46,7 @@ public class ChatService {
     private final JwtTokenUtils jwtTokenUtils;
     private final TokenSecretKey tokenSecretKey;
     private final ChatBotAdmin chatBotAdmin;
+    private final LockerRepository lockerRepository;
 
     public void chatRequestHandler(ChatRequest chatRequest , AccessToken accessToken) {
         String userName = accessToken.nickname();
@@ -137,6 +140,7 @@ public class ChatService {
         return chatRoomRepository.findByChatroomWithNickname(nickname);
     }
 
+    @Transactional
     public void stopTrade(ChatStopRequest chatStopRequest) {
         ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatStopRequest.getChatRoomId())
                 .orElseThrow(() -> new ChatException("채팅방을 찾을 수 없습니다."));
@@ -149,6 +153,16 @@ public class ChatService {
             chatBotAdmin.tradeStopByBuyer(chatRoom , seller , buyer);
         } else if(target.equals("seller")) {
             chatBotAdmin.tradeStopBySeller(chatRoom , seller , buyer);
+        } else {
+            return;
         }
+
+        releaseLocker(chatRoom);
+    }
+
+    public void releaseLocker(ChatRoom chatRoom) {
+        Locker locker = lockerRepository.findByChatRoom(chatRoom);
+
+        locker.releaseLocker();
     }
 }

@@ -113,7 +113,12 @@ public class ChatLogicHandler {
         String lockerNumber = chatRequest.getData().get("lockerNumber").toString();
         String lockerPassword = chatRequest.getData().get("lockerPassword").toString();
 
-        Locker result = lockerRepository.findByLockerNumberAAndIsExists(lockerNumber , true);
+        Locker result = lockerRepository.findByLockerNumberAndIsExists(lockerNumber);
+
+        if(result != null) {
+            System.out.println(result.getTradeDate().toString());
+            System.out.println(chatRoom.getUsedBook().getTradeAvailableDatetime().toString());
+        }
         if(result != null && result.getTradeDate().equals(chatRoom.getUsedBook().getTradeAvailableDatetime())) {
             throw new ChatException("이미 사용중인 Locker 입니다.");
         }
@@ -123,14 +128,14 @@ public class ChatLogicHandler {
                 .password(lockerPassword)
                 .chatRoom(chatRoom)
                 .isExists(true)
-                .tradeDate(LocalDateTime.now())
+                .tradeDate(chatRoom.getUsedBook().getTradeAvailableDatetime())
                 .build();
 
         return lockerRepository.save(locker);
     }
 
     public void releaseLocker(ChatRoom chatRoom) {
-         Locker locker = lockerRepository.findByChatRoom(chatRoom);
+        Locker locker = lockerRepository.findByChatRoom(chatRoom);
 
         locker.releaseLocker();
     }

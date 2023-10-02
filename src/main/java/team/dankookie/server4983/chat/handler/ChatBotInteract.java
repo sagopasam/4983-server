@@ -3,7 +3,6 @@ package team.dankookie.server4983.chat.handler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import team.dankookie.server4983.book.domain.Locker;
-import team.dankookie.server4983.book.repository.locker.LockerRepository;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
@@ -14,7 +13,6 @@ import team.dankookie.server4983.chat.repository.SellerChatRepository;
 import java.util.List;
 
 import static team.dankookie.server4983.chat.constant.ContentType.*;
-import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE;
 
 @Component
 @RequiredArgsConstructor

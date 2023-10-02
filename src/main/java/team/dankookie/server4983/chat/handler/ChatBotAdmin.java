@@ -2,6 +2,8 @@ package team.dankookie.server4983.chat.handler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import team.dankookie.server4983.book.domain.Locker;
+import team.dankookie.server4983.book.repository.locker.LockerRepository;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
@@ -39,6 +41,7 @@ public class ChatBotAdmin {
                 BuyerChat buyerChatCase1 = BuyerChat.buildBuyerChat(messageCase1_buyer, TRADE_STOP_REQUEST, chatRoom);
                 chatRoom.addSellerChat(sellerChatCase1);
                 chatRoom.addBuyerChat(buyerChatCase1);
+                chatRoom.setInteractStep(999);
                 buyerChatRepository.save(buyerChatCase1);
                 sellerChatRepository.save(sellerChatCase1);
 
@@ -59,6 +62,7 @@ public class ChatBotAdmin {
                 BuyerChat buyerChatCase2 = BuyerChat.buildBuyerChat(messageCase2_buyer, TRADE_STOP_REQUEST, chatRoom);
                 chatRoom.addSellerChat(sellerChatCase2);
                 chatRoom.addBuyerChat(buyerChatCase2);
+                chatRoom.setInteractStep(999);
                 buyerChatRepository.save(buyerChatCase2);
                 sellerChatRepository.save(sellerChatCase2);
 
@@ -92,6 +96,7 @@ public class ChatBotAdmin {
                 BuyerChat buyerChatCase1 = BuyerChat.buildBuyerChat(messageCase1_buyer, TRADE_STOP_REQUEST, chatRoom);
                 chatRoom.addSellerChat(sellerChatCase1);
                 chatRoom.addBuyerChat(buyerChatCase1);
+                chatRoom.setInteractStep(999);
                 buyerChatRepository.save(buyerChatCase1);
                 sellerChatRepository.save(sellerChatCase1);
 
@@ -113,6 +118,7 @@ public class ChatBotAdmin {
                 BuyerChat buyerChatCase2 = BuyerChat.buildBuyerChat(messageCase2_buyer, TRADE_STOP_REQUEST, chatRoom);
                 chatRoom.addSellerChat(sellerChatCase2);
                 chatRoom.addBuyerChat(buyerChatCase2);
+                chatRoom.setInteractStep(999);
                 buyerChatRepository.save(buyerChatCase2);
                 sellerChatRepository.save(sellerChatCase2);
 
@@ -136,6 +142,7 @@ public class ChatBotAdmin {
                 BuyerChat buyerChatCase3 = BuyerChat.buildBuyerChat(messageCase3_buyer, TRADE_STOP_REQUEST, chatRoom);
                 chatRoom.addSellerChat(sellerChatCase3);
                 chatRoom.addBuyerChat(buyerChatCase3);
+                chatRoom.setInteractStep(999);
                 buyerChatRepository.save(buyerChatCase3);
                 sellerChatRepository.save(sellerChatCase3);
 
