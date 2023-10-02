@@ -16,6 +16,9 @@ link:index.html[메인 문서]
 
 include::{snippets}/used-book-list/getUsedBookList/success/http-request.adoc[]
 
+queryParameter::
+include::{snippets}/used-book-list/getUsedBookList/success/query-parameters.adoc[]
+
 ==== Response
 
 include::{snippets}/used-book-list/getUsedBookList/success/http-response.adoc[]
@@ -31,6 +34,9 @@ include::{snippets}/used-book-list/getUsedBookListWithCollegeAndDepartment/succe
 
 ===== QueryParameter 예시
 api?college=ENGINEERING,EDUCATION&department=COMPUTER,SOFTWARE,KOREAN
+
+queryParameter::
+include::{snippets}/used-book-list/getUsedBookListWithCollegeAndDepartment/success/query-parameters.adoc[]
 
 ==== Response
 
@@ -101,6 +107,20 @@ include::{snippets}/used-book-list/getUsedBookListWithCollegeAndDepartment/succe
     ORCHESTRA("관현악전공", MUSIC_AND_ARTS),
     COMPOSITION("작곡전공", MUSIC_AND_ARTS),
     GUGAK("국악전공", MUSIC_AND_ARTS);
+
+=== 검색어에 따라서 책 리스트 가져오기 (성공)
+
+==== Request
+
+include::{snippets}/used-book-list/getUsedBookList/search/success/http-request.adoc[]
+
+queryParameter::
+include::{snippets}/used-book-list/getUsedBookList/search/success/query-parameters.adoc[]
+
+==== Response
+
+include::{snippets}/used-book-list/getUsedBookList/search/success/http-response.adoc[]
+include::{snippets}/used-book-list/getUsedBookList/search/success/response-fields.adoc[]
 
 === 마이페이지 판매내역 책 리스트 가져오기(회원이 존재하지 않는 경우)
 
