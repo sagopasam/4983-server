@@ -11,6 +11,7 @@ public enum ContentType {
     BOOK_PLACEMENT_SET , // SELLCHAT_5 서적 배치 설정 성공
     BOOK_PLACEMENT_COMPLETE, // SELLCHAT_5 서적 배치 완료 step : 4
     TRADE_COMPLETE, // SELLCHAT_6 거래 완료 step : 5
-    TRADE_STOP_REQUEST; // SELLCHAT 거래 중지 요청
+    TRADE_STOP_REQUEST, // SELLCHAT 거래 중지 요청
+    TRADE_WARNING; // 경고
 }
 

@@ -104,6 +104,7 @@ public class ChatBotInteract {
         BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_SALE_REJECTION, chatRoom);
         chatRoom.addSellerChat(sellerChat);
         chatRoom.addBuyerChat(buyerChat);
+        chatRoom.setInteractStep(999);
         sellerChatRepository.save(sellerChat);
         buyerChatRepository.save(buyerChat);
         return buyerMessage;

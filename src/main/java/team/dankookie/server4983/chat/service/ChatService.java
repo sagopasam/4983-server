@@ -137,20 +137,18 @@ public class ChatService {
         return chatRoomRepository.findByChatroomWithNickname(nickname);
     }
 
-    public void stopTrade(ChatRequest chatRequest) {
-        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRequest.getChatRoomId())
+    public void stopTrade(ChatStopRequest chatStopRequest) {
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatStopRequest.getChatRoomId())
                 .orElseThrow(() -> new ChatException("채팅방을 찾을 수 없습니다."));
 
-        Member seller = chatRoomRepository.getSeller(chatRequest.getChatRoomId());
-        Member buyer = chatRoomRepository.getBuyer(chatRequest.getChatRoomId());
-        String target = chatRequest.getData().get("target").toString();
+        Member seller = chatRoomRepository.getSeller(chatStopRequest.getChatRoomId());
+        Member buyer = chatRoomRepository.getBuyer(chatStopRequest.getChatRoomId());
+        String target = chatStopRequest.getTarget();
 
         if(target.equals("buyer")) {
             chatBotAdmin.tradeStopByBuyer(chatRoom , seller , buyer);
         } else if(target.equals("seller")) {
             chatBotAdmin.tradeStopBySeller(chatRoom , seller , buyer);
-        } else {
-            return;
         }
     }
 }

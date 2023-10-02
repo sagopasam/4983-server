@@ -6,7 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.dankookie.server4983.book.domain.Locker;
 import team.dankookie.server4983.book.repository.locker.LockerRepository;
+import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
+import team.dankookie.server4983.chat.domain.SellerChat;
+import team.dankookie.server4983.chat.repository.BuyerChatRepository;
+import team.dankookie.server4983.chat.repository.SellerChatRepository;
 import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
 import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.scheduler.constant.ScheduleType;
@@ -16,6 +20,9 @@ import team.dankookie.server4983.scheduler.repository.SchedulerRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PURCHASE_START;
+import static team.dankookie.server4983.chat.constant.ContentType.TRADE_WARNING;
+
 @Service
 @RequiredArgsConstructor
 public class SchedulerService {
@@ -23,6 +30,8 @@ public class SchedulerService {
     private final SchedulerRepository schedulerRepository;
     private final FcmService fcmService;
     private final LockerRepository lockerRepository;
+    private final BuyerChatRepository buyerChatRepository;
+    private final SellerChatRepository sellerChatRepository;
 
     @Scheduled(cron = "0 0/5 * * * *")
     @Transactional
@@ -31,7 +40,32 @@ public class SchedulerService {
 
         for (Schedule schedule : result) {
             fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(schedule.getTargetId(), schedule.getMessage()));
+            saveChatInteract(schedule);
             schedulerRepository.deleteById(schedule.getId());
+        }
+    }
+
+    public void saveChatInteract(Schedule schedule) {
+        ScheduleType scheduleType = schedule.getScheduleType();
+        ChatRoom chatRoom = schedule.getChatRoom();
+
+        switch (scheduleType) {
+            case BUYER_CASE_1:
+            case BUYER_CASE_2:
+                BuyerChat buyerChat = BuyerChat.buildBuyerChat(schedule.getMessage(), TRADE_WARNING, chatRoom);
+
+                chatRoom.addBuyerChat(buyerChat);
+                buyerChatRepository.save(buyerChat);
+                break;
+            case SELLER_CASE_2:
+            case SELLER_CASE_3:
+                SellerChat sellerChat = SellerChat.buildSellerChat(schedule.getMessage(), TRADE_WARNING, chatRoom);
+
+                chatRoom.addSellerChat(sellerChat);
+                sellerChatRepository.save(sellerChat);
+                break;
+            default:
+                break;
         }
     }
 

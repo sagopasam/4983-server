@@ -5,10 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import team.dankookie.server4983.chat.dto.ChatMessageResponse;
-import team.dankookie.server4983.chat.dto.ChatRequest;
-import team.dankookie.server4983.chat.dto.ChatRoomRequest;
-import team.dankookie.server4983.chat.dto.ChatRoomResponse;
+import team.dankookie.server4983.chat.dto.*;
 import team.dankookie.server4983.chat.service.ChatService;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 
@@ -30,8 +27,8 @@ public class ChatController {
     }
 
     @PostMapping("/chat-stop")
-    public ResponseEntity stopTrade(@RequestBody ChatRequest chatRequest) {
-        chatService.stopTrade(chatRequest);
+    public ResponseEntity stopTrade(@RequestBody ChatStopRequest chatStopRequest) {
+        chatService.stopTrade(chatStopRequest);
 
         return ResponseEntity.ok().build();
     }

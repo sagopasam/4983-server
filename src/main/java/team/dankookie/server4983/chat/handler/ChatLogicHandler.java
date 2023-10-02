@@ -5,26 +5,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import team.dankookie.server4983.book.domain.Locker;
 import team.dankookie.server4983.book.repository.locker.LockerRepository;
-import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
-import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.chat.dto.ChatRequest;
 import team.dankookie.server4983.chat.exception.ChatException;
-import team.dankookie.server4983.chat.repository.BuyerChatRepository;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
-import team.dankookie.server4983.chat.repository.SellerChatRepository;
 import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
 import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.scheduler.repository.SchedulerRepository;
 import team.dankookie.server4983.scheduler.service.SchedulerService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
 
-import static team.dankookie.server4983.chat.constant.ContentType.*;
 import static team.dankookie.server4983.scheduler.constant.ScheduleType.*;
 
 @Component
@@ -48,6 +41,9 @@ public class ChatLogicHandler {
 
         switch (chatRequest.getContentType()) {
             case BOOK_PURCHASE_START: // SELLCHAT_1_1 판매자 구매 요청
+                if(chatRoom.getInteractStep() >= 1) {
+                    return;
+                }
                 String startSellerMessage = chatBotInteract.purchaseBookStart(chatRoom);
                 chatBotInteract.purchaseBookWarning(chatRoom);
 
@@ -55,6 +51,9 @@ public class ChatLogicHandler {
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(seller.getId(), startSellerMessage));
                 break;
             case BOOK_PURCHASE_REQUEST: // SELLCHAT_2 판매자 구매 수락
+                if(chatRoom.getInteractStep() >= 2) {
+                    return;
+                }
                 String requestBuyerMessage = chatBotInteract.purchaseBookApprove(chatRoom, seller.getNickname());
                 schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , SELLER_CASE_2);
 
@@ -63,10 +62,17 @@ public class ChatLogicHandler {
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(buyer.getId(), requestBuyerMessage));
                 break;
             case BOOK_SALE_REJECTION: // SELLCHAT_1_2 거래 거절
+                if(chatRoom.getInteractStep() >= 100) {
+                    return;
+                }
                 String bookSakeRejectionBuyerMessage = chatBotInteract.rejectPurchaseRequest(chatRoom, buyer.getNickname(), seller.getNickname());
+
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(buyer.getId(), bookSakeRejectionBuyerMessage));
                 break;
             case PAYMENT_CONFIRMATION_COMPLETE: // SELLCHAT_4 입금 확인
+                if(chatRoom.getInteractStep() >= 3) {
+                    return;
+                }
                 List<String> paymentConfirmationCompleteMessageList = chatBotInteract.confirmDeposit(chatRoom);
 
                 schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , BUYER_CASE_1);
@@ -74,6 +80,9 @@ public class ChatLogicHandler {
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(buyer.getId(), paymentConfirmationCompleteMessageList.get(1)));
                 break;
             case BOOK_PLACEMENT_SET : // 서적 위치 설정 완료
+                if(chatRoom.getInteractStep() >= 4) {
+                    return;
+                }
                 Locker locker = saveLockerData(chatRequest , chatRoom);
                 String bookPlacementCompleteBuyerMessage = chatBotInteract.completeSelectLockAndPassword(chatRoom, chatRequest , locker);
 
@@ -86,8 +95,12 @@ public class ChatLogicHandler {
                 schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , SELLER_CASE_3);
                 break;
             case TRADE_COMPLETE: // SELLCHAT_6 거래 완료
+                if(chatRoom.getInteractStep() >= 5) {
+                    return;
+                }
                 String tradeCompleteSellerMessage = chatBotInteract.completeTrade(chatRoom);
 
+                releaseLocker(chatRoom);
                 schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , BUYER_CASE_2);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(seller.getId(), tradeCompleteSellerMessage));
                 break;
@@ -97,12 +110,13 @@ public class ChatLogicHandler {
     }
 
     public Locker saveLockerData(ChatRequest chatRequest , ChatRoom chatRoom) {
-        if(lockerRepository.findByLockerNumber(chatRequest.getData().get("lockerNumber").toString()).isPresent()) {
-            throw new ChatException("이미 사용중인 Locker 입니다.");
-        }
-
         String lockerNumber = chatRequest.getData().get("lockerNumber").toString();
         String lockerPassword = chatRequest.getData().get("lockerPassword").toString();
+
+        Locker result = lockerRepository.findByLockerNumberAAndIsExists(lockerNumber , true);
+        if(result != null && result.getTradeDate().equals(chatRoom.getUsedBook().getTradeAvailableDatetime())) {
+            throw new ChatException("이미 사용중인 Locker 입니다.");
+        }
 
         Locker locker = Locker.builder()
                 .lockerNumber(lockerNumber)
@@ -113,6 +127,12 @@ public class ChatLogicHandler {
                 .build();
 
         return lockerRepository.save(locker);
+    }
+
+    public void releaseLocker(ChatRoom chatRoom) {
+         Locker locker = lockerRepository.findByChatRoom(chatRoom);
+
+        locker.releaseLocker();
     }
 
 }

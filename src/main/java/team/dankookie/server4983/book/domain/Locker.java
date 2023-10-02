@@ -33,4 +33,8 @@ public class Locker {
 
     private LocalDateTime tradeDate;
 
+    public void releaseLocker() {
+        isExists = false;
+    }
+
 }
