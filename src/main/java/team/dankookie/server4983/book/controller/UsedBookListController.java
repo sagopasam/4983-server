@@ -15,24 +15,31 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/used-book-list")
+@RequestMapping("/api/v1/used-book-list")
 public class UsedBookListController {
 
     private final UsedBookListService usedBookListService;
 
     @GetMapping
-    public ResponseEntity<List<UsedBookListResponse>> getUsedBookList(@RequestParam boolean canBuyElseAll) {
-        return ResponseEntity.ok(usedBookListService.getUsedBookList(canBuyElseAll));
+    public ResponseEntity<List<UsedBookListResponse>> getUsedBookList(@RequestParam boolean isOrderByTradeAvailableDatetime) {
+        return ResponseEntity.ok(usedBookListService.getUsedBookList(isOrderByTradeAvailableDatetime));
     }
 
     @GetMapping("/college-and-department")
     public ResponseEntity<List<UsedBookListResponse>> getUsedBookListByCollegeAndDepartment(
-            @RequestParam boolean canBuyElseAll,
+            @RequestParam boolean isOrderByTradeAvailableDatetime,
             @RequestParam List<College> college,
             @RequestParam List<Department> department
     ) {
-        return ResponseEntity.ok(usedBookListService.getUsedBookList(college, department, canBuyElseAll));
+        return ResponseEntity.ok(usedBookListService.getUsedBookList(college, department, isOrderByTradeAvailableDatetime));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<UsedBookListResponse>> getUsedBookListBySearch(
+            @RequestParam boolean isOrderByTradeAvailableDatetime,
+            @RequestParam String searchKeyword
+    ) {
+        return ResponseEntity.ok(usedBookListService.getUsedBookListBySearchKeyword(searchKeyword, isOrderByTradeAvailableDatetime));
+    }
 
 }

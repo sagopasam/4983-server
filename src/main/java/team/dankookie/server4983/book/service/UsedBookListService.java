@@ -19,19 +19,19 @@ public class UsedBookListService {
     private final UsedBookRepository usedBookRepository;
     private final BookImageRepository bookImageRepository;
 
-    public List<UsedBookListResponse> getUsedBookList(boolean canBuyElseAll) {
+    public List<UsedBookListResponse> getUsedBookList(boolean isOrderByTradeAvailableDatetime) {
 
         List<UsedBookListResponse> responseList = new ArrayList<>();
 
-        List<UsedBook> usedBookList = usedBookRepository.getUsedBookList(canBuyElseAll);
+        List<UsedBook> usedBookList = usedBookRepository.getUsedBookList(isOrderByTradeAvailableDatetime);
 
         return getUsedBookListResponses(responseList, usedBookList);
     }
 
-    public List<UsedBookListResponse> getUsedBookList(List<College> college, List<Department> department, boolean canBuyElseAll) {
+    public List<UsedBookListResponse> getUsedBookList(List<College> college, List<Department> department, boolean isOrderByTradeAvailableDatetime) {
         List<UsedBookListResponse> responseList = new ArrayList<>();
 
-        List<UsedBook> usedBookList = usedBookRepository.getUsedBookListInCollegeAndDepartment(college, department, canBuyElseAll);
+        List<UsedBook> usedBookList = usedBookRepository.getUsedBookListInCollegeAndDepartment(college, department, isOrderByTradeAvailableDatetime);
 
         return getUsedBookListResponses(responseList, usedBookList);
     }
@@ -52,5 +52,12 @@ public class UsedBookListService {
         }
 
         return responseList;
+    }
+
+    public List<UsedBookListResponse> getUsedBookListBySearchKeyword(String searchKeyword, boolean isOrderByTradeAvailableDatetime) {
+        List<UsedBookListResponse> responseList = new ArrayList<>();
+
+        List<UsedBook> usedBookList = usedBookRepository.getUsedBookListBySearchKeyword(searchKeyword, isOrderByTradeAvailableDatetime);
+        return getUsedBookListResponses(responseList, usedBookList);
     }
 }
