@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -45,13 +48,13 @@ public class UsedBook extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private BookStatus bookStatus;
 
-    @Column(columnDefinition = "boolean default false")
+    @ColumnDefault("false")
     private Boolean isUnderlinedOrWrite;
 
-    @Column(columnDefinition = "boolean default false")
+    @ColumnDefault("false")
     private Boolean isDiscolorationAndDamage;
 
-    @Column(columnDefinition = "boolean default false")
+    @ColumnDefault("false")
     private Boolean isCoverDamaged;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -60,7 +63,7 @@ public class UsedBook extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Member sellerMember;
 
-    @Column(columnDefinition = "boolean default false")
+    @ColumnDefault("false")
     private Boolean isDeleted;
 
     @OneToMany(mappedBy = "usedBook", cascade = CascadeType.ALL)
