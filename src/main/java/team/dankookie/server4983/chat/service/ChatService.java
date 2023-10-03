@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.dankookie.server4983.book.constant.Department;
+import team.dankookie.server4983.book.domain.Locker;
 import team.dankookie.server4983.book.domain.UsedBook;
+import team.dankookie.server4983.book.repository.locker.LockerRepository;
 import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
 import team.dankookie.server4983.chat.constant.ContentType;
 import team.dankookie.server4983.chat.domain.BuyerChat;
@@ -13,8 +15,11 @@ import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.chat.dto.*;
 import team.dankookie.server4983.chat.exception.ChatException;
+import team.dankookie.server4983.chat.handler.ChatBotAdmin;
 import team.dankookie.server4983.chat.handler.ChatLogicHandler;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
+import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
+import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.jwt.constants.TokenSecretKey;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
@@ -40,6 +45,8 @@ public class ChatService {
     private final MemberService memberService;
     private final JwtTokenUtils jwtTokenUtils;
     private final TokenSecretKey tokenSecretKey;
+    private final ChatBotAdmin chatBotAdmin;
+    private final LockerRepository lockerRepository;
 
     public void chatRequestHandler(ChatRequest chatRequest , AccessToken accessToken) {
         String userName = accessToken.nickname();
@@ -48,7 +55,6 @@ public class ChatService {
         chatLogicHandler.chatLoginHandler(chatRequest , member);
     }
 
-//    @Transactional
     public ChatRoomResponse createChatRoom(ChatRoomRequest chatRoomRequest , AccessToken accessToken) throws AccountException {
         String nickname = accessToken.nickname();
 
@@ -105,7 +111,6 @@ public class ChatService {
                 chatRoomRepository.updateSellerChattingToRead(chatRoomId);
                 return chatRoomRepository.findChatMessageByChatroomIdWithSellerNickname(chatRoomId, nickname);
             }
-
         }else {
             chatRoomRepository.updateBuyerChattingToRead(chatRoomId);
             return chatRoomRepository.findChatMessageByChatroomIdWithBuyerNickname(chatRoomId, nickname);
@@ -135,18 +140,29 @@ public class ChatService {
         return chatRoomRepository.findByChatroomWithNickname(nickname);
     }
 
-    private Member createTemporaryMember() {
-        return Member.builder()
-                .studentId("studentIds")
-                .yearOfAdmission(0)
-                .department(Department.DEPARTMENT_OF_LAW)
-                .nickname("DFGgt4t21Rr-351rfvZCVb")
-                .password("password")
-                .phoneNumber("01012341234")
-                .accountHolder("accountHolder")
-                .accountBank(AccountBank.IBK)
-                .accountNumber("0101010100101010")
-                .build();
+    @Transactional
+    public void stopTrade(ChatStopRequest chatStopRequest) {
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatStopRequest.getChatRoomId())
+                .orElseThrow(() -> new ChatException("채팅방을 찾을 수 없습니다."));
+
+        Member seller = chatRoomRepository.getSeller(chatStopRequest.getChatRoomId());
+        Member buyer = chatRoomRepository.getBuyer(chatStopRequest.getChatRoomId());
+        String target = chatStopRequest.getTarget();
+
+        if(target.equals("buyer")) {
+            chatBotAdmin.tradeStopByBuyer(chatRoom , seller , buyer);
+        } else if(target.equals("seller")) {
+            chatBotAdmin.tradeStopBySeller(chatRoom , seller , buyer);
+        } else {
+            return;
+        }
+
+        releaseLocker(chatRoom);
     }
 
+    public void releaseLocker(ChatRoom chatRoom) {
+        Locker locker = lockerRepository.findByChatRoom(chatRoom);
+
+        locker.releaseLocker();
+    }
 }
