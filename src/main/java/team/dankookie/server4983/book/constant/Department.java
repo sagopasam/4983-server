@@ -8,6 +8,7 @@ import static team.dankookie.server4983.book.constant.College.*;
 @RequiredArgsConstructor
 @Getter
 public enum Department {
+    GE("교양", College.GE),
     BUSINESS("경영학과", BUSINESS_AND_ECONOMICS),
     ECONOMICS("경제학과", BUSINESS_AND_ECONOMICS),
     INTERNATIONAL_BUSINESS("국제경영학전공", BUSINESS_AND_ECONOMICS),
