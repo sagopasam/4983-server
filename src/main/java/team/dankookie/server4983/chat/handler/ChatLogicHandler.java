@@ -115,10 +115,6 @@ public class ChatLogicHandler {
 
         Locker result = lockerRepository.findByLockerNumberAndIsExists(lockerNumber);
 
-        if(result != null) {
-            System.out.println(result.getTradeDate().toString());
-            System.out.println(chatRoom.getUsedBook().getTradeAvailableDatetime().toString());
-        }
         if(result != null && result.getTradeDate().equals(chatRoom.getUsedBook().getTradeAvailableDatetime())) {
             throw new ChatException("이미 사용중인 Locker 입니다.");
         }
