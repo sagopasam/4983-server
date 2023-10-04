@@ -20,7 +20,6 @@ import team.dankookie.server4983.scheduler.repository.SchedulerRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PURCHASE_START;
 import static team.dankookie.server4983.chat.constant.ContentType.TRADE_WARNING;
 
 @Service
@@ -33,7 +32,7 @@ public class SchedulerService {
     private final BuyerChatRepository buyerChatRepository;
     private final SellerChatRepository sellerChatRepository;
 
-    @Scheduled(cron = "0 0/5 * * * *")
+    @Scheduled(cron = "0 0/1 * * * *")
     @Transactional
     public void execute() {
         List<Schedule> result = schedulerRepository.findByAlertTime(LocalDateTime.now());
