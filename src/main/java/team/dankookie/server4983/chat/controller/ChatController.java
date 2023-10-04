@@ -33,6 +33,13 @@ public class ChatController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/chat/{chatRoomId}")
+    public ResponseEntity sendCustomMessage(@PathVariable long chatRoomId , @RequestBody ChatMessageRequest messageRequest) {
+        chatService.sendCustomMessage(chatRoomId , messageRequest);
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/chat/{chatRoomId}")
     public ResponseEntity<List<ChatMessageResponse>> getChattingData(@PathVariable long chatRoomId, AccessToken accessToken) {
         List<ChatMessageResponse> chattingMessageList = chatService.getChattingData(chatRoomId, accessToken);
