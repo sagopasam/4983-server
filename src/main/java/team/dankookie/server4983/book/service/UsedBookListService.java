@@ -9,7 +9,6 @@ import team.dankookie.server4983.book.dto.UsedBookListResponse;
 import team.dankookie.server4983.book.repository.bookImage.BookImageRepository;
 import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -20,20 +19,11 @@ public class UsedBookListService {
     private final BookImageRepository bookImageRepository;
 
     public List<UsedBookListResponse> getUsedBookList(boolean isOrderByTradeAvailableDatetime) {
-
-        List<UsedBookListResponse> responseList = new ArrayList<>();
-
-        List<UsedBook> usedBookList = usedBookRepository.getUsedBookList(isOrderByTradeAvailableDatetime);
-
-        return getUsedBookListResponses(responseList, usedBookList);
+        return usedBookRepository.getUsedBookList(isOrderByTradeAvailableDatetime);
     }
 
     public List<UsedBookListResponse> getUsedBookList(List<College> college, List<Department> department, boolean isOrderByTradeAvailableDatetime) {
-        List<UsedBookListResponse> responseList = new ArrayList<>();
-
-        List<UsedBook> usedBookList = usedBookRepository.getUsedBookListInCollegeAndDepartment(college, department, isOrderByTradeAvailableDatetime);
-
-        return getUsedBookListResponses(responseList, usedBookList);
+        return usedBookRepository.getUsedBookListInCollegeAndDepartment(college, department, isOrderByTradeAvailableDatetime);
     }
 
     private List<UsedBookListResponse> getUsedBookListResponses(List<UsedBookListResponse> responseList, List<UsedBook> usedBookList) {
@@ -55,9 +45,6 @@ public class UsedBookListService {
     }
 
     public List<UsedBookListResponse> getUsedBookListBySearchKeyword(String searchKeyword, boolean isOrderByTradeAvailableDatetime) {
-        List<UsedBookListResponse> responseList = new ArrayList<>();
-
-        List<UsedBook> usedBookList = usedBookRepository.getUsedBookListBySearchKeyword(searchKeyword, isOrderByTradeAvailableDatetime);
-        return getUsedBookListResponses(responseList, usedBookList);
+        return usedBookRepository.getUsedBookListBySearchKeyword(searchKeyword, isOrderByTradeAvailableDatetime);
     }
 }

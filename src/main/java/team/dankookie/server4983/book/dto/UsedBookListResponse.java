@@ -1,5 +1,6 @@
 package team.dankookie.server4983.book.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import team.dankookie.server4983.book.constant.BookStatus;
 
@@ -16,7 +17,15 @@ public record UsedBookListResponse (
 ){
 
     @Builder
-    public UsedBookListResponse {
+    @QueryProjection
+    public UsedBookListResponse(Long usedBookId, String imageUrl, BookStatus bookStatus, String name, LocalDateTime tradeAvailableDatetime, LocalDateTime createdAt, Integer price) {
+        this.usedBookId = usedBookId;
+        this.imageUrl = imageUrl;
+        this.bookStatus = bookStatus;
+        this.name = name;
+        this.tradeAvailableDatetime = tradeAvailableDatetime;
+        this.createdAt = createdAt;
+        this.price = price;
     }
 }
 
