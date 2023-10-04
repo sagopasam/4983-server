@@ -16,8 +16,8 @@ public class SchedulerRepositoryImpl implements CustomSchedulerRepository {
 
     @Override
     public List<Schedule> findByAlertTime(LocalDateTime time) {
-        LocalDateTime start = LocalDateTime.of(time.getYear() , time.getMonth() , time.getDayOfMonth() , time.getHour(), time.getMinute() - 3).withNano(0);
-        LocalDateTime end = LocalDateTime.of(time.getYear() , time.getMonth() , time.getDayOfMonth() , time.getHour(), time.getMinute() + 3).withNano(0);
+        LocalDateTime start = LocalDateTime.now().withNano(0).minusMinutes(20);
+        LocalDateTime end = LocalDateTime.now().withNano(0).plusMinutes(20);
 
         return jpaQueryFactory.select(schedule)
                 .from(schedule)
