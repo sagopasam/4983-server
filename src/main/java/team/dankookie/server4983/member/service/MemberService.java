@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
+import team.dankookie.server4983.book.domain.BookImage;
 import team.dankookie.server4983.book.domain.UsedBook;
+import team.dankookie.server4983.book.repository.bookImage.BookImageRepository;
 import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
@@ -40,6 +42,7 @@ public class MemberService {
     private final JwtTokenUtils jwtTokenUtils;
     private final TokenSecretKey tokenSecretKey;
     private final ChatRoomRepository chatRoomRepository;
+    private final BookImageRepository bookImageRepository;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -76,6 +79,8 @@ public class MemberService {
 
         memberRepository.save(testMember1);
         memberRepository.save(testMember2);
+
+
 
         UsedBook usedBook1 = UsedBook.builder()
                 .bookStatus(BookStatus.SALE)
@@ -213,6 +218,49 @@ public class MemberService {
         usedBookRepository.save(usedBook8);
         usedBookRepository.save(usedBook9);
         usedBookRepository.save(usedBook10);
+
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook1)
+                    .imageUrl("imageUrl")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook2)
+                    .imageUrl("imageUrl")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook3)
+                    .imageUrl("imageUrl")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook4)
+                    .imageUrl("imageUrl")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook5)
+                    .imageUrl("imageUrl")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook6)
+                    .imageUrl("imageUrl")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook7)
+                    .imageUrl("imageUrl")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook8)
+                    .imageUrl("imageUrl")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook9)
+                    .imageUrl("imageUrl")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook10)
+                    .imageUrl("imageUrl")
+                    .build());
+
+
 
         ChatRoom chatRoom_1 = buildChatRoom(testMember1 , testMember2 , usedBook1);
         ChatRoom chatRoom_2 = buildChatRoom(testMember2 , testMember1 , usedBook2);

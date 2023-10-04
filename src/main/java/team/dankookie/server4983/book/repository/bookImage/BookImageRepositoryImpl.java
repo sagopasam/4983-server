@@ -16,6 +16,7 @@ public class BookImageRepositoryImpl implements BookImageRepositoryCustom {
                 .from(bookImage)
                 .where(bookImage.usedBook.id.eq(usedBookId))
                 .orderBy(bookImage.id.desc())
+                .limit(1)
                 .fetchOne();
     }
 }
