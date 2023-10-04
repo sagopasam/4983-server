@@ -164,7 +164,8 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
         if (chatListResponseList.size() == 0) {
             return chatListResponseList;
         }
-        chatListResponseList.sort(Comparator.comparing(ChatListResponse::createdAt).reversed());
+        chatListResponseList.sort(Comparator.comparing(ChatListResponse::createdAt, Comparator.nullsLast(Comparator.reverseOrder())));
+
         return chatListResponseList;
     }
 

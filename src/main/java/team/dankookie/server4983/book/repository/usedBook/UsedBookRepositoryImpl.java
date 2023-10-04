@@ -8,8 +8,6 @@ import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.book.domain.UsedBook;
-import team.dankookie.server4983.member.domain.Member;
-import team.dankookie.server4983.member.domain.QMember;
 
 import java.util.List;
 
@@ -21,26 +19,37 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<UsedBook> getUsedBookList(boolean canBuyElseAll) {
+    public List<UsedBook> getUsedBookList(boolean isOrderByTradeAvailableDatetime) {
         JPAQuery<UsedBook> query = queryFactory.selectFrom(usedBook);
-        return getUsedBooksCanBuyElseAll(canBuyElseAll, query);
+
+        return getUsedBooksIsOrderByTradeAvailableDatetime(isOrderByTradeAvailableDatetime, query);
     }
 
     @Override
-    public List<UsedBook> getUsedBookListInCollegeAndDepartment(List<College> college, List<Department> department, boolean canBuyElseAll) {
-        JPAQuery<UsedBook> query = queryFactory.selectFrom(usedBook);
+    public List<UsedBook> getUsedBookListInCollegeAndDepartment(List<College> college, List<Department> department, boolean isOrderByTradeAvailableDatetime) {
+        JPAQuery<UsedBook> query = queryFactory.selectFrom(usedBook)
+                .where(
+                        usedBook.college.in(college).or(usedBook.department.in(department))
+                );
 
-        query.where(usedBook.college.in(college).or(usedBook.department.in(department)));
-        return getUsedBooksCanBuyElseAll(canBuyElseAll, query);
+        return getUsedBooksIsOrderByTradeAvailableDatetime(isOrderByTradeAvailableDatetime, query);
     }
 
-    private List<UsedBook> getUsedBooksCanBuyElseAll(boolean canBuyElseAll, JPAQuery<UsedBook> query) {
-        if (canBuyElseAll) {
+    @Override
+    public List<UsedBook> getUsedBookListBySearchKeyword(String searchKeyword, boolean isOrderByTradeAvailableDatetime) {
+        JPAQuery<UsedBook> query = queryFactory.selectFrom(usedBook)
+                .where(
+                        usedBook.name.contains(searchKeyword)
+                );
+        return getUsedBooksIsOrderByTradeAvailableDatetime(isOrderByTradeAvailableDatetime, query);
+    }
+
+    private List<UsedBook> getUsedBooksIsOrderByTradeAvailableDatetime(boolean isOrderByTradeAvailableDatetime, JPAQuery<UsedBook> query) {
+        if (isOrderByTradeAvailableDatetime) {
             return query
-                    .where(usedBook.bookStatus.eq(BookStatus.SALE).and(usedBook.isDeleted.eq(false)))
-                    .orderBy(usedBook.createdAt.desc()).fetch();
-        }else {
-            return query
+                    .where(usedBook.isDeleted.eq(false),
+                            usedBook.sellerMember.isWithdraw.eq(false)
+                    )
                     .orderBy(
                             new CaseBuilder()
                                     .when(usedBook.bookStatus.eq(BookStatus.SALE)).then(1)
@@ -48,7 +57,22 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
                                     .when(usedBook.bookStatus.eq(BookStatus.SOLD)).then(3)
                                     .otherwise(4)
                                     .asc(),
-                            usedBook.createdAt.desc()
+                            usedBook.tradeAvailableDatetime.desc()
+                    ).fetch();
+        }else {
+
+            return query
+                    .where(usedBook.isDeleted.eq(false),
+                            usedBook.sellerMember.isWithdraw.eq(false)
+                    )
+                    .orderBy(
+                            new CaseBuilder()
+                                    .when(usedBook.bookStatus.eq(BookStatus.SALE)).then(1)
+                                    .when(usedBook.bookStatus.eq(BookStatus.TRADE)).then(2)
+                                    .when(usedBook.bookStatus.eq(BookStatus.SOLD)).then(3)
+                                    .otherwise(4)
+                                    .asc(),
+                            usedBook.id.desc()
                     )
                     .fetch();
         }

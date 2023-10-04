@@ -9,8 +9,9 @@ import java.util.List;
 
 public interface UsedBookRepositoryCustom {
 
-    List<UsedBook> getUsedBookList(boolean canBuyElseAll);
+    List<UsedBook> getUsedBookList(boolean isOrderByTradeAvailableDatetime);
 
-    List<UsedBook> getUsedBookListInCollegeAndDepartment(List<College> college, List<Department> department, boolean canBuyElseAll);
+    List<UsedBook> getUsedBookListInCollegeAndDepartment(List<College> college, List<Department> department, boolean isOrderByTradeAvailableDatetime);
 
+    List<UsedBook> getUsedBookListBySearchKeyword(String searchKeyword, boolean isOrderByTradeAvailableDatetime);
 }
