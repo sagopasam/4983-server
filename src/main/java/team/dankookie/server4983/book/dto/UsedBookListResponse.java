@@ -27,5 +27,9 @@ public record UsedBookListResponse (
         this.createdAt = createdAt;
         this.price = price;
     }
+
+    public static UsedBookListResponse of (Long usedBookId, String imageUrl, BookStatus bookStatus, String name, LocalDateTime tradeAvailableDatetime, LocalDateTime createdAt, Integer price) {
+        return new UsedBookListResponse(usedBookId, imageUrl, bookStatus, name, tradeAvailableDatetime, createdAt, price);
+    }
 }
 

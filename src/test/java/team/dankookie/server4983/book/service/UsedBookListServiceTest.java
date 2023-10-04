@@ -40,13 +40,11 @@ class UsedBookListServiceTest extends BaseServiceTest {
         final String imageUrl = "imageUrl";
         final boolean canBuy = false;
 
-        final UsedBook book1 = createBook();
-        final UsedBook book2 = createBook();
+        UsedBookListResponse usedBookListResponse1 = UsedBookListResponse.of(1L, imageUrl, BookStatus.SALE, "book", LocalDateTime.of(2023, 12, 12, 12, 30), LocalDateTime.of(2023, 12, 12, 12, 30), 10000);
+        UsedBookListResponse usedBookListResponse2 = UsedBookListResponse.of(1L, imageUrl, BookStatus.SALE, "book", LocalDateTime.of(2023, 12, 12, 12, 30), LocalDateTime.of(2023, 12, 12, 12, 30), 10000);
 
         when(usedBookRepository.getUsedBookList(canBuy))
-                .thenReturn(List.of(book1, book2));
-        when(bookImageRepository.getBookImageUrlByUsedBookId(any()))
-                .thenReturn(imageUrl);
+                .thenReturn(List.of(usedBookListResponse1, usedBookListResponse2));
         //when
         List<UsedBookListResponse> usedBookList = usedBookListService.getUsedBookList(canBuy);
 

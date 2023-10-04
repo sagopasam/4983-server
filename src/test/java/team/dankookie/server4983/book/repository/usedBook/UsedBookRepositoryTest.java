@@ -8,6 +8,7 @@ import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.book.domain.UsedBook;
+import team.dankookie.server4983.book.dto.UsedBookListResponse;
 import team.dankookie.server4983.common.BaseRepositoryTest;
 import team.dankookie.server4983.member.constant.AccountBank;
 import team.dankookie.server4983.member.domain.Member;
@@ -86,13 +87,13 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
 
 
         //when
-        List<UsedBook> usedBookList = usedBookRepository.getUsedBookList(canBuyElseAll);
+        List<UsedBookListResponse> usedBookList = usedBookRepository.getUsedBookList(canBuyElseAll);
 
         //then
         assertThat(usedBookList).hasSize(3);
-        assertThat(usedBookList.get(0).getBookStatus()).isEqualTo(BookStatus.SALE);
-        assertThat(usedBookList.get(1).getBookStatus()).isEqualTo(BookStatus.TRADE);
-        assertThat(usedBookList.get(2).getBookStatus()).isEqualTo(BookStatus.SOLD);
+        assertThat(usedBookList.get(0).bookStatus()).isEqualTo(BookStatus.SALE);
+        assertThat(usedBookList.get(1).bookStatus()).isEqualTo(BookStatus.TRADE);
+        assertThat(usedBookList.get(2).bookStatus()).isEqualTo(BookStatus.SOLD);
     }
 
     @Test
@@ -153,7 +154,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
 
 
         //when
-        List<UsedBook> usedBookList = usedBookRepository.getUsedBookListInCollegeAndDepartment(collegeList, departmentList, canBuyElseAll);
+        List<UsedBookListResponse> usedBookList = usedBookRepository.getUsedBookListInCollegeAndDepartment(collegeList, departmentList, canBuyElseAll);
 
         //then
         assertThat(usedBookList).hasSize(2);
@@ -218,7 +219,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
 
 
         //when
-        List<UsedBook> usedBookList = usedBookRepository.getUsedBookListInCollegeAndDepartment(collegeList, List.of(), canBuyElseAll);
+        List<UsedBookListResponse> usedBookList = usedBookRepository.getUsedBookListInCollegeAndDepartment(collegeList, List.of(), canBuyElseAll);
 
         //then
         assertThat(usedBookList).hasSize(2);
@@ -283,7 +284,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
 
 
         //when
-        List<UsedBook> usedBookList = usedBookRepository.getUsedBookListInCollegeAndDepartment(List.of(), departmentList, canBuyElseAll);
+        List<UsedBookListResponse> usedBookList = usedBookRepository.getUsedBookListInCollegeAndDepartment(List.of(), departmentList, canBuyElseAll);
 
         //then
         assertThat(usedBookList).hasSize(2);

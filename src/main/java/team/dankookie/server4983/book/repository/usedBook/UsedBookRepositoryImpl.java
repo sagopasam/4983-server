@@ -47,7 +47,11 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
         JPAQuery<UsedBookListResponse> query = queryFactory.select(
                         new QUsedBookListResponse(
                                 usedBook.id,
-                                usedBook.bookImageList.get(0).imageUrl,
+                                JPAExpressions.select(bookImage.imageUrl)
+                                        .from(bookImage)
+                                        .where(bookImage.usedBook.eq(usedBook))
+                                        .orderBy(bookImage.id.asc())
+                                        .limit(1),
                                 usedBook.bookStatus,
                                 usedBook.name,
                                 usedBook.tradeAvailableDatetime,
@@ -67,7 +71,11 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
         JPAQuery<UsedBookListResponse> query = queryFactory.select(
                         new QUsedBookListResponse(
                                 usedBook.id,
-                                usedBook.bookImageList.get(0).imageUrl,
+                                JPAExpressions.select(bookImage.imageUrl)
+                                        .from(bookImage)
+                                        .where(bookImage.usedBook.eq(usedBook))
+                                        .orderBy(bookImage.id.asc())
+                                        .limit(1),
                                 usedBook.bookStatus,
                                 usedBook.name,
                                 usedBook.tradeAvailableDatetime,

@@ -26,23 +26,6 @@ public class UsedBookListService {
         return usedBookRepository.getUsedBookListInCollegeAndDepartment(college, department, isOrderByTradeAvailableDatetime);
     }
 
-    private List<UsedBookListResponse> getUsedBookListResponses(List<UsedBookListResponse> responseList, List<UsedBook> usedBookList) {
-        for (UsedBook usedBook : usedBookList) {
-            String firstImageUrl = bookImageRepository.getBookImageUrlByUsedBookId(usedBook.getId());
-            UsedBookListResponse usedBookListResponse = UsedBookListResponse.builder()
-                    .usedBookId(usedBook.getId())
-                    .imageUrl(firstImageUrl)
-                    .bookStatus(usedBook.getBookStatus())
-                    .name(usedBook.getName())
-                    .tradeAvailableDatetime(usedBook.getTradeAvailableDatetime())
-                    .createdAt(usedBook.getCreatedAt())
-                    .price(usedBook.getPrice())
-                    .build();
-            responseList.add(usedBookListResponse);
-        }
-
-        return responseList;
-    }
 
     public List<UsedBookListResponse> getUsedBookListBySearchKeyword(String searchKeyword, boolean isOrderByTradeAvailableDatetime) {
         return usedBookRepository.getUsedBookListBySearchKeyword(searchKeyword, isOrderByTradeAvailableDatetime);
