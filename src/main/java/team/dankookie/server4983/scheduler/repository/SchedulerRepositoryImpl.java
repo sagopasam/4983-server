@@ -4,10 +4,14 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import team.dankookie.server4983.chat.constant.ContentType;
 import team.dankookie.server4983.chat.domain.ChatRoom;
+import team.dankookie.server4983.scheduler.constant.ReportType;
+import team.dankookie.server4983.scheduler.entity.AdminReport;
+import team.dankookie.server4983.scheduler.entity.QAdminReport;
 import team.dankookie.server4983.scheduler.entity.Schedule;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static team.dankookie.server4983.book.domain.QUsedBook.usedBook;
 import static team.dankookie.server4983.chat.domain.QChatRoom.chatRoom;
@@ -51,6 +55,16 @@ public class SchedulerRepositoryImpl implements CustomSchedulerRepository {
                 .on(usedBook.tradeAvailableDatetime.goe(start).and(usedBook.tradeAvailableDatetime.loe(end)))
                 .where(chatRoom.interactStep.eq(interactStep))
                 .fetch();
+    }
+
+    @Override
+    public Optional<AdminReport> findByChatRoomAndReportType(ChatRoom chatRoom, ReportType reportType) {
+        QAdminReport adminReport = new QAdminReport("admin");
+        AdminReport result = jpaQueryFactory.select(adminReport).from(adminReport)
+                .where(adminReport.chatRoom.eq(chatRoom).and(adminReport.reportType.eq(reportType.getType())))
+                .fetchOne();
+
+        return Optional.ofNullable(result);
     }
 
 }

@@ -20,7 +20,8 @@ public class AdminReportService {
     private final AdminReportRepository adminReportRepository;
     private final SchedulerRepository schedulerRepository;
 
-    @Scheduled(cron = "0 0/10 * * * *")
+    @Scheduled(cron = "* 0/10 * * * *")
+    @Transactional
     public void execute() {
         addAdminReportByNotBookArrangement();
         addAdminReportByNotDeposit();
@@ -32,7 +33,9 @@ public class AdminReportService {
         List<ChatRoom> result = schedulerRepository.findChatRoomAfterTime(30 , 3);
 
         for(ChatRoom chatRoom : result) {
-            adminReportRepository.save(AdminReport.createAdminReport(chatRoom , NOT_BOOK_ARRANGEMENT));
+            if(!schedulerRepository.findByChatRoomAndReportType(chatRoom , NOT_BOOK_ARRANGEMENT).isPresent()) {
+                adminReportRepository.save(AdminReport.createAdminReport(chatRoom , NOT_BOOK_ARRANGEMENT));
+            };
         }
     }
 
@@ -41,7 +44,9 @@ public class AdminReportService {
         List<ChatRoom> result = schedulerRepository.findChatRoomAfterTime(144 , 2);
 
         for(ChatRoom chatRoom : result) {
-            adminReportRepository.save(AdminReport.createAdminReport(chatRoom , NOT_DEPOSIT));
+            if(!schedulerRepository.findByChatRoomAndReportType(chatRoom , NOT_DEPOSIT).isPresent()) {
+                adminReportRepository.save(AdminReport.createAdminReport(chatRoom, NOT_DEPOSIT));
+            }
         }
     }
 
@@ -50,7 +55,9 @@ public class AdminReportService {
         List<ChatRoom> result = schedulerRepository.findChatRoomPreviouslyTime(30 , 4);
 
         for(ChatRoom chatRoom : result) {
-            adminReportRepository.save(AdminReport.createAdminReport(chatRoom , NOT_BOOK_PICKUP));
+            if(!schedulerRepository.findByChatRoomAndReportType(chatRoom , NOT_BOOK_PICKUP).isPresent()) {
+                adminReportRepository.save(AdminReport.createAdminReport(chatRoom, NOT_BOOK_PICKUP));
+            }
         }
     }
 
