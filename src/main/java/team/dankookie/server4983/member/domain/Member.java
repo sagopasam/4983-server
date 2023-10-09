@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.common.domain.BaseEntity;
 import team.dankookie.server4983.member.constant.AccountBank;
@@ -30,6 +31,10 @@ public class Member extends BaseEntity implements UserDetails {
 
     @NotNull
     private String studentId;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private College college;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -76,9 +81,10 @@ public class Member extends BaseEntity implements UserDetails {
     }
 
     @Builder
-    public Member(Long id, String studentId, Department department, Integer yearOfAdmission, String nickname, String password, String phoneNumber, String accountHolder, AccountBank accountBank, String accountNumber, String imageUrl, Boolean marketingAgree, String firebaseToken, UserRole role, Boolean isWithdraw) {
+    public Member(Long id, String studentId, College college, Department department, Integer yearOfAdmission, String nickname, String password, String phoneNumber, String accountHolder, AccountBank accountBank, String accountNumber, String imageUrl, Boolean marketingAgree, String firebaseToken, UserRole role, Boolean isWithdraw) {
         this.id = id;
         this.studentId = studentId;
+        this.college = college;
         this.department = department;
         this.yearOfAdmission = yearOfAdmission;
         this.nickname = nickname;
@@ -93,6 +99,8 @@ public class Member extends BaseEntity implements UserDetails {
         this.role = role;
         this.isWithdraw = isWithdraw;
     }
+
+
     public void withdraw() {
         if (!this.isWithdraw) {
             this.isWithdraw = true;
