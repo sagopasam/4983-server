@@ -43,6 +43,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
 
         Member member = Member.builder()
                 .accountBank(AccountBank.K)
+                .college(Department.DEPARTMENT_OF_LAW.getCollege())
                 .department(Department.DEPARTMENT_OF_LAW)
                 .accountHolder("홍길동")
                 .phoneNumber("010-1234-5678")
@@ -105,6 +106,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
 
 
         Member member = Member.builder()
+                .college(Department.DEPARTMENT_OF_LAW.getCollege())
                 .department(Department.DEPARTMENT_OF_LAW)
                 .accountBank(AccountBank.K)
                 .accountHolder("홍길동")
@@ -169,6 +171,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
 
 
         Member member = Member.builder()
+                .college(Department.DEPARTMENT_OF_LAW.getCollege())
                 .department(Department.DEPARTMENT_OF_LAW)
                 .accountBank(AccountBank.K)
                 .accountHolder("홍길동")
@@ -234,6 +237,7 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
 
 
         Member member = Member.builder()
+                .college(Department.DEPARTMENT_OF_LAW.getCollege())
                 .department(Department.DEPARTMENT_OF_LAW)
                 .accountBank(AccountBank.K)
                 .accountHolder("홍길동")

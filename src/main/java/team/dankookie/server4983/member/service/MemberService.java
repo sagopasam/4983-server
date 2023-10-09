@@ -52,6 +52,7 @@ public class MemberService {
     public void init() {
         Member testMember1 = Member.builder()
                 .studentId("202023604")
+                .college(Department.COMPUTER.getCollege())
                 .department(Department.COMPUTER)
                 .yearOfAdmission(2020)
                 .nickname("닉네임1")
@@ -65,6 +66,7 @@ public class MemberService {
 
         Member testMember2 = Member.builder()
                 .studentId("test")
+                .college(Department.COMPUTER.getCollege())
                 .department(Department.COMPUTER)
                 .yearOfAdmission(2020)
                 .nickname("닉네임2")
@@ -92,6 +94,7 @@ public class MemberService {
                 .isDiscolorationAndDamage(true)
                 .department(Department.COMMUNICATION_DESIGN)
                 .college(College.MUSIC_AND_ARTS)
+                .publisher("한국도서출판")
                 .sellerMember(testMember1)
                 .build();
 
@@ -105,6 +108,7 @@ public class MemberService {
                 .isDiscolorationAndDamage(true)
                 .department(Department.COMMUNICATION_DESIGN)
                 .college(College.MUSIC_AND_ARTS)
+                .publisher("한국도서출판")
                 .sellerMember(testMember1)
                 .build();
 
@@ -118,6 +122,7 @@ public class MemberService {
                 .isDiscolorationAndDamage(false)
                 .department(Department.BUSINESS)
                 .college(College.BUSINESS_AND_ECONOMICS)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
 
@@ -131,6 +136,7 @@ public class MemberService {
                 .isDiscolorationAndDamage(false)
                 .department(Department.BUSINESS)
                 .college(College.BUSINESS_AND_ECONOMICS)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
 
@@ -144,6 +150,7 @@ public class MemberService {
                 .isDiscolorationAndDamage(true)
                 .department(Department.CHEMICAL)
                 .college(College.ENGINEERING)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
 
@@ -157,6 +164,7 @@ public class MemberService {
                 .isDiscolorationAndDamage(true)
                 .department(Department.CHEMICAL)
                 .college(College.ENGINEERING)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
         UsedBook usedBook7 = UsedBook.builder()
@@ -169,6 +177,7 @@ public class MemberService {
                 .isDiscolorationAndDamage(true)
                 .department(Department.CHEMICAL)
                 .college(College.ENGINEERING)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
         UsedBook usedBook8 = UsedBook.builder()
@@ -181,6 +190,7 @@ public class MemberService {
                 .isDiscolorationAndDamage(true)
                 .department(Department.CHEMICAL)
                 .college(College.ENGINEERING)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
         UsedBook usedBook9 = UsedBook.builder()
@@ -193,6 +203,7 @@ public class MemberService {
                 .isDiscolorationAndDamage(true)
                 .department(Department.CHEMICAL)
                 .college(College.ENGINEERING)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
         UsedBook usedBook10 = UsedBook.builder()
@@ -205,6 +216,7 @@ public class MemberService {
                 .isDiscolorationAndDamage(true)
                 .department(Department.CHEMICAL)
                 .college(College.ENGINEERING)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
 

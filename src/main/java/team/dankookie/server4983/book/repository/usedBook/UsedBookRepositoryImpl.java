@@ -29,8 +29,7 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
                         JPAExpressions.select(bookImage.imageUrl)
                                 .from(bookImage)
                                 .where(bookImage.usedBook.eq(usedBook))
-                                .orderBy(bookImage.id.asc())
-                                .limit(1),
+                                .orderBy(bookImage.id.asc()),
                         usedBook.bookStatus,
                         usedBook.name,
                         usedBook.tradeAvailableDatetime,
@@ -75,7 +74,7 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
                                         .from(bookImage)
                                         .where(bookImage.usedBook.eq(usedBook))
                                         .orderBy(bookImage.id.asc())
-                                        .limit(1),
+                                        .offset(1).limit(1),
                                 usedBook.bookStatus,
                                 usedBook.name,
                                 usedBook.tradeAvailableDatetime,

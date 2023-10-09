@@ -31,6 +31,7 @@ class BookSalesDetailRepositoryTest extends BaseRepositoryTest{
 
         Member member = Member.builder()
                 .accountBank(AccountBank.K)
+                .college(Department.DEPARTMENT_OF_LAW.getCollege())
                 .department(Department.DEPARTMENT_OF_LAW)
                 .accountHolder("홍길동")
                 .phoneNumber("010-1234-5678")
@@ -67,6 +68,7 @@ class BookSalesDetailRepositoryTest extends BaseRepositoryTest{
 
         Member member = Member.builder()
                 .accountBank(AccountBank.K)
+                .college(Department.DEPARTMENT_OF_LAW.getCollege())
                 .department(Department.DEPARTMENT_OF_LAW)
                 .accountHolder("홍길동")
                 .phoneNumber("010-1234-5678")
