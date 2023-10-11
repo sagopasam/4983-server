@@ -25,124 +25,130 @@ import java.util.List;
 @Service
 public class UsedBookService {
 
-    private final S3UploadService uploadService;
-    private final UsedBookRepository usedBookRepository;
-    private final BookImageRepository bookImageRepository;
-    private final MemberService memberService;
-    private final JwtTokenUtils jwtTokenUtils;
-    private final TokenSecretKey tokenSecretKey;
+  private final S3UploadService uploadService;
+  private final UsedBookRepository usedBookRepository;
+  private final BookImageRepository bookImageRepository;
+  private final MemberService memberService;
+  private final JwtTokenUtils jwtTokenUtils;
+  private final TokenSecretKey tokenSecretKey;
 
-    @Transactional
-    public UsedBookSaveResponse saveAndSaveFiles(List<MultipartFile> multipartFileList, UsedBookSaveRequest usedBookSaveRequest, AccessToken accessToken) {
+  @Transactional
+  public UsedBookSaveResponse saveAndSaveFiles(List<MultipartFile> multipartFileList,
+      UsedBookSaveRequest usedBookSaveRequest, AccessToken accessToken) {
 
-        String nickname = getNicknameWithAccessToken(accessToken);
-        Member member = memberService.findMemberByNickname(nickname);
+    String nickname = getNicknameWithAccessToken(accessToken);
+    Member member = memberService.findMemberByNickname(nickname);
 
-        UsedBook usedBook = usedBookRepository.save(usedBookSaveRequest.toEntity(member));
+    UsedBook usedBook = usedBookRepository.save(usedBookSaveRequest.toEntity(member));
 
-        for (MultipartFile multipartFile : multipartFileList) {
-            S3Response s3Response = uploadService.saveFileWithUUID(multipartFile);
-            BookImage bookImage = BookImage.builder()
-                    .usedBook(usedBook)
-                    .imageUrl(s3Response.s3ImageUrl()).build();
-            bookImageRepository.save(bookImage);
-        }
-
-        return UsedBookSaveResponse.of(usedBook.getId());
+    for (MultipartFile multipartFile : multipartFileList) {
+      S3Response s3Response = uploadService.saveFileWithUUID(multipartFile);
+      BookImage bookImage = BookImage.builder()
+          .usedBook(usedBook)
+          .imageUrl(s3Response.s3ImageUrl()).build();
+      bookImageRepository.save(bookImage);
     }
 
-    public UsedBookResponse findByUsedBookId(Long id) {
+    return UsedBookSaveResponse.of(usedBook.getId());
+  }
 
-        UsedBook usedBook = getUsedBookById(id);
+  public UsedBookResponse findByUsedBookId(Long id) {
 
-        List<BookImage> bookImageList = bookImageRepository.findByUsedBook(usedBook);
+    UsedBook usedBook = getUsedBookById(id);
 
-        List<String> bookImageUrlList = bookImageList.stream()
-                .map(BookImage::getImageUrl)
-                .toList();
+    List<BookImage> bookImageList = bookImageRepository.findByUsedBook(usedBook);
 
-        return UsedBookResponse.of(
-                usedBook.getCollege().name(),
-                usedBook.getDepartment().name(),
-                usedBook.getSellerMember().getNickname(),
-                usedBook.getSellerMember().getImageUrl(),
-                usedBook.getCreatedAt(),
-                bookImageUrlList,
-                usedBook.getName(),
-                usedBook.getPublisher(),
-                usedBook.getTradeAvailableDatetime(),
-                usedBook.getIsUnderlinedOrWrite(),
-                usedBook.getIsDiscolorationAndDamage(),
-                usedBook.getIsCoverDamaged(),
-                usedBook.getPrice(),
-                usedBook.getBookStatus()
-        );
+    List<String> bookImageUrlList = bookImageList.stream()
+        .map(BookImage::getImageUrl)
+        .toList();
+
+    return UsedBookResponse.of(
+        usedBook.getCollege().name(),
+        usedBook.getDepartment().name(),
+        usedBook.getSellerMember().getNickname(),
+        usedBook.getSellerMember().getImageUrl(),
+        usedBook.getCreatedAt(),
+        bookImageUrlList,
+        usedBook.getName(),
+        usedBook.getPublisher(),
+        usedBook.getTradeAvailableDatetime(),
+        usedBook.getIsUnderlinedOrWrite(),
+        usedBook.getIsDiscolorationAndDamage(),
+        usedBook.getIsCoverDamaged(),
+        usedBook.getPrice(),
+        usedBook.getBookStatus()
+    );
+  }
+
+  @Transactional
+  public boolean deleteUsedBook(Long id, AccessToken accessToken) {
+
+    String nickname = getNicknameWithAccessToken(accessToken);
+
+    Member member = memberService.findMemberByNickname(nickname);
+
+    boolean isUsedBookSavedByThisMember = usedBookRepository.existsUsedBookByIdAndSellerMember(id,
+        member);
+
+    if (!isUsedBookSavedByThisMember) {
+      throw new IllegalArgumentException("글을 올린 사용자만 삭제할 수 있습니다.");
     }
 
-    @Transactional
-    public boolean deleteUsedBook(Long id, AccessToken accessToken) {
+    UsedBook usedBook = getUsedBookById(id);
+    usedBook.setIsDeletedTrue();
 
-        String nickname = getNicknameWithAccessToken(accessToken);
+    return true;
+  }
 
-        Member member = memberService.findMemberByNickname(nickname);
+  @Transactional
+  public boolean deleteUsedBookImage(Long id, String image) {
+    UsedBook usedBook = getUsedBookById(id);
 
-        boolean isUsedBookSavedByThisMember = usedBookRepository.existsUsedBookByIdAndSellerMember(id, member);
+    String imageUrl = uploadService.s3Bucket + image;
 
-        if (!isUsedBookSavedByThisMember) {
-            throw new IllegalArgumentException("글을 올린 사용자만 삭제할 수 있습니다.");
-        }
-
-        UsedBook usedBook = getUsedBookById(id);
-        usedBook.setIsDeletedTrue();
-
-        return true;
+    long deleteCount = bookImageRepository.deleteBookImageByUsedBookAndImageUrl(usedBook, imageUrl);
+    if (deleteCount == 0) {
+      return false;
     }
 
-    @Transactional
-    public boolean deleteUsedBookImage(Long id, String image) {
-        UsedBook usedBook = getUsedBookById(id);
+    uploadService.deleteFile(image);
+    return true;
+  }
 
-        String imageUrl = uploadService.s3Bucket + image;
+  @Transactional
+  public UsedBookSaveResponse updateUsedBook(Long id, List<MultipartFile> multipartFileList,
+      UsedBookSaveRequest usedBookSaveRequest, AccessToken accessToken) {
+    String nickname = getNicknameWithAccessToken(accessToken);
+    Member member = memberService.findMemberByNickname(nickname);
 
-        long deleteCount = bookImageRepository.deleteBookImageByUsedBookAndImageUrl(usedBook, imageUrl);
-        if (deleteCount == 0) {
-            return false;
-        }
+    UsedBook usedBook = getUsedBookById(id);
 
-        uploadService.deleteFile(image);
-        return true;
+    if (!usedBook.getSellerMember().equals(member)) {
+      throw new IllegalArgumentException("글을 올린 유저만 수정할 수 있습니다.");
     }
 
-    @Transactional
-    public UsedBookSaveResponse updateUsedBook(Long id, List<MultipartFile> multipartFileList, UsedBookSaveRequest usedBookSaveRequest, AccessToken accessToken) {
-        String nickname = getNicknameWithAccessToken(accessToken);
-        Member member = memberService.findMemberByNickname(nickname);
+    usedBook.updateUsedBook(usedBookSaveRequest);
 
-        UsedBook usedBook = getUsedBookById(id);
-
-        if (!usedBook.getSellerMember().equals(member)) {
-            throw new IllegalArgumentException("글을 올린 유저만 수정할 수 있습니다.");
-        }
-
-        usedBook.updateUsedBook(usedBookSaveRequest);
-
-        for (MultipartFile multipartFile : multipartFileList) {
-            S3Response s3Response = uploadService.saveFileWithUUID(multipartFile);
-            BookImage bookImage = BookImage.builder()
-                    .usedBook(usedBook)
-                    .imageUrl(s3Response.s3ImageUrl()).build();
-            bookImageRepository.save(bookImage);
-        }
-
-        return UsedBookSaveResponse.of(usedBook.getId());    }
-
-    private String getNicknameWithAccessToken(AccessToken accessToken) {
-        String nickname = jwtTokenUtils.getNickname(accessToken.value(), tokenSecretKey.getSecretKey());
-        return nickname;
+    if (multipartFileList.size() != 0) {
+      for (MultipartFile multipartFile : multipartFileList) {
+        S3Response s3Response = uploadService.saveFileWithUUID(multipartFile);
+        BookImage bookImage = BookImage.builder()
+            .usedBook(usedBook)
+            .imageUrl(s3Response.s3ImageUrl()).build();
+        bookImageRepository.save(bookImage);
+      }
     }
 
-    private UsedBook getUsedBookById(Long id) {
-        return usedBookRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("id와 일치하는 중고책이 존재하지 않습니다."));
-    }
+    return UsedBookSaveResponse.of(usedBook.getId());
+  }
+
+  private String getNicknameWithAccessToken(AccessToken accessToken) {
+    String nickname = jwtTokenUtils.getNickname(accessToken.value(), tokenSecretKey.getSecretKey());
+    return nickname;
+  }
+
+  private UsedBook getUsedBookById(Long id) {
+    return usedBookRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("id와 일치하는 중고책이 존재하지 않습니다."));
+  }
 }
