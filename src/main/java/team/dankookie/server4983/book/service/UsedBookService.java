@@ -129,7 +129,7 @@ public class UsedBookService {
 
     usedBook.updateUsedBook(usedBookSaveRequest);
 
-    if (multipartFileList.size() != 0) {
+    if (multipartFileList != null) {
       for (MultipartFile multipartFile : multipartFileList) {
         S3Response s3Response = uploadService.saveFileWithUUID(multipartFile);
         BookImage bookImage = BookImage.builder()

@@ -233,43 +233,43 @@ public class MemberService {
 
         bookImageRepository.save(BookImage.builder()
                     .usedBook(usedBook1)
-                    .imageUrl("imageUrl")
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
                     .build());
         bookImageRepository.save(BookImage.builder()
                     .usedBook(usedBook2)
-                    .imageUrl("imageUrl")
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
                     .build());
         bookImageRepository.save(BookImage.builder()
                     .usedBook(usedBook3)
-                    .imageUrl("imageUrl")
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
                     .build());
         bookImageRepository.save(BookImage.builder()
                     .usedBook(usedBook4)
-                    .imageUrl("imageUrl")
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
                     .build());
         bookImageRepository.save(BookImage.builder()
                     .usedBook(usedBook5)
-                    .imageUrl("imageUrl")
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
                     .build());
         bookImageRepository.save(BookImage.builder()
                     .usedBook(usedBook6)
-                    .imageUrl("imageUrl")
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
                     .build());
         bookImageRepository.save(BookImage.builder()
                     .usedBook(usedBook7)
-                    .imageUrl("imageUrl")
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
                     .build());
         bookImageRepository.save(BookImage.builder()
                     .usedBook(usedBook8)
-                    .imageUrl("imageUrl")
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
                     .build());
         bookImageRepository.save(BookImage.builder()
                     .usedBook(usedBook9)
-                    .imageUrl("imageUrl")
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
                     .build());
         bookImageRepository.save(BookImage.builder()
                     .usedBook(usedBook10)
-                    .imageUrl("imageUrl")
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
                     .build());
 
 
