@@ -27,8 +27,8 @@ public class ChatBotInteract {
         String buyerMessage = String.format("\'%s\' 님께 \'%s\' 서적 거래를 요청했습니다. \n\n" +
                 " 판매자의 응답을 기다려주세요. :)", chatRoom.getSeller().getNickname(), chatRoom.getUsedBook().getName());
 
-        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, BOOK_PURCHASE_START, chatRoom);
-        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_PURCHASE_START, chatRoom);
+        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, BOOK_PURCHASE_START_SELLER, chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_PURCHASE_START_BUYER, chatRoom);
         chatRoom.addSellerChat(sellerChat);
         chatRoom.addBuyerChat(buyerChat);
         chatRoom.setInteractStep(1);
@@ -62,8 +62,8 @@ public class ChatBotInteract {
                 "메일) 4983service@gmail.com\n" +
                 "\n");
 
-        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage , BOOK_PURCHASE_START, chatRoom);
-        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_PURCHASE_START, chatRoom);
+        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage , BOOK_PURCHASE_START_NOTIFY_SELLER, chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_PURCHASE_START_NOTIFY_BUYER, chatRoom);
         chatRoom.addSellerChat(sellerChat);
         chatRoom.addBuyerChat(buyerChat);
         buyerChatRepository.save(buyerChat);
@@ -80,8 +80,8 @@ public class ChatBotInteract {
                 "우리 은행 1002-3597-18283 (사고팔삼)\n" +
                 "결제 금액 : %d원", sellerNickName, chatRoom.getUsedBook().getName(), chatRoom.getUsedBook().getPrice());
 
-        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, BOOK_PURCHASE_REQUEST, chatRoom);
-        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_PURCHASE_REQUEST, chatRoom);
+        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, BOOK_PURCHASE_REQUEST_SELLER, chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_PURCHASE_REQUEST_BUYER, chatRoom);
         chatRoom.addSellerChat(sellerChat);
         chatRoom.addBuyerChat(buyerChat);
         chatRoom.setInteractStep(2);
@@ -98,8 +98,8 @@ public class ChatBotInteract {
         String buyerMessage = String.format("아쉽게도 '%s' 님과의 서적 거래가 \n" +
                 "이루어지지 못했습니다. \n", sellerNickName);
 
-        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, BOOK_SALE_REJECTION, chatRoom);
-        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_SALE_REJECTION, chatRoom);
+        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, BOOK_SALE_REJECTION_SELLER, chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_SALE_REJECTION_BUYER, chatRoom);
         chatRoom.addSellerChat(sellerChat);
         chatRoom.addBuyerChat(buyerChat);
         chatRoom.setInteractStep(999);
@@ -118,8 +118,8 @@ public class ChatBotInteract {
                 "\n" +
                 "거래날짜에 판매자가 사물함에 서적을 배치할 예정입니다.\n");
 
-        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, PAYMENT_CONFIRMATION_COMPLETE, chatRoom);
-        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, PAYMENT_CONFIRMATION_COMPLETE, chatRoom);
+        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, PAYMENT_CONFIRMATION_COMPLETE_SELLER, chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, PAYMENT_CONFIRMATION_COMPLETE_BUYER, chatRoom);
         chatRoom.addSellerChat(sellerChat);
         chatRoom.addBuyerChat(buyerChat);
         chatRoom.setInteractStep(3);
@@ -145,8 +145,8 @@ public class ChatBotInteract {
                 "\n" +
                 "사물함 번호: %s번\n" +
                 "사물함 비밀번호: %s\n" , request.getData().get("lockerNumber") , request.getData().get("lockerPassword") );
-        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, BOOK_PLACEMENT_COMPLETE, chatRoom);
-        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_PLACEMENT_COMPLETE, chatRoom);
+        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, BOOK_PLACEMENT_COMPLETE_SELLER, chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_PLACEMENT_COMPLETE_BUYER, chatRoom);
         chatRoom.addSellerChat(sellerChat);
         chatRoom.addBuyerChat(buyerChat);
         chatRoom.setInteractStep(4);
@@ -160,8 +160,8 @@ public class ChatBotInteract {
                 "이용해주셔서 감사합니다.\n" +
                 "\n" +
                 "-사고파삼-\n");
-        SellerChat sellerChat = SellerChat.buildSellerChat(message, TRADE_COMPLETE, chatRoom);
-        BuyerChat buyerChat = BuyerChat.buildBuyerChat(message, TRADE_COMPLETE, chatRoom);
+        SellerChat sellerChat = SellerChat.buildSellerChat(message, TRADE_COMPLETE_SELLER, chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(message, TRADE_COMPLETE_BUYER, chatRoom);
         chatRoom.addBuyerChat(buyerChat);
         chatRoom.addSellerChat(sellerChat);
         chatRoom.setInteractStep(5);
