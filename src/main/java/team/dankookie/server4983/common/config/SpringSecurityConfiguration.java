@@ -19,22 +19,24 @@ import team.dankookie.server4983.member.service.MemberService;
 @EnableWebSecurity
 public class SpringSecurityConfiguration {
 
-    private final MemberService memberService;
-    private final RefreshTokenRepository refreshTokenRepository;
+  private final MemberService memberService;
+  private final RefreshTokenRepository refreshTokenRepository;
 
-    @Value("${jwt.secret-key}")
-    private String secretKey;
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((req) -> req
-                        .anyRequest().permitAll())
-                .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .build();
-    }
+  @Value("${jwt.secret-key}")
+  private String secretKey;
+
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    return http
+        .cors(AbstractHttpConfigurer::disable)
+        .csrf(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests((req) -> req
+            .anyRequest().permitAll())
+        .sessionManagement((session) -> session
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .build();
+  }
 
 
 }
