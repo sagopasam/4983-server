@@ -20,7 +20,8 @@ import team.dankookie.server4983.scheduler.repository.SchedulerRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static team.dankookie.server4983.chat.constant.ContentType.TRADE_WARNING;
+import static team.dankookie.server4983.chat.constant.ContentType.TRADE_WARNING_BUYER;
+import static team.dankookie.server4983.chat.constant.ContentType.TRADE_WARNING_SELLER;
 
 @Service
 @RequiredArgsConstructor
@@ -51,14 +52,14 @@ public class SchedulerService {
         switch (scheduleType) {
             case BUYER_CASE_1:
             case BUYER_CASE_2:
-                BuyerChat buyerChat = BuyerChat.buildBuyerChat(schedule.getMessage(), TRADE_WARNING, chatRoom);
+                BuyerChat buyerChat = BuyerChat.buildBuyerChat(schedule.getMessage(), TRADE_WARNING_BUYER, chatRoom);
 
                 chatRoom.addBuyerChat(buyerChat);
                 buyerChatRepository.save(buyerChat);
                 break;
             case SELLER_CASE_2:
             case SELLER_CASE_3:
-                SellerChat sellerChat = SellerChat.buildSellerChat(schedule.getMessage(), TRADE_WARNING, chatRoom);
+                SellerChat sellerChat = SellerChat.buildSellerChat(schedule.getMessage(), TRADE_WARNING_SELLER, chatRoom);
 
                 chatRoom.addSellerChat(sellerChat);
                 sellerChatRepository.save(sellerChat);

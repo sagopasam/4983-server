@@ -13,7 +13,7 @@ import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
 import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.member.domain.Member;
 
-import static team.dankookie.server4983.chat.constant.ContentType.TRADE_STOP_REQUEST;
+import static team.dankookie.server4983.chat.constant.ContentType.*;
 
 @Component
 @RequiredArgsConstructor
@@ -37,8 +37,8 @@ public class ChatBotAdmin {
                         "거래가 이루어지지 못하였다는 점 양해 부탁드리며, 앞으로 원활한 거래를 위해 더욱 노력하겠습니다."
                 , seller.getNickname());
 
-                SellerChat sellerChatCase1 = SellerChat.buildSellerChat(messageCase1_seller, TRADE_STOP_REQUEST, chatRoom);
-                BuyerChat buyerChatCase1 = BuyerChat.buildBuyerChat(messageCase1_buyer, TRADE_STOP_REQUEST, chatRoom);
+                SellerChat sellerChatCase1 = SellerChat.buildSellerChat(messageCase1_seller, TRADE_STOP_REQUEST_BEFORE_DEPOSIT_SELLER , chatRoom);
+                BuyerChat buyerChatCase1 = BuyerChat.buildBuyerChat(messageCase1_buyer, TRADE_STOP_REQUEST_BEFORE_DEPOSIT_BUYER, chatRoom);
                 chatRoom.addSellerChat(sellerChatCase1);
                 chatRoom.addBuyerChat(buyerChatCase1);
                 chatRoom.setInteractStep(999);
@@ -58,8 +58,8 @@ public class ChatBotAdmin {
                         "거래가 이루어지지 못하였다는 점 양해 부탁드리며, 앞으로 원활한 거래를 위해 더욱 노력하겠습니다.\n" +
                         "입금해주신 판매 금액은 해당 계좌로 2~3일내 환불 조치가 이루어집니다." , seller.getNickname());
 
-                SellerChat sellerChatCase2 = SellerChat.buildSellerChat(messageCase2_seller, TRADE_STOP_REQUEST, chatRoom);
-                BuyerChat buyerChatCase2 = BuyerChat.buildBuyerChat(messageCase2_buyer, TRADE_STOP_REQUEST, chatRoom);
+                SellerChat sellerChatCase2 = SellerChat.buildSellerChat(messageCase2_seller, TRADE_STOP_REQUEST_AFTER_DEPOSIT_SELLER , chatRoom);
+                BuyerChat buyerChatCase2 = BuyerChat.buildBuyerChat(messageCase2_buyer, TRADE_STOP_REQUEST_AFTER_DEPOSIT_BUYER, chatRoom);
                 chatRoom.addSellerChat(sellerChatCase2);
                 chatRoom.addBuyerChat(buyerChatCase2);
                 chatRoom.setInteractStep(999);
@@ -92,8 +92,8 @@ public class ChatBotAdmin {
                         "판매자분께 거래 중지 안내 드렸습니다.\n" +
                         "앞으로의 원활한 거래를 위해 더욱 노력하겠습니다.");
 
-                SellerChat sellerChatCase1 = SellerChat.buildSellerChat(messageCase1_seller, TRADE_STOP_REQUEST, chatRoom);
-                BuyerChat buyerChatCase1 = BuyerChat.buildBuyerChat(messageCase1_buyer, TRADE_STOP_REQUEST, chatRoom);
+                SellerChat sellerChatCase1 = SellerChat.buildSellerChat(messageCase1_seller, TRADE_STOP_REQUEST_BEFORE_DEPOSIT_SELLER , chatRoom);
+                BuyerChat buyerChatCase1 = BuyerChat.buildBuyerChat(messageCase1_buyer, TRADE_STOP_REQUEST_BEFORE_DEPOSIT_BUYER , chatRoom);
                 chatRoom.addSellerChat(sellerChatCase1);
                 chatRoom.addBuyerChat(buyerChatCase1);
                 chatRoom.setInteractStep(999);
@@ -114,8 +114,8 @@ public class ChatBotAdmin {
                         "서적배치전: 100%% 환불\n" +
                         "서적배치후: 70%% 환불\n");
 
-                SellerChat sellerChatCase2 = SellerChat.buildSellerChat(messageCase2_seller, TRADE_STOP_REQUEST, chatRoom);
-                BuyerChat buyerChatCase2 = BuyerChat.buildBuyerChat(messageCase2_buyer, TRADE_STOP_REQUEST, chatRoom);
+                SellerChat sellerChatCase2 = SellerChat.buildSellerChat(messageCase2_seller, TRADE_STOP_REQUEST_AFTER_DEPOSIT_SELLER , chatRoom);
+                BuyerChat buyerChatCase2 = BuyerChat.buildBuyerChat(messageCase2_buyer, TRADE_STOP_REQUEST_AFTER_DEPOSIT_BUYER , chatRoom);
                 chatRoom.addSellerChat(sellerChatCase2);
                 chatRoom.addBuyerChat(buyerChatCase2);
                 chatRoom.setInteractStep(999);
@@ -138,8 +138,8 @@ public class ChatBotAdmin {
                         "서적배치전: 100%% 환불\n" +
                         "서적배치후: 70%% 환불\n");
 
-                SellerChat sellerChatCase3 = SellerChat.buildSellerChat(messageCase3_seller, TRADE_STOP_REQUEST, chatRoom);
-                BuyerChat buyerChatCase3 = BuyerChat.buildBuyerChat(messageCase3_buyer, TRADE_STOP_REQUEST, chatRoom);
+                SellerChat sellerChatCase3 = SellerChat.buildSellerChat(messageCase3_seller, TRADE_STOP_REQUEST_AFTER_BOOK_PLACEMENT_SELLER, chatRoom);
+                BuyerChat buyerChatCase3 = BuyerChat.buildBuyerChat(messageCase3_buyer, TRADE_STOP_REQUEST_AFTER_BOOK_PLACEMENT_BUYER , chatRoom);
                 chatRoom.addSellerChat(sellerChatCase3);
                 chatRoom.addBuyerChat(buyerChatCase3);
                 chatRoom.setInteractStep(999);

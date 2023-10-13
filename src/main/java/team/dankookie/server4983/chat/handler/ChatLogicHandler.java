@@ -47,7 +47,6 @@ public class ChatLogicHandler {
                 String startSellerMessage = chatBotInteract.purchaseBookStart(chatRoom);
                 chatBotInteract.purchaseBookWarning(chatRoom);
 
-                schedulerService.setSchedulerAboutNotReply(chatRoom);
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(seller.getId(), startSellerMessage));
                 break;
             case BOOK_PURCHASE_REQUEST: // SELLCHAT_2 판매자 구매 수락
@@ -55,7 +54,6 @@ public class ChatLogicHandler {
                     return;
                 }
                 String requestBuyerMessage = chatBotInteract.purchaseBookApprove(chatRoom, seller.getNickname());
-                schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , SELLER_CASE_2);
 
                 schedulerService.setSchedulerAboutSetPlacement(chatRoom);
                 schedulerService.setSchedulerAboutNotDeposit(chatRoom , chatRoom.getUsedBook().getTradeAvailableDatetime());
@@ -76,6 +74,8 @@ public class ChatLogicHandler {
                 List<String> paymentConfirmationCompleteMessageList = chatBotInteract.confirmDeposit(chatRoom);
 
                 schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom , BUYER_CASE_1);
+                schedulerService.setSchedulerAboutNotReply(chatRoom);
+
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(seller.getId(), paymentConfirmationCompleteMessageList.get(0)));
                 fcmService.sendChattingNotificationByToken(FcmTargetUserIdRequest.of(buyer.getId(), paymentConfirmationCompleteMessageList.get(1)));
                 break;

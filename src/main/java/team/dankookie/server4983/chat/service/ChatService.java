@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.book.domain.Locker;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.book.repository.locker.LockerRepository;
@@ -20,12 +19,9 @@ import team.dankookie.server4983.chat.handler.ChatLogicHandler;
 import team.dankookie.server4983.chat.repository.BuyerChatRepository;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
 import team.dankookie.server4983.chat.repository.SellerChatRepository;
-import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
-import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.jwt.constants.TokenSecretKey;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
-import team.dankookie.server4983.member.constant.AccountBank;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.repository.MemberRepository;
 import team.dankookie.server4983.member.service.MemberService;
@@ -34,8 +30,7 @@ import javax.security.auth.login.AccountException;
 import java.util.List;
 import java.util.Optional;
 
-import static team.dankookie.server4983.chat.constant.ContentType.CUSTOM;
-import static team.dankookie.server4983.chat.constant.ContentType.PAYMENT_CONFIRMATION_COMPLETE;
+import static team.dankookie.server4983.chat.constant.ContentType.*;
 import static team.dankookie.server4983.chat.domain.ChatRoom.buildChatRoom;
 
 @Service
@@ -177,13 +172,14 @@ public class ChatService {
                 .orElseThrow(() -> new ChatException("채팅방을 찾을 수 없습니다."));
 
         if(messageRequest.getType().equals("seller")) {
-            SellerChat sellerChat = SellerChat.buildSellerChat(messageRequest.getMessage() , CUSTOM, chatRoom);
+            SellerChat sellerChat = SellerChat.buildSellerChat(messageRequest.getMessage() , CUSTOM_SELLER, chatRoom);
             chatRoom.addSellerChat(sellerChat);
 
             sellerChatRepository.save(sellerChat);
 
         } else if(messageRequest.getType().equals("buyer")) {
-            BuyerChat buyerChat = BuyerChat.buildBuyerChat(messageRequest.getMessage(), CUSTOM, chatRoom);
+            BuyerChat buyerChat = BuyerChat.buildBuyerChat(messageRequest.getMessage(), CUSTOM_BUYER
+                    , chatRoom);
             chatRoom.addBuyerChat(buyerChat);
 
             buyerChatRepository.save(buyerChat);
