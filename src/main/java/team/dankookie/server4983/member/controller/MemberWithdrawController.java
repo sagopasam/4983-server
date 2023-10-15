@@ -17,7 +17,7 @@ public class MemberWithdrawController {
 
     @PatchMapping("/withdraw")
     public ResponseEntity<String> withdraw(AccessToken accessToken) {
-        boolean isWithdraw = memberService.checkMemberAndWithdraw(accessToken.nickname());
+        boolean isWithdraw = memberService.checkMemberAndWithdraw(accessToken);
         if (isWithdraw) {
             return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
         } else {

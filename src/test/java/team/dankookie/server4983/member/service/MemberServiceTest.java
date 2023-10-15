@@ -7,6 +7,8 @@ import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import team.dankookie.server4983.common.BaseServiceTest;
 import team.dankookie.server4983.common.exception.LoginFailedException;
+import team.dankookie.server4983.jwt.constants.TokenSecretKey;
+import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.dto.LoginRequest;
@@ -36,6 +38,9 @@ class MemberServiceTest extends BaseServiceTest {
 
     @Mock
     JwtTokenUtils jwtTokenUtils;
+
+    @Mock
+    TokenSecretKey tokenSecretKey;
 
 
     @Test
@@ -283,13 +288,19 @@ class MemberServiceTest extends BaseServiceTest {
     @Test
     void 회원이_탈퇴되었으면_isWithdraw를_true로_반환한다(){
         //given
+        AccessToken accessToken = new AccessToken("dummy_access_token", "testNickname");
         String nickname = "testNickname";
-        Member findMember = Member.builder().nickname(nickname).isWithdraw(false).build();
+
+        when(tokenSecretKey.getSecretKey()).thenReturn("your_secret_key_for_testing");
+
+        when(jwtTokenUtils.getNickname(Mockito.any(), Mockito.any())).thenReturn(nickname);
+
+        Member findMember = Member.builder().nickname("nickname").isWithdraw(false).build();
         when(memberRepository.findByNickname("testNickname"))
                 .thenReturn(Optional.of(findMember));
 
         //when
-        boolean isWithdraw = memberService.checkMemberAndWithdraw(nickname);
+        boolean isWithdraw = memberService.checkMemberAndWithdraw(accessToken);
         //then
         assertTrue(isWithdraw);
         assertTrue(findMember.getIsWithdraw());
