@@ -246,7 +246,7 @@ include::{snippets}/member/collegeAndDepartment/success/response-fields.adoc[]
 
 ==== Request
 
-include::{snippets}/my-pages/logout/success/http-response.adoc[]
+include::{snippets}/my-pages/logout/success/http-request.adoc[]
 include::{snippets}/my-pages/logout/success/request-cookies.adoc[]
 
 === 회원 탈퇴 로직(성공)
