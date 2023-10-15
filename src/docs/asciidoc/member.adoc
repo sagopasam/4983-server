@@ -246,6 +246,13 @@ include::{snippets}/member/collegeAndDepartment/success/response-fields.adoc[]
 
 ==== Request
 
+include::{snippets}/my-pages/logout/success/http-response.adoc[]
+include::{snippets}/my-pages/logout/success/request-cookies.adoc[]
+
+=== 로그아웃(성공: 쿠키에 남긴 refreshToken 삭제, 클라이언트에서 redirect, accessToken 삭제 필요)
+
+==== Request
+
 include::{snippets}/my-pages/logout/success/http-request.adoc[]
 include::{snippets}/my-pages/logout/success/request-cookies.adoc[]
 
@@ -258,6 +265,10 @@ include::{snippets}/my-pages/member-withdraw/success/http-request.adoc[]
 ==== requestHeader
 
 include::{snippets}/my-pages/member-withdraw/success/request-headers.adoc[]
+
+==== requestCookie
+
+include::{snippets}/my-pages/member-withdraw/success/request-cookies.adoc[]
 
 ==== Response
 include::{snippets}/my-pages/member-withdraw/success/http-response.adoc[]
