@@ -164,7 +164,8 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
         if (chatListResponseList.size() == 0) {
             return chatListResponseList;
         }
-        chatListResponseList.sort(Comparator.comparing(ChatListResponse::createdAt).reversed());
+        chatListResponseList.sort(Comparator.comparing(ChatListResponse::createdAt, Comparator.nullsLast(Comparator.reverseOrder())));
+
         return chatListResponseList;
     }
 
@@ -213,6 +214,15 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                 .set(buyerChat.isRead, true)
                 .where(buyerChat.chatRoom.chatRoomId.eq(chatRoomId))
                 .execute();
+    }
+
+    @Override
+    public Member getBuyer(long chatRoomId) {
+        return jpaQueryFactory.select(member)
+                .from(chatRoom)
+                .innerJoin(chatRoom.buyer , member)
+                .where(chatRoom.chatRoomId.eq(chatRoomId))
+                .fetchOne();
     }
 
     private static JPQLQuery<Boolean> getLastSellerMessageIsRead() {

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
+import team.dankookie.server4983.book.domain.BookImage;
 import team.dankookie.server4983.book.domain.UsedBook;
+import team.dankookie.server4983.book.repository.bookImage.BookImageRepository;
 import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
@@ -27,6 +29,7 @@ import team.dankookie.server4983.member.dto.MemberRegisterRequest;
 import team.dankookie.server4983.member.repository.MemberRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static team.dankookie.server4983.chat.domain.ChatRoom.buildChatRoom;
 
@@ -39,6 +42,7 @@ public class MemberService {
     private final JwtTokenUtils jwtTokenUtils;
     private final TokenSecretKey tokenSecretKey;
     private final ChatRoomRepository chatRoomRepository;
+    private final BookImageRepository bookImageRepository;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -48,6 +52,7 @@ public class MemberService {
     public void init() {
         Member testMember1 = Member.builder()
                 .studentId("202023604")
+                .college(Department.COMPUTER.getCollege())
                 .department(Department.COMPUTER)
                 .yearOfAdmission(2020)
                 .nickname("닉네임1")
@@ -61,6 +66,7 @@ public class MemberService {
 
         Member testMember2 = Member.builder()
                 .studentId("test")
+                .college(Department.COMPUTER.getCollege())
                 .department(Department.COMPUTER)
                 .yearOfAdmission(2020)
                 .nickname("닉네임2")
@@ -76,129 +82,141 @@ public class MemberService {
         memberRepository.save(testMember1);
         memberRepository.save(testMember2);
 
+
+
         UsedBook usedBook1 = UsedBook.builder()
                 .bookStatus(BookStatus.SALE)
                 .name("사회과학통계방법")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12,30,30))
                 .price(13000)
                 .isUnderlinedOrWrite(false)
                 .isCoverDamaged(true)
                 .isDiscolorationAndDamage(true)
                 .department(Department.COMMUNICATION_DESIGN)
                 .college(College.MUSIC_AND_ARTS)
+                .publisher("한국도서출판")
                 .sellerMember(testMember1)
                 .build();
 
         UsedBook usedBook2 = UsedBook.builder()
                 .bookStatus(BookStatus.SALE)
                 .name("생명과학 길라잡이")
-                .tradeAvailableDate(LocalDate.of(2023, 8, 9))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 8, 9, 12,30,30))
                 .price(9000)
                 .isUnderlinedOrWrite(true)
                 .isCoverDamaged(true)
                 .isDiscolorationAndDamage(true)
                 .department(Department.COMMUNICATION_DESIGN)
                 .college(College.MUSIC_AND_ARTS)
+                .publisher("한국도서출판")
                 .sellerMember(testMember1)
                 .build();
 
         UsedBook usedBook3 = UsedBook.builder()
                 .bookStatus(BookStatus.SALE)
                 .name("경영학 원론")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12, 30, 30))
                 .price(9000)
                 .isUnderlinedOrWrite(false)
                 .isCoverDamaged(false)
                 .isDiscolorationAndDamage(false)
                 .department(Department.BUSINESS)
                 .college(College.BUSINESS_AND_ECONOMICS)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
 
         UsedBook usedBook4 = UsedBook.builder()
                 .bookStatus(BookStatus.TRADE)
                 .name("컴퓨터 개론")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29,11,11,11))
                 .price(14000)
                 .isUnderlinedOrWrite(false)
                 .isCoverDamaged(false)
                 .isDiscolorationAndDamage(false)
                 .department(Department.BUSINESS)
                 .college(College.BUSINESS_AND_ECONOMICS)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
 
         UsedBook usedBook5 = UsedBook.builder()
                 .bookStatus(BookStatus.SOLD)
                 .name("일반 화학")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12, 30, 00))
                 .price(7000)
                 .isUnderlinedOrWrite(true)
                 .isCoverDamaged(true)
                 .isDiscolorationAndDamage(true)
                 .department(Department.CHEMICAL)
                 .college(College.ENGINEERING)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
 
         UsedBook usedBook6 = UsedBook.builder()
                 .bookStatus(BookStatus.SOLD)
                 .name("일반 화학2")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 13,00,00))
                 .price(70002)
                 .isUnderlinedOrWrite(true)
                 .isCoverDamaged(true)
                 .isDiscolorationAndDamage(true)
                 .department(Department.CHEMICAL)
                 .college(College.ENGINEERING)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
         UsedBook usedBook7 = UsedBook.builder()
                 .bookStatus(BookStatus.SOLD)
                 .name("일반 화학3")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 11,0))
                 .price(100)
                 .isUnderlinedOrWrite(true)
                 .isCoverDamaged(true)
                 .isDiscolorationAndDamage(true)
                 .department(Department.CHEMICAL)
                 .college(College.ENGINEERING)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
         UsedBook usedBook8 = UsedBook.builder()
                 .bookStatus(BookStatus.SOLD)
                 .name("일반 화학4")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 15,0))
                 .price(100)
                 .isUnderlinedOrWrite(true)
                 .isCoverDamaged(true)
                 .isDiscolorationAndDamage(true)
                 .department(Department.CHEMICAL)
                 .college(College.ENGINEERING)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
         UsedBook usedBook9 = UsedBook.builder()
                 .bookStatus(BookStatus.SOLD)
                 .name("일반 화학5")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29,8,0))
                 .price(100)
                 .isUnderlinedOrWrite(true)
                 .isCoverDamaged(true)
                 .isDiscolorationAndDamage(true)
                 .department(Department.CHEMICAL)
                 .college(College.ENGINEERING)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
         UsedBook usedBook10 = UsedBook.builder()
                 .bookStatus(BookStatus.SOLD)
                 .name("일반 화학6")
-                .tradeAvailableDate(LocalDate.of(2023, 7, 29))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29,6,0))
                 .price(100)
                 .isUnderlinedOrWrite(true)
                 .isCoverDamaged(true)
                 .isDiscolorationAndDamage(true)
                 .department(Department.CHEMICAL)
                 .college(College.ENGINEERING)
+                .publisher("한국도서출판")
                 .sellerMember(testMember2)
                 .build();
 
@@ -212,6 +230,49 @@ public class MemberService {
         usedBookRepository.save(usedBook8);
         usedBookRepository.save(usedBook9);
         usedBookRepository.save(usedBook10);
+
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook1)
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook2)
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook3)
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook4)
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook5)
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook6)
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook7)
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook8)
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook9)
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
+                    .build());
+        bookImageRepository.save(BookImage.builder()
+                    .usedBook(usedBook10)
+                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/036e083e-efae-4ffc-8606-7b692ed3d892")
+                    .build());
+
+
 
         ChatRoom chatRoom_1 = buildChatRoom(testMember1 , testMember2 , usedBook1);
         ChatRoom chatRoom_2 = buildChatRoom(testMember2 , testMember1 , usedBook2);

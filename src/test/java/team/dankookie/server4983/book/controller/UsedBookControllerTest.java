@@ -16,6 +16,7 @@ import team.dankookie.server4983.book.dto.UsedBookSaveRequest;
 import team.dankookie.server4983.book.dto.UsedBookSaveResponse;
 import team.dankookie.server4983.book.service.UsedBookService;
 import team.dankookie.server4983.common.BaseControllerTest;
+import team.dankookie.server4983.jwt.constants.TokenDuration;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 
 import java.time.LocalDate;
@@ -49,7 +50,7 @@ class UsedBookControllerTest extends BaseControllerTest {
                 College.LAW,
                 Department.BUSINESS,
                 15000,
-                LocalDate.of(2023, 9, 13),
+                LocalDateTime.of(2023, 9, 13, 12,0),
                 "책이름",
                 "출판사",
                 false,
@@ -57,7 +58,7 @@ class UsedBookControllerTest extends BaseControllerTest {
                 true
         );
 
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), 1000L);
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         MockMultipartFile file1 = new MockMultipartFile("fileList", "file1.png", MediaType.MULTIPART_FORM_DATA_VALUE, "file1".getBytes(UTF_8));
         MockMultipartFile file2 = new MockMultipartFile("fileList", "file2.png", MediaType.MULTIPART_FORM_DATA_VALUE, "file2".getBytes(UTF_8));
@@ -95,7 +96,7 @@ class UsedBookControllerTest extends BaseControllerTest {
                                         fieldWithPath("college").description("단과대"),
                                         fieldWithPath("department").description("학과"),
                                         fieldWithPath("price").description("가격"),
-                                        fieldWithPath("tradeAvailableDate").description("거래 가능 날짜"),
+                                        fieldWithPath("tradeAvailableDatetime").description("거래 가능 날짜"),
                                         fieldWithPath("name").description("책 이름"),
                                         fieldWithPath("publisher").description("출판사"),
                                         fieldWithPath("isUnderlinedOrWrite").description("밑줄및 필기흔적 여부"),
@@ -122,7 +123,7 @@ class UsedBookControllerTest extends BaseControllerTest {
                 List.of("image1Url", "image2Url"),
                 "책이름",
                 "출판사",
-                LocalDate.of(2023, 9, 13),
+                LocalDateTime.of(2023, 9, 13, 12,0),
                 false,
                 true,
                 true,
@@ -152,7 +153,7 @@ class UsedBookControllerTest extends BaseControllerTest {
                                 fieldWithPath("bookImage").description("책 이미지 주소"),
                                 fieldWithPath("bookName").description("책 이름"),
                                 fieldWithPath("publisher").description("출판사"),
-                                fieldWithPath("tradeAvailableDate").description("거래 가능 날짜"),
+                                fieldWithPath("tradeAvailableDatetime").description("거래 가능 날짜"),
                                 fieldWithPath("price").description("가격"),
                                 fieldWithPath("bookStatus").description("책 상태"),
                                 fieldWithPath("underlinedOrWrite").description("밑줄및 필기흔적 여부"),
@@ -166,7 +167,7 @@ class UsedBookControllerTest extends BaseControllerTest {
     @Test
     void 중고서적을_삭제한다() throws Exception {
         //given
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), 1000L);
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         final Long usedBookId = 1L;
 
@@ -192,7 +193,7 @@ class UsedBookControllerTest extends BaseControllerTest {
     @Test
     void 중고서적을_삭제한다_실패_글을_올린_사용자가_아님() throws Exception {
         //given
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), 1000L);
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         final Long usedBookId = 1L;
 
@@ -222,7 +223,7 @@ class UsedBookControllerTest extends BaseControllerTest {
         //given
         final Long usedBookId = 1L;
         final String image = "image.png";
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), 1000L);
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         when(usedBookService.deleteUsedBookImage(usedBookId, image))
                 .thenReturn(true);
@@ -255,7 +256,7 @@ class UsedBookControllerTest extends BaseControllerTest {
                 College.LAW,
                 Department.BUSINESS,
                 15000,
-                LocalDate.of(2023, 9, 13),
+                LocalDateTime.of(2023, 9, 13, 12,0),
                 "책이름",
                 "출판사",
                 false,
@@ -263,7 +264,7 @@ class UsedBookControllerTest extends BaseControllerTest {
                 true
         );
 
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), 1000L);
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         MockMultipartFile file1 = new MockMultipartFile("fileList", "file1.png", MediaType.MULTIPART_FORM_DATA_VALUE, "file1".getBytes(UTF_8));
         MockMultipartFile file2 = new MockMultipartFile("fileList", "file2.png", MediaType.MULTIPART_FORM_DATA_VALUE, "file2".getBytes(UTF_8));
@@ -303,7 +304,7 @@ class UsedBookControllerTest extends BaseControllerTest {
                                 fieldWithPath("college").description("단과대"),
                                 fieldWithPath("department").description("학과"),
                                 fieldWithPath("price").description("가격"),
-                                fieldWithPath("tradeAvailableDate").description("거래 가능 날짜"),
+                                fieldWithPath("tradeAvailableDatetime").description("거래 가능 날짜"),
                                 fieldWithPath("name").description("책 이름"),
                                 fieldWithPath("publisher").description("출판사"),
                                 fieldWithPath("isUnderlinedOrWrite").description("밑줄및 필기흔적 여부"),
@@ -326,7 +327,7 @@ class UsedBookControllerTest extends BaseControllerTest {
                 College.LAW,
                 Department.BUSINESS,
                 15000,
-                LocalDate.of(2023, 9, 13),
+                LocalDateTime.of(2023, 9, 13,8,0),
                 "책이름",
                 "출판사",
                 false,
@@ -374,7 +375,7 @@ class UsedBookControllerTest extends BaseControllerTest {
                                 fieldWithPath("college").description("단과대"),
                                 fieldWithPath("department").description("학과"),
                                 fieldWithPath("price").description("가격"),
-                                fieldWithPath("tradeAvailableDate").description("거래 가능 날짜"),
+                                fieldWithPath("tradeAvailableDatetime").description("거래 가능 날짜"),
                                 fieldWithPath("name").description("책 이름"),
                                 fieldWithPath("publisher").description("출판사"),
                                 fieldWithPath("isUnderlinedOrWrite").description("밑줄및 필기흔적 여부"),

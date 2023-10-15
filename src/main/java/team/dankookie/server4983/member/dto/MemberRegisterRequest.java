@@ -64,6 +64,7 @@ public record MemberRegisterRequest(
     public Member toEntity(String password) {
         return Member.builder()
                 .studentId(studentId)
+                .college(department.getCollege())
                 .department(department)
                 .yearOfAdmission(yearOfAdmission)
                 .nickname(nickname)

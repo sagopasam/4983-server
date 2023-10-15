@@ -25,6 +25,7 @@ import team.dankookie.server4983.s3.dto.S3Response;
 import team.dankookie.server4983.s3.service.S3UploadService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,7 +65,7 @@ class UsedBookServiceTest extends BaseServiceTest {
                 College.LAW,
                 Department.BUSINESS,
                 15000,
-                LocalDate.of(2023, 9, 13),
+                LocalDateTime.of(2023, 9, 13,12,0),
                 "책이름",
                 "출판사",
                 false,
@@ -111,7 +112,7 @@ class UsedBookServiceTest extends BaseServiceTest {
                 .name(bookName)
                 .publisher(publisher)
                 .price(15000)
-                .tradeAvailableDate(LocalDate.of(2023, 9, 13))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 9, 13,12,0))
                 .build();
 
         when(usedBookRepository.findById(usedBookId))

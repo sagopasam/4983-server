@@ -12,7 +12,7 @@ import team.dankookie.server4983.member.domain.Member;
 @NoArgsConstructor
 @Getter
 public class ChatRoomResponse {
-    private long roomId;
+    private long chatRoomId;
 
     private long buyerId;
 
@@ -35,7 +35,7 @@ public class ChatRoomResponse {
         }
 
         return ChatRoomResponse.builder()
-                .roomId(chatRoom.getChatRoomId())
+                .chatRoomId(chatRoom.getChatRoomId())
                 .buyerId(chatRoom.getBuyer().getId())
                 .buyerNickname(buyerNickname)
                 .sellerId(chatRoom.getSeller().getId())

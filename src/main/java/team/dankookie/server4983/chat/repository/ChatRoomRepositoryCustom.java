@@ -39,4 +39,6 @@ public interface ChatRoomRepositoryCustom {
     void updateSellerChattingToRead(long chatRoomId);
 
     void updateBuyerChattingToRead(long chatRoomId);
+
+    Member getBuyer(long chatRoomId);
 }
