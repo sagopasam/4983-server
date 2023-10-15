@@ -377,9 +377,9 @@ public class MemberService {
     }
 
     @Transactional
-    public boolean checkMemberAndWithdraw(String nickname){
-        Member member = memberRepository.findByNickname(nickname)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+    public boolean checkMemberAndWithdraw(AccessToken accessToken){
+        String nickname = jwtTokenUtils.getNickname(accessToken.value(), tokenSecretKey.getSecretKey());
+        Member member = findMemberByNickname(nickname);
         if (!member.getIsWithdraw()) {
             member.withdraw();
         }
