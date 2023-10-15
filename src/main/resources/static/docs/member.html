@@ -466,6 +466,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_회원가입_성공">회원가입 (성공)</a></li>
 <li><a href="#_회원의_단과대_학과_가져오기">회원의 단과대 학과 가져오기</a></li>
 <li><a href="#_로그아웃성공_쿠키에_남긴_refreshtoken_삭제_클라이언트에서_redirect_accesstoken_삭제_필요">로그아웃(성공: 쿠키에 남긴 refreshToken 삭제, 클라이언트에서 redirect, accessToken 삭제 필요)</a></li>
+<li><a href="#_로그아웃성공_쿠키에_남긴_refreshtoken_삭제_클라이언트에서_redirect_accesstoken_삭제_필요_2">로그아웃(성공: 쿠키에 남긴 refreshToken 삭제, 클라이언트에서 redirect, accessToken 삭제 필요)</a></li>
 <li><a href="#_회원_탈퇴_로직성공">회원 탈퇴 로직(성공)</a></li>
 </ul>
 </li>
@@ -525,8 +526,8 @@ Host: localhost:8080
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk2NDI3Nzc1LCJleHAiOjE2OTY0Mjk1NzV9.OH0bKY48kkpfKyBhpAPR_vTQtzSaWhavVPcEdYavqNw
-Set-Cookie: refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk2NDI3Nzc1LCJleHAiOjE2OTc2MzczNzV9.aF-vUuCvC2IrzRY_sPppi3PQP9cx8nx1fI_N9-TFJ00</code></pre>
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk3Mzg1ODA5LCJleHAiOjE2OTczODc2MDl9.1PIo4Smi0_k5rTo23NtlRxHoRizF_UMx88M6GlAby7c
+Set-Cookie: refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk3Mzg1ODA5LCJleHAiOjE2OTg1OTU0MDl9.9rKveKPWQ64v5odxOJ5CWIgMdBnTf1MvZgAFrhesn_Y</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1713,7 +1714,7 @@ Host: localhost:8080
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/college-department HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk2NDI3Nzc2LCJleHAiOjE2OTY0Mjk1NzZ9._2ergRttM7yJrYyfHtBdPmdvpkM_y7toLPfDy-lnr80
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk3Mzg1ODEyLCJleHAiOjE2OTczODc2MTJ9.0K6FdXYmhhhobIj8wXggKPiNmyc7LTUKmGr2809jnsk
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1809,15 +1810,48 @@ Set-Cookie: refreshToken=example_refresh_token; Max-Age=0; Expires=Thu, 01 Jan 1
 </div>
 </div>
 <div class="sect2">
-<h3 id="_회원_탈퇴_로직성공">회원 탈퇴 로직(성공)</h3>
+<h3 id="_로그아웃성공_쿠키에_남긴_refreshtoken_삭제_클라이언트에서_redirect_accesstoken_삭제_필요_2">로그아웃(성공: 쿠키에 남긴 refreshToken 삭제, 클라이언트에서 redirect, accessToken 삭제 필요)</h3>
 <div class="sect3">
 <h4 id="_request_21">Request</h4>
 <div class="listingblock">
 <div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/logout HTTP/1.1
+Content-Type: application/json
+Host: localhost:8080
+Cookie: refreshToken=example_refresh_token</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>refreshToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refreshToken</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_회원_탈퇴_로직성공">회원 탈퇴 로직(성공)</h3>
+<div class="sect3">
+<h4 id="_request_22">Request</h4>
+<div class="listingblock">
+<div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/v1/withdraw HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk2NDI3Nzc3LCJleHAiOjE2OTY0Mjk1Nzd9.I-jNchNKgrDu_ElQgsNZayAjFL_C2YQq_aFC4ImCNYo
-Host: localhost:8080</code></pre>
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuaWNrbmFtZSI6Im5pY2tuYW1lIiwiaWF0IjoxNjk3Mzg1ODEzLCJleHAiOjE2OTczODc2MTN9.76HIU0grwB7B2kIwYSHGwU4s-ChOymcLqdC5047yxyA
+Host: localhost:8080
+Cookie: refreshToken=example_refresh_token</code></pre>
 </div>
 </div>
 </div>
@@ -1843,10 +1877,32 @@ Host: localhost:8080</code></pre>
 </table>
 </div>
 <div class="sect3">
+<h4 id="_requestcookie">requestCookie</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>refreshToken</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refreshToken</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
 <h4 id="_response_20">Response</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Set-Cookie: refreshToken=example_refresh_token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT
 Content-Type: text/plain;charset=UTF-8
 Content-Length: 39
 
@@ -1861,7 +1917,7 @@ Content-Length: 39
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-10-02 19:07:19 +0900
+Last updated 2023-10-16 00:59:47 +0900
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
