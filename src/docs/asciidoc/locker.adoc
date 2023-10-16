@@ -1,0 +1,39 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+== 메인 문서
+
+link:index.html[메인 문서]
+
+== 해당 책의 거래날짜에 차있는 사물함의 리스트를 반환한다
+
+=== Request
+
+include::{snippets}/locker/chat-room-available-date/success/http-request.adoc[]
+
+Query Parameters::
+include::{snippets}/locker/chat-room-available-date/success/query-parameters.adoc[]
+
+=== Response
+
+include::{snippets}/locker/chat-room-available-date/success/http-response.adoc[]
+include::{snippets}/locker/chat-room-available-date/success/response-fields.adoc[]
+
+== 사물함을 예약한다
+
+=== Request
+
+include::{snippets}/locker/success/http-request.adoc[]
+
+Request Header::
+include::{snippets}/locker/success/request-headers.adoc[]
+
+Request Body::
+include::{snippets}/locker/success/request-fields.adoc[]
+
+=== Response
+
+include::{snippets}/locker/success/http-response.adoc[]
