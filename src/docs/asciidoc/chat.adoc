@@ -9,7 +9,7 @@
 link:index.html[메인 문서]
 
 
-=== 유저의 채팅방 리스트 리턴 (성공)
+=== 유저가 참가한 채팅방 리스트 리턴 (성공)
 
 ==== Request
 
@@ -22,17 +22,86 @@ include::{snippets}/chat-list/success/request-headers.adoc[]
 include::{snippets}/chat-list/success/http-response.adoc[]
 include::{snippets}/chat-list/success/response-fields.adoc[]
 
-=== 유저의 채팅 메시지 리스트 반환 (성공)
+=== 채팅방 생성
+
+==== Request
+
+include::{snippets}/chat/create-chat-room/success/http-request.adoc[]
+
+RequestHeader::
+include::{snippets}/chat/create-chat-room/success/request-headers.adoc[]
+
+Request Body::
+include::{snippets}/chat/create-chat-room/success/request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/chat/create-chat-room/success/http-response.adoc[]
+
+include::{snippets}/chat/create-chat-room/success/response-fields.adoc[]
+
+
+=== 채팅방 아이디로 유저의 채팅 내역 반환 (성공)
 
 ==== Request
 
 include::{snippets}/chat/get-chatting-data/success/http-request.adoc[]
-PathVariable::
+Path Variable::
 include::{snippets}/chat/get-chatting-data/success/path-parameters.adoc[]
-RequestHeader::
+Request Header::
 include::{snippets}/chat/get-chatting-data/success/request-headers.adoc[]
 
 ==== Response
 
 include::{snippets}/chat/get-chatting-data/success/http-response.adoc[]
 include::{snippets}/chat/get-chatting-data/success/response-fields.adoc[]
+
+== 채팅방에서 각 버튼 클릭시 서버에서 로직 작동
+
+=== Request
+
+include::{snippets}/chat-room/interact/success/http-request.adoc[]
+
+Request Headers::
+include::{snippets}/chat-room/interact/success/request-headers.adoc[]
+
+Request Body::
+include::{snippets}/chat-room/interact/success/request-fields.adoc[]
+
+=== Response
+
+include::{snippets}/chat-room/interact/success/http-response.adoc[]
+
+include::{snippets}/chat-room/interact/success/response-fields.adoc[]
+
+== 안읽은 메세지들을 반환
+
+=== Request
+
+include::{snippets}/chat-room/not-read/success/http-request.adoc[]
+
+Path Variable::
+include::{snippets}/chat-room/not-read/success/path-parameters.adoc[]
+
+Request Headers::
+include::{snippets}/chat-room/not-read/success/request-headers.adoc[]
+
+=== Response
+
+include::{snippets}/chat-room/not-read/success/http-response.adoc[]
+
+== 채팅 정지
+
+=== Request
+
+include::{snippets}/chat-room/stop/success/http-request.adoc[]
+
+Request Headers::
+include::{snippets}/chat-room/stop/success/request-headers.adoc[]
+
+Request Body::
+include::{snippets}/chat-room/stop/success/request-fields.adoc[]
+
+=== Response
+
+include::{snippets}/chat-room/stop/success/http-response.adoc[]

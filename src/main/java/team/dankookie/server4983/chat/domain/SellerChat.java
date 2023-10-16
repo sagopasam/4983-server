@@ -1,22 +1,34 @@
 package team.dankookie.server4983.chat.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-import team.dankookie.server4983.book.domain.UsedBook;
-import team.dankookie.server4983.chat.constant.ContentType;
-import team.dankookie.server4983.common.domain.BaseEntity;
-
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+import team.dankookie.server4983.chat.constant.ContentType;
+import team.dankookie.server4983.chat.dto.ChatMessageResponse;
 
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 @Getter
 @Entity
-@Builder(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SellerChat {
 
     @Id @GeneratedValue
@@ -26,7 +38,7 @@ public class SellerChat {
     @Enumerated(EnumType.STRING)
     private ContentType contentType;
 
-    @Column(columnDefinition = "boolean default false")
+    @ColumnDefault("false")
     @Builder.Default
     private Boolean isRead = false;
 
@@ -55,6 +67,18 @@ public class SellerChat {
                 .contentType(contentType)
                 .chatRoom(chatRoom)
                 .build();
+    }
+
+    public ChatMessageResponse toChatMessageResponse() {
+        return ChatMessageResponse.of(
+            message,
+            contentType,
+            createdAt
+        );
+    }
+
+    public void updateIsReadTrue() {
+        this.isRead = true;
     }
 
 }

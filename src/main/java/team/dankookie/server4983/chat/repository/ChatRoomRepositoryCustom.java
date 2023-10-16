@@ -15,11 +15,11 @@ public interface ChatRoomRepositoryCustom {
 
     List<SellerChat> getSellerChatting(long chatRoomId);
 
-    List<SellerChat> getNotReadSellerChattingData(long chatRoomId);
+    List<ChatMessageResponse> getNotReadSellerChattingData(long chatRoomId);
 
     List<BuyerChat> getBuyerChatting(long chatRoomId);
 
-    List<BuyerChat> getNotReadBuyerChattingData(long chatRoomId);
+    List<ChatMessageResponse> getNotReadBuyerChattingData(long chatRoomId);
 
     Member getSeller(long chatRoomId);
 

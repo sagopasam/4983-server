@@ -5,8 +5,8 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import team.dankookie.server4983.common.dto.BaseMessageResponse;
 import team.dankookie.server4983.fcm.dto.FcmBaseRequest;
 import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
 import team.dankookie.server4983.member.domain.Member;
@@ -19,8 +19,8 @@ public class FcmService {
     private final FirebaseMessaging firebaseMessaging;
     private final MemberService memberService;
 
-
-    public BaseMessageResponse sendNotificationByToken(FcmBaseRequest request) {
+    @Async("messagingTaskExecutor")
+    public void sendNotificationByToken(FcmBaseRequest request) {
 
         Member member = memberService.findMemberById(request.targetUserId());
 
@@ -39,17 +39,18 @@ public class FcmService {
 
                 try {
                     firebaseMessaging.send(message);
-                    return BaseMessageResponse.of("알림을 성공적으로 전송했습니다. targetUserId=" + request.targetUserId());
                 } catch (FirebaseMessagingException e) {
                     e.printStackTrace();
-                    return BaseMessageResponse.of("알림 보내기를 실패하였습니다. targetUserId=" + request.targetUserId());
+                    throw new RuntimeException("알림 보내기를 실패하였습니다. targetUserId=" + request.targetUserId());
                 }
             } else {
-                return BaseMessageResponse.of("서버에 저장된 해당 유저의 FirebaseToken이 존재하지 않습니다. targetUserId=" + request.targetUserId());
+                throw new RuntimeException("서버에 저장된 해당 유저의 FirebaseToken이 존재하지 않습니다. targetUserId="
+                    + request.targetUserId());
             }
     }
 
-    public BaseMessageResponse sendChattingNotificationByToken(FcmTargetUserIdRequest request) {
+    @Async("messagingTaskExecutor")
+    public void sendChattingNotificationByToken(FcmTargetUserIdRequest request) {
         FcmBaseRequest fcmBaseRequest = FcmBaseRequest.of(
                 request.targetUserId(),
                 //FIXME : title 명 수정 필요
@@ -57,6 +58,6 @@ public class FcmService {
                 request.message()
         );
 
-        return sendNotificationByToken(fcmBaseRequest);
+        sendNotificationByToken(fcmBaseRequest);
     }
 }
