@@ -94,7 +94,7 @@ public class SchedulerService {
                         "\n" +
                         "사물함 번호 : %s번 \n " +
                         "거래 약속 시간: %d:%d \n",
-                locker.getLockerNumber(), locker.getTradeDate().getHour() , locker.getTradeDate().getMinute()))
+                locker.getLockerNumber(), chatRoom.getUsedBook().getTradeAvailableDatetime().getHour() , chatRoom.getUsedBook().getTradeAvailableDatetime().getMinute()))
                 .build();
 
         schedulerRepository.save(schedule);
@@ -127,7 +127,8 @@ public class SchedulerService {
 
     @Transactional
     public void setSchedulerAboutDontPressDone(ChatRoom chatRoom, LocalDateTime tradeAvailableDate) {
-        Locker locker = lockerRepository.findByChatRoom(chatRoom);
+        Locker locker = lockerRepository.findByChatRoom(chatRoom)
+            .orElseThrow(() -> new IllegalArgumentException("해당 채팅방에 사물함이 없습니다."));
         LocalDateTime time = tradeAvailableDate.withHour(8).withMinute(30);
 
         Schedule schedule = Schedule.builder().targetId(chatRoom.getBuyer().getId()).chatRoom(chatRoom).time(time).scheduleType(ScheduleType.BUYER_CASE_2)
@@ -138,7 +139,7 @@ public class SchedulerService {
                                 "\n" +
                                 "사물함 번호 : %s번 \n " +
                                 "거래 약속 시간: %d:%d \n",
-                        locker.getLockerNumber(), locker.getTradeDate().getHour() , locker.getTradeDate().getMinute()))
+                        locker.getLockerNumber(), chatRoom.getUsedBook().getTradeAvailableDatetime().getHour() , chatRoom.getUsedBook().getTradeAvailableDatetime().getMinute()))
                 .build();
 
         schedulerRepository.save(schedule);
