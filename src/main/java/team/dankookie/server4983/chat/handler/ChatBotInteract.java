@@ -14,6 +14,7 @@ import java.util.List;
 
 import static team.dankookie.server4983.chat.constant.ContentType.*;
 
+@Deprecated
 @Component
 @RequiredArgsConstructor
 public class ChatBotInteract {
@@ -22,10 +23,10 @@ public class ChatBotInteract {
     private final SellerChatRepository sellerChatRepository;
 
     public String purchaseBookStart(ChatRoom chatRoom) {
-        String sellerMessage = String.format("\'%s\' 님이 거래 요청을 보냈어요! \n" +
-                "오늘 거래하러 갈래요?", chatRoom.getSeller().getNickname());
-        String buyerMessage = String.format("\'%s\' 님께 \'%s\' 서적 거래를 요청했습니다. \n\n" +
-                " 판매자의 응답을 기다려주세요. :)", chatRoom.getSeller().getNickname(), chatRoom.getUsedBook().getName());
+        String sellerMessage = String.format("'%s' 님이 거래 요청을 보냈어요! \n" +
+                                             "오늘 거래하러 갈래요?", chatRoom.getSeller().getNickname());
+        String buyerMessage = String.format("'%s' 님께 '%s' 서적 거래를 요청했습니다. \n\n" +
+                                            " 판매자의 응답을 기다려주세요. :)", chatRoom.getSeller().getNickname(), chatRoom.getUsedBook().getName());
 
         SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, BOOK_PURCHASE_START_SELLER, chatRoom);
         BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_PURCHASE_START_BUYER, chatRoom);
@@ -128,32 +129,32 @@ public class ChatBotInteract {
         return List.of(sellerMessage, buyerMessage);
     }
 
-    public String completeSelectLockAndPassword(ChatRoom chatRoom , ChatRequest request , Locker locker) {
-        String sellerMessage = String.format("기입하셨던 거래 날짜에 맞게, 당일 내에 배치 해주시길 바랍니다. \n" +
-                        "\n" +
-                        "서적 배치 이후 완료 버튼을 눌러주세요.\n" +
-                        "\n" +
-                        "구매자가 배치된 서적을 수령한 후, “거래 완료” 버튼을 클릭하면 판매금액이 자동으로 입금됩니다.\n \n" +
-                        "사물함은 상경관 2층 GS25 편의점 옆 초록색 사물함을 찾아주세요:) \n \n" +
-                        "사물함 번호 : %s번 \n 거래 날짜 및 시간: %d월 %d일 %d:%d" +
-                        "\n",
-                locker.getLockerNumber() , locker.getTradeDate().getMonthValue() , locker.getTradeDate().getDayOfMonth() , locker.getTradeDate().getHour() , locker.getTradeDate().getMinute());
-        String buyerMessage = String.format("서적 배치가 완료되었습니다.\n" +
-                "금일 내 수령해주시길 바랍니다.\n" +
-                "\n" +
-                "“거래 완료\" 버튼을 눌러야, 판매자에게 판매금액이 입금되오니, 수령 후 버튼을 꼭 눌러주세요 \n" +
-                "\n" +
-                "사물함 번호: %s번\n" +
-                "사물함 비밀번호: %s\n" , request.getData().get("lockerNumber") , request.getData().get("lockerPassword") );
-        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, BOOK_PLACEMENT_COMPLETE_SELLER, chatRoom);
-        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_PLACEMENT_COMPLETE_BUYER, chatRoom);
-        chatRoom.addSellerChat(sellerChat);
-        chatRoom.addBuyerChat(buyerChat);
-        chatRoom.setInteractStep(4);
-        sellerChatRepository.save(sellerChat);
-        buyerChatRepository.save(buyerChat);
-        return buyerMessage;
-    }
+//    public String completeSelectLockAndPassword(ChatRoom chatRoom , ChatRequest request , Locker locker) {
+//        String sellerMessage = String.format("기입하셨던 거래 날짜에 맞게, 당일 내에 배치 해주시길 바랍니다. \n" +
+//                        "\n" +
+//                        "서적 배치 이후 완료 버튼을 눌러주세요.\n" +
+//                        "\n" +
+//                        "구매자가 배치된 서적을 수령한 후, “거래 완료” 버튼을 클릭하면 판매금액이 자동으로 입금됩니다.\n \n" +
+//                        "사물함은 상경관 2층 GS25 편의점 옆 초록색 사물함을 찾아주세요:) \n \n" +
+//                        "사물함 번호 : %s번 \n 거래 날짜 및 시간: %d월 %d일 %d:%d" +
+//                        "\n",
+//                locker.getLockerNumber() , chatRoom.getUsedBook().getTradeAvailableDatetime().getMonthValue() , chatRoom.getUsedBook().getTradeAvailableDatetime().getDayOfMonth() , chatRoom.getUsedBook().getTradeAvailableDatetime().getHour() , chatRoom.getUsedBook().getTradeAvailableDatetime().getMinute());
+//        String buyerMessage = String.format("서적 배치가 완료되었습니다.\n" +
+//                "금일 내 수령해주시길 바랍니다.\n" +
+//                "\n" +
+//                "“거래 완료\" 버튼을 눌러야, 판매자에게 판매금액이 입금되오니, 수령 후 버튼을 꼭 눌러주세요 \n" +
+//                "\n" +
+//                "사물함 번호: %s번\n" +
+//                "사물함 비밀번호: %s\n" , request.getData().get("lockerNumber") , request.getData().get("lockerPassword") );
+//        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, BOOK_PLACEMENT_COMPLETE_SELLER, chatRoom);
+//        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, BOOK_PLACEMENT_COMPLETE_BUYER, chatRoom);
+//        chatRoom.addSellerChat(sellerChat);
+//        chatRoom.addBuyerChat(buyerChat);
+//        chatRoom.setInteractStep(4);
+//        sellerChatRepository.save(sellerChat);
+//        buyerChatRepository.save(buyerChat);
+//        return buyerMessage;
+//    }
 
     public String completeTrade(ChatRoom chatRoom) {
         String message = String.format("거래가 완료되었습니다.\n" +
@@ -164,7 +165,7 @@ public class ChatBotInteract {
         BuyerChat buyerChat = BuyerChat.buildBuyerChat(message, TRADE_COMPLETE_BUYER, chatRoom);
         chatRoom.addBuyerChat(buyerChat);
         chatRoom.addSellerChat(sellerChat);
-        chatRoom.setInteractStep(5);
+        chatRoom.setInteractStep(6);
         sellerChatRepository.save(sellerChat);
         buyerChatRepository.save(buyerChat);
         return message;
