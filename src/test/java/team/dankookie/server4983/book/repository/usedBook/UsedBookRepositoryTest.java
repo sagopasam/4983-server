@@ -15,7 +15,6 @@ import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.fixture.MemberFixture;
 import team.dankookie.server4983.member.repository.MemberRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

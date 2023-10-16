@@ -5,12 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.book.domain.UsedBook;
+import team.dankookie.server4983.book.dto.UsedBookListResponse;
 import team.dankookie.server4983.common.BaseRepositoryTest;
 import team.dankookie.server4983.member.constant.AccountBank;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.repository.MemberRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -55,10 +55,10 @@ public class BookPurchaseDetailRepositoryTest extends BaseRepositoryTest {
         bookPurchaseDetailRepository.save(bookPurchase);
 
         //when
-        List<UsedBook> myPageBookPurchaseDetailList = bookPurchaseDetailRepository.getMyPageBookPurchaseDetailList(bookStatus, member.getId());
+        List<UsedBookListResponse> myPageBookPurchaseDetailList = bookPurchaseDetailRepository.getMyPageBookPurchaseDetailList(bookStatus, member.getId());
         //then
         assertThat(myPageBookPurchaseDetailList).hasSize(1);
-        assertThat(myPageBookPurchaseDetailList.get(0).getBookStatus()).isEqualTo(BookStatus.SOLD);
+        assertThat(myPageBookPurchaseDetailList.get(0).bookStatus()).isEqualTo(BookStatus.SOLD);
     }
 
 }

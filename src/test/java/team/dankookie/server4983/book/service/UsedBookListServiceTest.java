@@ -1,12 +1,8 @@
 package team.dankookie.server4983.book.service;
 
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.book.dto.UsedBookListResponse;
@@ -15,12 +11,10 @@ import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
 import team.dankookie.server4983.common.BaseServiceTest;
 import team.dankookie.server4983.member.domain.Member;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 class UsedBookListServiceTest extends BaseServiceTest {

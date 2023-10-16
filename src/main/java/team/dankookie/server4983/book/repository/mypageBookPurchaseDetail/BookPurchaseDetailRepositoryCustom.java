@@ -1,10 +1,10 @@
 package team.dankookie.server4983.book.repository.mypageBookPurchaseDetail;
 
 import team.dankookie.server4983.book.constant.BookStatus;
-import team.dankookie.server4983.book.domain.UsedBook;
+import team.dankookie.server4983.book.dto.UsedBookListResponse;
 
 import java.util.List;
 
 public interface BookPurchaseDetailRepositoryCustom {
-    List<UsedBook> getMyPageBookPurchaseDetailList(BookStatus bookStatus, Long memberId);
+    List<UsedBookListResponse> getMyPageBookPurchaseDetailList(BookStatus bookStatus, Long memberId);
 }
