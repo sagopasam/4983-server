@@ -1,13 +1,22 @@
 package team.dankookie.server4983.chat.domain;
 
-import jakarta.persistence.*;
-import lombok.*;
-import team.dankookie.server4983.book.domain.UsedBook;
-import team.dankookie.server4983.chat.constant.ContentType;
-import team.dankookie.server4983.member.domain.Member;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import team.dankookie.server4983.book.domain.UsedBook;
+import team.dankookie.server4983.member.domain.Member;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter

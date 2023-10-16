@@ -10,9 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class ChatStopRequest {
-
     private long chatRoomId;
-
-    private String target;
-
 }

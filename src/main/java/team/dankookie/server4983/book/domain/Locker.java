@@ -1,14 +1,21 @@
 package team.dankookie.server4983.book.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDate;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -23,15 +30,15 @@ public class Locker {
     private ChatRoom chatRoom;
 
     @NotNull
-    private String lockerNumber;
+    private Integer lockerNumber;
 
     @NotNull
     private String password;
 
-    @Column(columnDefinition = "boolean default false")
+    @ColumnDefault("true")
     private Boolean isExists;
 
-    private LocalDateTime tradeDate;
+    private LocalDate tradeDate;
 
     public void releaseLocker() {
         isExists = false;
