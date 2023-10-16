@@ -20,7 +20,7 @@ public class AdminReportService {
     private final AdminReportRepository adminReportRepository;
     private final SchedulerRepository schedulerRepository;
 
-    @Scheduled(cron = "* 0/10 * * * *")
+//    @Scheduled(cron = "* 0/10 * * * *")
     @Transactional
     public void execute() {
         addAdminReportByNotBookArrangement();
