@@ -2,8 +2,7 @@ package team.dankookie.server4983.book.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import team.dankookie.server4983.book.domain.UsedBook;
-import team.dankookie.server4983.book.dto.MyPageBookSalesDetailListResponse;
+import team.dankookie.server4983.book.dto.UsedBookListResponse;
 import team.dankookie.server4983.book.repository.bookImage.BookImageRepository;
 import team.dankookie.server4983.book.repository.mypageBookSalesDetail.BookSalesDetailRepository;
 import team.dankookie.server4983.jwt.constants.TokenSecretKey;
@@ -12,7 +11,6 @@ import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.repository.MemberRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -26,8 +24,16 @@ public class MyPageBookSalesDetailListService {
     private final TokenSecretKey tokenSecretKey;
 
 
+    public List<UsedBookListResponse> getMyPageBookSalesDetailList(boolean canBuy, AccessToken accessToken) {
+        String nickname = jwtTokenUtils.getNickname(accessToken.value(), tokenSecretKey.getSecretKey());
 
-    public List<MyPageBookSalesDetailListResponse> getMyPageBookSalesDetailList(boolean canBuy, AccessToken accessToken) {
+        Member member = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        return bookSalesDetailRepository.getMyPageBookSalesDetailList(canBuy, member.getId());
+    }
+}
+   /* public List<UsedBookListResponse> getMyPageBookSalesDetailList(boolean canBuy, AccessToken accessToken) {
 
         String nickname = jwtTokenUtils.getNickname(accessToken.value(), tokenSecretKey.getSecretKey());
 
@@ -35,15 +41,15 @@ public class MyPageBookSalesDetailListService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
 
-        List<MyPageBookSalesDetailListResponse> responseList = new ArrayList<>();
+        List<UsedBookListResponse> responseList = new ArrayList<>();
         List<UsedBook> mypageBookSalesDetailList = bookSalesDetailRepository.getMyPageBookSalesDetailList(canBuy, member.getId());
-        return getMyPageBookSalesDetailListResponse(responseList, mypageBookSalesDetailList);
+        return getUsedBookListResponse(responseList, mypageBookSalesDetailList);
     }
 
-    private List<MyPageBookSalesDetailListResponse> getMyPageBookSalesDetailListResponse(List<MyPageBookSalesDetailListResponse> responseList, List<UsedBook> mypageBookSalesDetailList) {
+    private List<UsedBookListResponse> getUsedBookListResponse(List<UsedBookListResponse> responseList, List<UsedBook> mypageBookSalesDetailList) {
         for(UsedBook usedBook : mypageBookSalesDetailList){
             String firstImageUrl = bookImageRepository.getBookImageUrlByUsedBookId(usedBook.getId());
-            MyPageBookSalesDetailListResponse myPageBookSalesDetailListResponse = MyPageBookSalesDetailListResponse.builder()
+            UsedBookListResponse UsedBookListResponse = UsedBookListResponse.builder()
                     .imageUrl(firstImageUrl)
                     .bookStatus(usedBook.getBookStatus())
                     .name(usedBook.getName())
@@ -51,8 +57,8 @@ public class MyPageBookSalesDetailListService {
                     .createdAt(usedBook.getCreatedAt())
                     .price(usedBook.getPrice())
                     .build();
-            responseList.add(myPageBookSalesDetailListResponse);
+            responseList.add(UsedBookListResponse);
         }
         return responseList;
     }
-}
+}*/

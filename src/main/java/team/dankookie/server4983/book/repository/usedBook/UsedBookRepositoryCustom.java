@@ -2,9 +2,7 @@ package team.dankookie.server4983.book.repository.usedBook;
 
 import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
-import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.book.dto.UsedBookListResponse;
-import team.dankookie.server4983.member.domain.Member;
 
 import java.util.List;
 

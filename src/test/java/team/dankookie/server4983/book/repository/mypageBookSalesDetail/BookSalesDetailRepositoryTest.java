@@ -5,12 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.book.domain.UsedBook;
+import team.dankookie.server4983.book.dto.UsedBookListResponse;
 import team.dankookie.server4983.common.BaseRepositoryTest;
 import team.dankookie.server4983.member.constant.AccountBank;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.repository.MemberRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -55,10 +55,10 @@ class BookSalesDetailRepositoryTest extends BaseRepositoryTest{
         bookSalesDetailRepository.save(bookSalesOn);
 
         //when
-        List<UsedBook> mypageBookSalesDetailList = bookSalesDetailRepository.getMyPageBookSalesDetailList(canBuy, member.getId());
+        List<UsedBookListResponse> mypageBookSalesDetailList = bookSalesDetailRepository.getMyPageBookSalesDetailList(canBuy, member.getId());
         //then
         assertThat(mypageBookSalesDetailList).hasSize(1);
-        assertThat(mypageBookSalesDetailList.get(0).getBookStatus()).isEqualTo(BookStatus.SALE);
+        assertThat(mypageBookSalesDetailList.get(0).bookStatus()).isEqualTo(BookStatus.SALE);
     }
 
     @Test
@@ -92,9 +92,9 @@ class BookSalesDetailRepositoryTest extends BaseRepositoryTest{
         bookSalesDetailRepository.save(bookSalesOn);
 
         //when
-        List<UsedBook> mypageBookSalesDetailList = bookSalesDetailRepository.getMyPageBookSalesDetailList(canBuy, member.getId());
+        List<UsedBookListResponse> mypageBookSalesDetailList = bookSalesDetailRepository.getMyPageBookSalesDetailList(canBuy, member.getId());
         //then
         assertThat(mypageBookSalesDetailList).hasSize(1);
-        assertThat(mypageBookSalesDetailList.get(0).getBookStatus()).isEqualTo(BookStatus.SOLD);
+        assertThat(mypageBookSalesDetailList.get(0).bookStatus()).isEqualTo(BookStatus.SOLD);
     }
 }

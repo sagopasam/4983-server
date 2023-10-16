@@ -1,13 +1,16 @@
 package team.dankookie.server4983.book.repository.mypageBookSalesDetail;
 
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import team.dankookie.server4983.book.constant.BookStatus;
-import team.dankookie.server4983.book.domain.UsedBook;
+import team.dankookie.server4983.book.dto.QUsedBookListResponse;
+import team.dankookie.server4983.book.dto.UsedBookListResponse;
 
 import java.util.List;
 
+import static team.dankookie.server4983.book.domain.QBookImage.bookImage;
 import static team.dankookie.server4983.book.domain.QUsedBook.usedBook;
 
 @RequiredArgsConstructor
@@ -17,12 +20,25 @@ public class BookSalesDetailRepositoryImpl implements BookSalesDetailRepositoryC
 
 
     @Override
-    public List<UsedBook> getMyPageBookSalesDetailList(boolean canBuy, Long memberId) {
-        JPAQuery<UsedBook> query = queryFactory.selectFrom(usedBook);
+    public List<UsedBookListResponse> getMyPageBookSalesDetailList(boolean canBuy, Long memberId) {
+        JPAQuery<UsedBookListResponse> query = queryFactory.select(
+                new QUsedBookListResponse(
+                        usedBook.id,
+                        JPAExpressions.select(bookImage.imageUrl)
+                                .from(bookImage)
+                                .where(bookImage.usedBook.eq(usedBook))
+                                .orderBy(bookImage.id.asc()),
+                        usedBook.bookStatus,
+                        usedBook.name,
+                        usedBook.tradeAvailableDatetime,
+                        usedBook.createdAt,
+                        usedBook.price
+                )
+        ).from(usedBook);
         return getMyPageBooksCanBuy(canBuy, memberId,query);
     }
 
-    private List<UsedBook> getMyPageBooksCanBuy(boolean canBuy, Long memberId, JPAQuery<UsedBook> query){
+    private List<UsedBookListResponse> getMyPageBooksCanBuy(boolean canBuy, Long memberId, JPAQuery<UsedBookListResponse> query){
         if(canBuy){
             return query
                     .where(
