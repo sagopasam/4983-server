@@ -49,7 +49,6 @@ class MemberWithdrawControllerTest extends BaseControllerTest {
         String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
         String withdrawUrl = API + "/withdraw";
         Cookie refreshTokenCookie = new Cookie("refreshToken", "example_refresh_token");
-
         when(memberService.checkMemberAndWithdraw(AccessToken.of(accessToken, "nickname")))
                 .thenReturn(true);
 
