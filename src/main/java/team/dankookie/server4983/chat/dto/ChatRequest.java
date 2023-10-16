@@ -1,25 +1,26 @@
 package team.dankookie.server4983.chat.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import team.dankookie.server4983.chat.constant.ContentType;
 
-import java.util.Map;
-
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class ChatRequest {
 
-    private long chatRoomId;
+    private Long chatRoomId;
 
-    private Map<String , Object> data;
-
-    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     private ContentType contentType;
 
+    private String message = "";
+
+
+    public static ChatRequest of(Long chatRoomId, ContentType contentType) {
+        return new ChatRequest(chatRoomId, contentType, "");
+    }
+
+    public static ChatRequest of(Long chatRoomId, ContentType contentType, String message) {
+        return new ChatRequest(chatRoomId, contentType, message);
+    }
 }
