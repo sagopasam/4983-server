@@ -1,5 +1,9 @@
 package team.dankookie.server4983.chat.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import team.dankookie.server4983.book.constant.BookStatus;
@@ -14,12 +18,6 @@ import team.dankookie.server4983.common.BaseRepositoryTest;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.fixture.MemberFixture;
 import team.dankookie.server4983.member.repository.MemberRepository;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class ChatRoomRepositoryTest extends BaseRepositoryTest {
 

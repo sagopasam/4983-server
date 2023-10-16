@@ -49,41 +49,61 @@ public class ChatService {
     private final BuyerChatRepository buyerChatRepository;
     private final SellerChatRepository sellerChatRepository;
 
-    public void chatRequestHandler(ChatRequest chatRequest , AccessToken accessToken) {
-        String userName = accessToken.nickname();
-        Member member = memberService.findMemberByNickname(userName);
-
-        chatLogicHandler.chatLoginHandler(chatRequest , member);
+    public ChatRoom findByChatRoomId(long chatRoomId) {
+        return chatRoomRepository.findByChatRoomId(chatRoomId)
+                .orElseThrow(() -> new ChatException("채팅방을 찾을 수 없습니다."));
     }
 
-    public ChatRoomResponse createChatRoom(ChatRoomRequest chatRoomRequest , AccessToken accessToken) throws AccountException {
-        String nickname = accessToken.nickname();
+    public List<ChatMessageResponse> chatRequestHandler(ChatRequest chatRequest, AccessToken accessToken) {
 
-        UsedBook usedBook = usedBookRepository.findById(chatRoomRequest.getSalesPost())
+        Member member = memberService.findMemberByNickname(accessToken.nickname());
+
+        chatRoomRepository.findBySellerOrBuyerAndChatRoomId(member, member,
+                chatRequest.getChatRoomId())
+            .orElseThrow(() -> new ChatException("해당 채팅방에 존재하지 않는 사용자입니다."));
+
+        return chatLogicHandler.chatLogic(chatRequest);
+    }
+
+    @Transactional
+    public ChatRoomResponse createChatRoom(ChatRoomRequest chatRoomRequest , AccessToken accessToken) throws AccountException {
+        String buyerNickname = accessToken.nickname();
+
+        UsedBook usedBook = usedBookRepository.findById(chatRoomRequest.getUsedBookId())
                 .orElseThrow(() -> new ChatException("거래 글을 찾을 수 없습니다."));
+
         Member seller = usedBook.getSellerMember();
-        Member buyer = memberRepository.findByNickname(nickname)
+        Member buyer = memberRepository.findByNickname(buyerNickname)
                 .orElseThrow(() -> new ChatException("사용자를 찾을 수 없습니다."));
 
-        if(seller.getNickname().equals(nickname)) {
+        if(seller.getNickname().equals(buyerNickname)) {
             throw new ChatException("자신의 판매글에 거래요청을 할 수 없습니다.");
         }
 
-        Optional<ChatRoom> result = chatRoomRepository.findBookBySellerAndBuyerAndBook(seller , buyer , usedBook);
-        if(result.isPresent()) {
-            return ChatRoomResponse.of(result.get() , nickname);
+        ChatRoomResponse result = isChatRoomAlreadyExistsBySellerBuyerUsedBook(usedBook, seller,
+            buyer);
+        if (result != null) {
+            return result;
         }
-        ChatRoom chatRoom = buildChatRoom(buyer , seller , usedBook);
 
+        ChatRoom savedChatroom = buildAndSaveChatRoom(usedBook, seller, buyer);
+
+        ChatRequest chatRequest = ChatRequest.of(savedChatroom.getChatRoomId(), BOOK_PURCHASE_START);
+        chatRequestHandler(chatRequest, accessToken);
+
+        return ChatRoomResponse.of(savedChatroom.getChatRoomId());
+    }
+
+    private ChatRoomResponse isChatRoomAlreadyExistsBySellerBuyerUsedBook(UsedBook usedBook, Member seller, Member buyer) {
+        Optional<ChatRoom> result = chatRoomRepository.findBookBySellerAndBuyerAndBook(seller,
+            buyer, usedBook);
+        return result.map(chatRoom -> ChatRoomResponse.of(chatRoom.getChatRoomId())).orElse(null);
+    }
+
+    private ChatRoom buildAndSaveChatRoom(UsedBook usedBook, Member seller, Member buyer) {
+        ChatRoom chatRoom = buildChatRoom(buyer, seller, usedBook);
         ChatRoom savedChatroom = chatRoomRepository.save(chatRoom);
-
-        ChatRequest chatRequest = ChatRequest.builder()
-                .chatRoomId(savedChatroom.getChatRoomId())
-                .contentType(ContentType.BOOK_PURCHASE_START)
-                .build();
-        chatRequestHandler(chatRequest , accessToken);
-
-        return ChatRoomResponse.of(savedChatroom , nickname);
+        return savedChatroom;
     }
 
     public ChatRoomResponse getChatRoom(long chatRoom , HttpServletRequest request) {
@@ -93,7 +113,7 @@ public class ChatService {
         ChatRoom result = chatRoomRepository.findById(chatRoom)
                 .orElseThrow(() -> new ChatException("존재하지 않는 채팅방 입니다."));
 
-        return ChatRoomResponse.of(result , userName);
+        return ChatRoomResponse.of(result.getChatRoomId());
     }
 
     @Transactional
@@ -119,20 +139,20 @@ public class ChatService {
     }
 
     @Transactional
-    public Object getNotReadChattingData(long chatRoomId, String type) {
-        if(type.equals("seller")) {
-            List<SellerChat> result = chatRoomRepository.getNotReadSellerChattingData(chatRoomId);
+    public List<ChatMessageResponse> getNotReadChattingData(long chatRoomId, AccessToken accessToken) {
+        ChatRoom chatRoom = findByChatRoomId(chatRoomId);
+
+        if (chatRoom.getSeller().getNickname().equals(accessToken.nickname())) {
             chatRoomRepository.modifySellerChattingToRead(chatRoomId);
-
-            return result;
-        } else if(type.equals("buyer")) {
-            List<BuyerChat> result = chatRoomRepository.getNotReadBuyerChattingData(chatRoomId);
-            chatRoomRepository.modifyBuyerChattingToRead(chatRoomId);
-
-            return result;
-        } else {
-            throw new ChatException("잘못된 타입입니다. seller , buyer 중 하나만 선택해주세요.");
+            return chatRoomRepository.getNotReadSellerChattingData(chatRoomId);
         }
+
+        if (chatRoom.getBuyer().getNickname().equals(accessToken.nickname())) {
+            chatRoomRepository.modifyBuyerChattingToRead(chatRoomId);
+            return chatRoomRepository.getNotReadBuyerChattingData(chatRoomId);
+        }
+
+        throw new ChatException("해당 채팅방에 존재하지 않는 회원입니다.");
     }
 
     public List<ChatListResponse> getChatListWithAccessToken(AccessToken accessToken) {
@@ -142,27 +162,27 @@ public class ChatService {
     }
 
     @Transactional
-    public void stopTrade(ChatStopRequest chatStopRequest) {
-        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatStopRequest.getChatRoomId())
-                .orElseThrow(() -> new ChatException("채팅방을 찾을 수 없습니다."));
+    public void stopTrade(ChatStopRequest chatStopRequest, AccessToken accessToken) {
+        String accessTokenNickname = accessToken.nickname();
+
+        ChatRoom chatRoom = findByChatRoomId(chatStopRequest.getChatRoomId());
 
         Member seller = chatRoomRepository.getSeller(chatStopRequest.getChatRoomId());
         Member buyer = chatRoomRepository.getBuyer(chatStopRequest.getChatRoomId());
-        String target = chatStopRequest.getTarget();
 
-        if(target.equals("buyer")) {
-            chatBotAdmin.tradeStopByBuyer(chatRoom , seller , buyer);
-        } else if(target.equals("seller")) {
-            chatBotAdmin.tradeStopBySeller(chatRoom , seller , buyer);
+        if (seller.getNickname().equals(accessTokenNickname)) {
+            chatBotAdmin.tradeStopBySeller(chatRoom, seller, buyer);
+        } else if (buyer.getNickname().equals(accessTokenNickname)) {
+            chatBotAdmin.tradeStopByBuyer(chatRoom, seller, buyer);
         } else {
-            return;
+            throw new ChatException("해당 채팅방에 존재하지 않는 회원입니다.");
         }
-
         releaseLocker(chatRoom);
     }
 
     public void releaseLocker(ChatRoom chatRoom) {
-        Locker locker = lockerRepository.findByChatRoom(chatRoom);
+        Locker locker = lockerRepository.findByChatRoom(chatRoom)
+                .orElseThrow(() -> new ChatException("해당 채팅방에 사물함이 없습니다."));
 
         locker.releaseLocker();
     }

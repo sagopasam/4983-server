@@ -11,6 +11,7 @@ import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.chat.dto.ChatListResponse;
 import team.dankookie.server4983.chat.dto.ChatMessageResponse;
+import team.dankookie.server4983.chat.dto.QChatMessageResponse;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.domain.QMember;
 
@@ -41,8 +42,8 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
     }
 
     @Override
-    public List<SellerChat> getNotReadSellerChattingData(long chatRoomId) {
-        return jpaQueryFactory.select(sellerChat)
+    public List<ChatMessageResponse> getNotReadSellerChattingData(long chatRoomId) {
+        return jpaQueryFactory.select(new QChatMessageResponse(sellerChat.message , sellerChat.contentType , sellerChat.createdAt))
                 .from(chatRoom)
                 .innerJoin(chatRoom.sellerChats , sellerChat).on(sellerChat.isRead.eq(false))
                 .where(chatRoom.chatRoomId.eq(chatRoomId))
@@ -59,8 +60,8 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
     }
 
     @Override
-    public List<BuyerChat> getNotReadBuyerChattingData(long chatRoomId) {
-        return jpaQueryFactory.select(buyerChat)
+    public List<ChatMessageResponse> getNotReadBuyerChattingData(long chatRoomId) {
+        return jpaQueryFactory.select(new QChatMessageResponse(buyerChat.message , buyerChat.contentType , buyerChat.createdAt))
                 .from(chatRoom)
                 .innerJoin(chatRoom.buyerChats , buyerChat).on(buyerChat.isRead.eq(false))
                 .where(chatRoom.chatRoomId.eq(chatRoomId))
