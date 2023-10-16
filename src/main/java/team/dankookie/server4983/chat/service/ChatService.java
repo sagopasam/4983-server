@@ -58,7 +58,7 @@ public class ChatService {
 
         Member member = memberService.findMemberByNickname(accessToken.nickname());
 
-        chatRoomRepository.findBySellerOrBuyerAndChatRoomId(member, member,
+        chatRoomRepository.findBySellerOrBuyerAndChatRoomId(member.getId(), member.getId(),
                 chatRequest.getChatRoomId())
             .orElseThrow(() -> new ChatException("해당 채팅방에 존재하지 않는 사용자입니다."));
 
@@ -106,7 +106,7 @@ public class ChatService {
         return savedChatroom;
     }
 
-    public ChatRoomResponse getChatRoom(long chatRoom , HttpServletRequest request) {
+    public ChatRoomResponse getChatRoom(Long chatRoom , HttpServletRequest request) {
         String token = request.getHeader("Authorization").substring(7);
         String userName = jwtTokenUtils.getNickname(token , tokenSecretKey.getSecretKey());
 

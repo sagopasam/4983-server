@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChatRoomRequest {
-    private long usedBookId;
+    private Long usedBookId;
 
-    public static ChatRoomRequest of(long usedBookId) {
+    public static ChatRoomRequest of(Long usedBookId) {
         return ChatRoomRequest.builder().usedBookId(usedBookId).build();
     }
 
