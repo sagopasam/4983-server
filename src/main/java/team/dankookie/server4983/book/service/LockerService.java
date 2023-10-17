@@ -29,8 +29,29 @@ public class LockerService {
     LocalDate tradeDate = LocalDate.from(
         chatRoom.getUsedBook().getTradeAvailableDatetime());
 
-    return lockerRepository.findByTradeDateBetweenAndIsExistsTrue(
+    List<LockerResponse> responseList = lockerRepository.findByTradeDateBetweenAndIsExistsTrue(
         tradeDate.minusDays(1), tradeDate);
+
+    addEmptyLockerToLockerResponseList(responseList);
+
+    sortListLockerNumberAsc(responseList);
+
+    return responseList;
+  }
+
+  private static void addEmptyLockerToLockerResponseList(List<LockerResponse> responseList) {
+    for (int i = 1; i <= 32; i++) {
+      int finalI = i;
+      if (responseList.stream().noneMatch(response -> response.getLockerNumber() == finalI)) {
+        responseList.add(LockerResponse.of(i, false));
+      }
+    }
+  }
+
+  private void sortListLockerNumberAsc(List<LockerResponse> responseList) {
+    responseList.sort(
+        (response1, response2) ->
+            Integer.compare(response1.getLockerNumber(), response2.getLockerNumber()));
   }
 
   @Transactional
