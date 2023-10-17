@@ -23,22 +23,30 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
 
     @Override
     public List<UsedBookListResponse> getUsedBookList(boolean isOrderByTradeAvailableDatetime) {
-        JPAQuery<UsedBookListResponse> query = queryFactory.select(
-                new QUsedBookListResponse(
-                        usedBook.id,
-                        JPAExpressions.select(bookImage.imageUrl)
-                                .from(bookImage)
-                                .where(bookImage.usedBook.eq(usedBook))
-                                .orderBy(bookImage.id.asc()),
-                        usedBook.bookStatus,
-                        usedBook.name,
-                        usedBook.tradeAvailableDatetime,
-                        usedBook.createdAt,
-                        usedBook.price
-                )
-        ).from(usedBook);
+      JPAQuery<UsedBookListResponse> query = queryFactory
+          .select(
+              new QUsedBookListResponse(
+                  usedBook.id,
+                  JPAExpressions
+                      .select(bookImage.imageUrl)
+                      .from(bookImage)
+                      .where(bookImage.usedBook.eq(usedBook)
+                          .and(bookImage.id.eq(
+                              JPAExpressions
+                                  .select(bookImage.id.min())
+                                  .from(bookImage)
+                                  .where(bookImage.usedBook.eq(usedBook))
+                          ))
+                      ),
+                  usedBook.bookStatus,
+                  usedBook.name,
+                  usedBook.tradeAvailableDatetime,
+                  usedBook.createdAt,
+                  usedBook.price
+              ))
+          .from(usedBook);
 
-        return getUsedBooksIsOrderByTradeAvailableDatetime(isOrderByTradeAvailableDatetime, query);
+      return getUsedBooksIsOrderByTradeAvailableDatetime(isOrderByTradeAvailableDatetime, query);
     }
 
     @Override
@@ -46,11 +54,17 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
         JPAQuery<UsedBookListResponse> query = queryFactory.select(
                         new QUsedBookListResponse(
                                 usedBook.id,
-                                JPAExpressions.select(bookImage.imageUrl)
-                                        .from(bookImage)
-                                        .where(bookImage.usedBook.eq(usedBook))
-                                        .orderBy(bookImage.id.asc())
-                                        .limit(1),
+                            JPAExpressions
+                                .select(bookImage.imageUrl)
+                                .from(bookImage)
+                                .where(bookImage.usedBook.eq(usedBook)
+                                    .and(bookImage.id.eq(
+                                        JPAExpressions
+                                            .select(bookImage.id.min())
+                                            .from(bookImage)
+                                            .where(bookImage.usedBook.eq(usedBook))
+                                    ))
+                                ),
                                 usedBook.bookStatus,
                                 usedBook.name,
                                 usedBook.tradeAvailableDatetime,
@@ -70,11 +84,17 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
         JPAQuery<UsedBookListResponse> query = queryFactory.select(
                         new QUsedBookListResponse(
                                 usedBook.id,
-                                JPAExpressions.select(bookImage.imageUrl)
-                                        .from(bookImage)
-                                        .where(bookImage.usedBook.eq(usedBook))
-                                        .orderBy(bookImage.id.asc())
-                                        .offset(1).limit(1),
+                            JPAExpressions
+                                .select(bookImage.imageUrl)
+                                .from(bookImage)
+                                .where(bookImage.usedBook.eq(usedBook)
+                                    .and(bookImage.id.eq(
+                                        JPAExpressions
+                                            .select(bookImage.id.min())
+                                            .from(bookImage)
+                                            .where(bookImage.usedBook.eq(usedBook))
+                                    ))
+                                ),
                                 usedBook.bookStatus,
                                 usedBook.name,
                                 usedBook.tradeAvailableDatetime,
