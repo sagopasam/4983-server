@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import team.dankookie.server4983.common.BaseRepositoryTest;
 import team.dankookie.server4983.member.domain.Member;
+import team.dankookie.server4983.member.domain.MemberImage;
 import team.dankookie.server4983.member.fixture.MemberFixture;
+import team.dankookie.server4983.member.repository.memberImage.MemberImageRepository;
 
 import java.util.Optional;
 
@@ -15,6 +17,9 @@ class MemberRepositoryTest extends BaseRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    MemberImageRepository memberImageRepository;
 
     @Test
     void 사용자의_nickname으로_멤버를_찾는다() {
@@ -57,5 +62,20 @@ class MemberRepositoryTest extends BaseRepositoryTest {
             boolean duplicateNickname = memberRepository.existsMemberByNickname(nickname);
             //then
             assertThat(duplicateNickname).isTrue();
+        }
+
+        @Test
+        void 프로필_이미지를_삭제한다(){
+
+            //given
+            final String nickname = "nickname";
+
+            Member member = MemberFixture.createMemberByNickname(nickname);
+            memberRepository.save(member);
+            MemberImage memberImage = MemberImage.builder()
+                    .member(member)
+                    .imageUrl(member.getImageUrl()).build();
+            memberImageRepository.save(memberImage);
+            memberImageRepository.deleteByMember(member);
         }
 }
