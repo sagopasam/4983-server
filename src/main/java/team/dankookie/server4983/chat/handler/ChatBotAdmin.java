@@ -160,6 +160,8 @@ public class ChatBotAdmin {
                     FcmTargetUserIdRequest.of(seller.getId(), messageCase3_seller));
                 fcmService.sendChattingNotificationByToken(
                     FcmTargetUserIdRequest.of(buyer.getId(), messageCase3_buyer));
+
+
             }
         }
     }
