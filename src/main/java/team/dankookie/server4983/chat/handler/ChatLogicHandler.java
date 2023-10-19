@@ -71,6 +71,8 @@ public class ChatLogicHandler {
     Member buyer = chatRoom.getBuyer();
     Member seller = chatRoom.getSeller();
 
+    ifChattingAlreadyFinishedThrowError(chatRoom);
+
     switch (chatRequest.getContentType()) {
       case BOOK_PURCHASE_START -> { // SELLCHAT_1_1 판매자 구매 요청
         if (chatRoom.getInteractStep() >= 1) {
@@ -235,6 +237,12 @@ public class ChatLogicHandler {
     }
 
     throw new ChatException("잘못된 데이터 요청입니다.");
+  }
+
+  private static void ifChattingAlreadyFinishedThrowError(ChatRoom chatRoom) {
+    if (chatRoom.getInteractStep() == 999) {
+      throw new ChatException("이미 종료된 거래입니다.");
+    }
   }
 
   private String getMessage(ContentType contentType, UserRole userRole, ChatRoom chatRoom) {
