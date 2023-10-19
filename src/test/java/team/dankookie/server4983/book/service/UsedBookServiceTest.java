@@ -96,9 +96,10 @@ class UsedBookServiceTest extends BaseServiceTest {
     @Test
     void 중고서적의_id값으로_중고서적을_찾는다() {
         //given
+        final String nickname = "nickname";
         final long usedBookId = 1L;
-        String bookName = "책이름";
-        String publisher = "출판사";
+        final String bookName = "책이름";
+        final String publisher = "출판사";
         final UsedBook usedBook = UsedBook.builder()
                 .id(usedBookId)
                 .college(College.LAW)
@@ -121,7 +122,7 @@ class UsedBookServiceTest extends BaseServiceTest {
                 .thenReturn(List.of(BookImage.builder().build()));
 
         //when
-        UsedBookResponse usedBookResponse = usedBookService.findByUsedBookId(usedBookId);
+        UsedBookResponse usedBookResponse = usedBookService.findByUsedBookId(usedBookId, nickname);
 
         //then
         assertThat(usedBookResponse.getBookName()).isEqualTo(bookName);

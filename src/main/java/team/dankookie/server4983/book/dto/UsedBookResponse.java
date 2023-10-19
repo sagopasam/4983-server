@@ -21,13 +21,14 @@ public class UsedBookResponse {
     private final String bookName;
     private final String publisher;
     private final LocalDateTime tradeAvailableDatetime;
-    private final boolean underlinedOrWrite;
-    private final boolean discolorationAndDamage;
-    private final boolean coverDamaged;
+    private final Boolean underlinedOrWrite;
+    private final Boolean discolorationAndDamage;
+    private final Boolean coverDamaged;
     private final Integer price;
     private final BookStatus bookStatus;
+    private final Boolean isBookOwner;
 
-    public static UsedBookResponse of(String college, String department, String sellerUserNickname, String sellerProfileImageUrl, LocalDateTime createdAt, List<String> bookImage, String bookName, String publisher, LocalDateTime tradeAvailableDate, boolean isUnderlinedOrWrite, boolean isDiscolorationAndDamage, boolean isCoverDamaged, Integer price, BookStatus bookStatus) {
-        return new UsedBookResponse(college, department, sellerUserNickname, sellerProfileImageUrl, createdAt, bookImage, bookName, publisher, tradeAvailableDate, isUnderlinedOrWrite, isDiscolorationAndDamage, isCoverDamaged, price, bookStatus);
+    public static UsedBookResponse of(String college, String department, String sellerUserNickname, String sellerProfileImageUrl, LocalDateTime createdAt, List<String> bookImage, String bookName, String publisher, LocalDateTime tradeAvailableDate, Boolean isUnderlinedOrWrite, Boolean isDiscolorationAndDamage, Boolean isCoverDamaged, Integer price, BookStatus bookStatus, Boolean isBookOwner) {
+        return new UsedBookResponse(college, department, sellerUserNickname, sellerProfileImageUrl, createdAt, bookImage, bookName, publisher, tradeAvailableDate, isUnderlinedOrWrite, isDiscolorationAndDamage, isCoverDamaged, price, bookStatus, isBookOwner);
     }
 }

@@ -218,8 +218,12 @@ include::{snippets}/used-book/save/success/response-fields.adoc[]
 
 ==== Request
 
+Request Header::
+include::{snippets}/used-book/detail/success/request-headers.adoc[]
+
 include::{snippets}/used-book/detail/success/http-request.adoc[]
 include::{snippets}/used-book/detail/success/path-parameters.adoc[]
+
 
 ==== Response
 

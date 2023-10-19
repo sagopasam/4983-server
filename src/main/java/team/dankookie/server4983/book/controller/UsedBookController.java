@@ -31,8 +31,8 @@ public class UsedBookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsedBookResponse> getUsedBook(@PathVariable Long id) {
-        UsedBookResponse usedBookResponse = usedBookService.findByUsedBookId(id);
+    public ResponseEntity<UsedBookResponse> getUsedBook(@PathVariable Long id, AccessToken accessToken) {
+        UsedBookResponse usedBookResponse = usedBookService.findByUsedBookId(id, accessToken.nickname());
 
         return ResponseEntity.ok().body(usedBookResponse);
     }

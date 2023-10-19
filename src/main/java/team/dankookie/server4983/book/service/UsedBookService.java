@@ -52,9 +52,13 @@ public class UsedBookService {
     return UsedBookSaveResponse.of(usedBook.getId());
   }
 
-  public UsedBookResponse findByUsedBookId(Long id) {
+  public UsedBookResponse findByUsedBookId(Long id, String nickname) {
 
     UsedBook usedBook = getUsedBookById(id);
+
+    Member requestMember = memberService.findMemberByNickname(nickname);
+
+    boolean isBookOwner = usedBook.getSellerMember().equals(requestMember);
 
     List<BookImage> bookImageList = bookImageRepository.findByUsedBook(usedBook);
 
@@ -76,7 +80,8 @@ public class UsedBookService {
         usedBook.getIsDiscolorationAndDamage(),
         usedBook.getIsCoverDamaged(),
         usedBook.getPrice(),
-        usedBook.getBookStatus()
+        usedBook.getBookStatus(),
+        isBookOwner
     );
   }
 
