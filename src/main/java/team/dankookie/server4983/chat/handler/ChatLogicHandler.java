@@ -20,6 +20,8 @@ import static team.dankookie.server4983.chat.constant.ContentType.PAYMENT_CONFIR
 import static team.dankookie.server4983.chat.constant.ContentType.PAYMENT_CONFIRMATION_COMPLETE_BUYER;
 import static team.dankookie.server4983.chat.constant.ContentType.PAYMENT_CONFIRMATION_COMPLETE_SELLER;
 import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE;
+import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE_BUYER;
+import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE_SELLER;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -215,8 +217,8 @@ public class ChatLogicHandler {
 
         String message = getMessage(TRADE_COMPLETE, UserRole.ALL, chatRoom);
 
-        saveSellerChat(chatRoom, PAYMENT_CONFIRMATION_COMPLETE_SELLER, message);
-        BuyerChat buyerChat = saveBuyerChat(chatRoom, PAYMENT_CONFIRMATION_COMPLETE_BUYER, message);
+        saveSellerChat(chatRoom, TRADE_COMPLETE_SELLER, message);
+        BuyerChat buyerChat = saveBuyerChat(chatRoom, TRADE_COMPLETE_BUYER, message);
 
         buyerChat.updateIsReadTrue();
 
