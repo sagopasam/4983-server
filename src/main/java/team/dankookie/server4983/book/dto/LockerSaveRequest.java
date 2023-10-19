@@ -20,6 +20,7 @@ public record LockerSaveRequest(
     return Locker.builder()
         .lockerNumber(lockerNumber)
         .chatRoom(chatRoom)
+        .password(password)
         .isExists(true)
         .tradeDate(tradeDate)
         .build();

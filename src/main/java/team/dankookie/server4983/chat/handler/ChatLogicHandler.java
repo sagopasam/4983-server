@@ -20,6 +20,8 @@ import static team.dankookie.server4983.chat.constant.ContentType.PAYMENT_CONFIR
 import static team.dankookie.server4983.chat.constant.ContentType.PAYMENT_CONFIRMATION_COMPLETE_BUYER;
 import static team.dankookie.server4983.chat.constant.ContentType.PAYMENT_CONFIRMATION_COMPLETE_SELLER;
 import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE;
+import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE_BUYER;
+import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE_SELLER;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +70,8 @@ public class ChatLogicHandler {
 
     Member buyer = chatRoom.getBuyer();
     Member seller = chatRoom.getSeller();
+
+    ifChattingAlreadyFinishedThrowError(chatRoom);
 
     switch (chatRequest.getContentType()) {
       case BOOK_PURCHASE_START -> { // SELLCHAT_1_1 판매자 구매 요청
@@ -215,8 +219,8 @@ public class ChatLogicHandler {
 
         String message = getMessage(TRADE_COMPLETE, UserRole.ALL, chatRoom);
 
-        saveSellerChat(chatRoom, PAYMENT_CONFIRMATION_COMPLETE_SELLER, message);
-        BuyerChat buyerChat = saveBuyerChat(chatRoom, PAYMENT_CONFIRMATION_COMPLETE_BUYER, message);
+        saveSellerChat(chatRoom, TRADE_COMPLETE_SELLER, message);
+        BuyerChat buyerChat = saveBuyerChat(chatRoom, TRADE_COMPLETE_BUYER, message);
 
         buyerChat.updateIsReadTrue();
 
@@ -233,6 +237,12 @@ public class ChatLogicHandler {
     }
 
     throw new ChatException("잘못된 데이터 요청입니다.");
+  }
+
+  private static void ifChattingAlreadyFinishedThrowError(ChatRoom chatRoom) {
+    if (chatRoom.getInteractStep() == 999) {
+      throw new ChatException("이미 종료된 거래입니다.");
+    }
   }
 
   private String getMessage(ContentType contentType, UserRole userRole, ChatRoom chatRoom) {
