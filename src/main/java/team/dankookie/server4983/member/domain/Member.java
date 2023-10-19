@@ -16,6 +16,7 @@ import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.common.domain.BaseEntity;
 import team.dankookie.server4983.member.constant.AccountBank;
 import team.dankookie.server4983.member.constant.UserRole;
+import team.dankookie.server4983.member.dto.MemberProfileSaveRequest;
 
 import java.util.Collection;
 import java.util.List;
@@ -107,6 +108,11 @@ public class Member extends BaseEntity implements UserDetails {
         }
     }
 
+    public void updateMemberProfile(MemberProfileSaveRequest member){
+        this.nickname = member.nickname();
+        this.accountBank = member.accountBank();
+        this.accountNumber = member.accountNumber();
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
