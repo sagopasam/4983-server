@@ -1,0 +1,33 @@
+package team.dankookie.server4983.member.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import team.dankookie.server4983.jwt.dto.AccessToken;
+import team.dankookie.server4983.member.dto.MemberProfileSaveRequest;
+import team.dankookie.server4983.member.dto.MemberProfileSaveResponse;
+import team.dankookie.server4983.member.service.MemberService;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/v1/my-pages")
+public class MemberUpdateController {
+
+    private final MemberService memberService;
+
+    @PostMapping("/update")
+    public ResponseEntity<MemberProfileSaveResponse> updateMemberProfile(
+            @RequestPart(value = "fileImage", required = false) MultipartFile multipartFile,
+            @RequestPart(value = "member") MemberProfileSaveRequest memberProfileSaveRequest,
+            AccessToken accessToken
+    ) {
+        MemberProfileSaveResponse memberProfileSaveResponse = memberService.updateMemberProfile(multipartFile, memberProfileSaveRequest, accessToken);
+
+        return ResponseEntity.ok().body(memberProfileSaveResponse);
+    }
+
+}

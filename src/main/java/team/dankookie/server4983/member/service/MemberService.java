@@ -1,12 +1,12 @@
 package team.dankookie.server4983.member.service;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
@@ -22,13 +22,13 @@ import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.constant.AccountBank;
 import team.dankookie.server4983.member.domain.Member;
-import team.dankookie.server4983.member.dto.LoginRequest;
-import team.dankookie.server4983.member.dto.MemberCollegeAndDepartment;
-import team.dankookie.server4983.member.dto.MemberPasswordChangeRequest;
-import team.dankookie.server4983.member.dto.MemberRegisterRequest;
+import team.dankookie.server4983.member.domain.MemberImage;
+import team.dankookie.server4983.member.dto.*;
 import team.dankookie.server4983.member.repository.MemberRepository;
+import team.dankookie.server4983.member.repository.memberImage.MemberImageRepository;
+import team.dankookie.server4983.s3.dto.S3Response;
+import team.dankookie.server4983.s3.service.S3UploadService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static team.dankookie.server4983.chat.domain.ChatRoom.buildChatRoom;
@@ -37,7 +37,9 @@ import static team.dankookie.server4983.chat.domain.ChatRoom.buildChatRoom;
 @Service
 public class MemberService {
 
+    private final S3UploadService uploadService;
     private final MemberRepository memberRepository;
+    private final MemberImageRepository memberImageRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
     private final TokenSecretKey tokenSecretKey;
@@ -397,5 +399,26 @@ public class MemberService {
         }
         return member.getIsWithdraw();
     }
-    }
+
+    @Transactional
+    public MemberProfileSaveResponse updateMemberProfile(MultipartFile multipartFile, MemberProfileSaveRequest memberProfileSaveRequest, AccessToken accessToken) {
+
+        String nickname = accessToken.nickname();
+        Member member = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+
+        member.updateMemberProfile(memberProfileSaveRequest);
+
+        if (multipartFile != null) {
+            memberImageRepository.deleteByMember(member);
+                S3Response s3Response = uploadService.saveFileWithUUID(multipartFile);
+                MemberImage memberImage = MemberImage.builder()
+                        .member(member)
+                        .imageUrl(s3Response.s3ImageUrl()).build();
+                memberImageRepository.save(memberImage);
+            }
+        return MemberProfileSaveResponse.of(member.getId());
+        }
+}
 
