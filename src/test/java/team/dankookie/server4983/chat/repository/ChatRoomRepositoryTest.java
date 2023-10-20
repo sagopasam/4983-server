@@ -74,7 +74,7 @@ class ChatRoomRepositoryTest extends BaseRepositoryTest {
         sellerChatRepository.save(sellerChat);
 
         //when
-        List<ChatListResponse> chatListResponseList = chatRoomRepository.findByChatroomWithNickname(nickname);
+        List<ChatListResponse> chatListResponseList = chatRoomRepository.findByChatroomListWithNickname(nickname);
 
         //then
         assertThat(chatListResponseList).hasSize(1);

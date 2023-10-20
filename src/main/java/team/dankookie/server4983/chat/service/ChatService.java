@@ -8,7 +8,6 @@ import team.dankookie.server4983.book.domain.Locker;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.book.repository.locker.LockerRepository;
 import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
-import team.dankookie.server4983.chat.constant.ContentType;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
@@ -165,7 +164,7 @@ public class ChatService {
   public List<ChatListResponse> getChatListWithAccessToken(AccessToken accessToken) {
     String nickname = jwtTokenUtils.getNickname(accessToken.value(), tokenSecretKey.getSecretKey());
 
-    return chatRoomRepository.findByChatroomWithNickname(nickname);
+    return chatRoomRepository.findByChatroomListWithNickname(nickname);
   }
 
   @Transactional

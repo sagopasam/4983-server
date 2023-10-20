@@ -31,7 +31,7 @@ public interface ChatRoomRepositoryCustom {
 
     Optional<ChatRoom> findBookBySellerAndBuyerAndBook(Member seller, Member buyer, UsedBook usedBook);
 
-    List<ChatListResponse> findByChatroomWithNickname(String nickname);
+    List<ChatListResponse> findByChatroomListWithNickname(String nickname);
 
     List<ChatMessageResponse> findChatMessageByChatroomIdWithBuyerNickname(long chatRoomId, String nickname);
     List<ChatMessageResponse> findChatMessageByChatroomIdWithSellerNickname(long chatRoomId, String nickname);
