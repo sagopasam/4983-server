@@ -45,9 +45,12 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
     @Override
     public List<ChatMessageResponse> getNotReadSellerChattingData(long chatRoomId) {
         return jpaQueryFactory.select(new QChatMessageResponse(chatRoom.chatRoomId ,sellerChat.message , sellerChat.contentType , sellerChat.createdAt))
-                .from(chatRoom)
-                .innerJoin(chatRoom.sellerChats , sellerChat).on(sellerChat.isRead.eq(false))
-                .where(chatRoom.chatRoomId.eq(chatRoomId))
+                .from(sellerChat)
+                .innerJoin(chatRoom).on(sellerChat.chatRoom.eq(chatRoom))
+                .where(
+                    sellerChat.isRead.eq(false),
+                    sellerChat.chatRoom.chatRoomId.eq(chatRoomId)
+                    )
                 .fetch();
     }
 
@@ -62,11 +65,14 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
 
     @Override
     public List<ChatMessageResponse> getNotReadBuyerChattingData(long chatRoomId) {
-        return jpaQueryFactory.select(new QChatMessageResponse(chatRoom.chatRoomId, buyerChat.message , buyerChat.contentType , buyerChat.createdAt))
-                .from(chatRoom)
-                .innerJoin(chatRoom.buyerChats , buyerChat).on(buyerChat.isRead.eq(false))
-                .where(chatRoom.chatRoomId.eq(chatRoomId))
-                .fetch();
+        return jpaQueryFactory.select(new QChatMessageResponse(chatRoom.chatRoomId ,buyerChat.message , buyerChat.contentType , buyerChat.createdAt))
+            .from(buyerChat)
+            .innerJoin(chatRoom).on(buyerChat.chatRoom.eq(chatRoom))
+            .where(
+                buyerChat.isRead.eq(false),
+                buyerChat.chatRoom.chatRoomId.eq(chatRoomId)
+            )
+            .fetch();
     }
 
     @Override
