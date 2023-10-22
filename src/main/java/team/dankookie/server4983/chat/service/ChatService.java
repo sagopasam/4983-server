@@ -149,13 +149,17 @@ public class ChatService {
     ChatRoom chatRoom = findByChatRoomId(chatRoomId);
 
     if (chatRoom.getSeller().getNickname().equals(accessToken.nickname())) {
+      List<ChatMessageResponse> responseList = chatRoomRepository.getNotReadSellerChattingData(
+          chatRoomId);
       chatRoomRepository.modifySellerChattingToRead(chatRoomId);
-      return chatRoomRepository.getNotReadSellerChattingData(chatRoomId);
+      return responseList;
     }
 
     if (chatRoom.getBuyer().getNickname().equals(accessToken.nickname())) {
+      List<ChatMessageResponse> responseList = chatRoomRepository.getNotReadBuyerChattingData(
+          chatRoomId);
       chatRoomRepository.modifyBuyerChattingToRead(chatRoomId);
-      return chatRoomRepository.getNotReadBuyerChattingData(chatRoomId);
+      return responseList;
     }
 
     throw new ChatException("해당 채팅방에 존재하지 않는 회원입니다.");
