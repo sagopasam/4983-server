@@ -84,11 +84,13 @@ class ChatControllerTest extends BaseControllerTest {
         tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     ChatMessageResponse response1 = ChatMessageResponse.of(
+        chatRoomId,
         "test1",
         ContentType.BOOK_PURCHASE_START,
         LocalDateTime.of(2023, 9, 22, 12, 30, 12)
     );
     ChatMessageResponse response2 = ChatMessageResponse.of(
+        chatRoomId,
         "test1",
         ContentType.BOOK_PURCHASE_START,
         LocalDateTime.of(2023, 9, 22, 12, 30, 12)
@@ -114,6 +116,7 @@ class ChatControllerTest extends BaseControllerTest {
                 parameterWithName("chatRoomId").description("채팅방 id")
             ),
             responseFields(
+                fieldWithPath("[].chatRoomId").description("채팅방 id"),
                 fieldWithPath("[].message").description("채팅 메시지"),
                 fieldWithPath("[].contentType").description("채팅의 타입"),
                 fieldWithPath("[].createdAt").description("채팅을 보낸 시간")
@@ -131,6 +134,7 @@ class ChatControllerTest extends BaseControllerTest {
         tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     ChatMessageResponse response = ChatMessageResponse.of(
+        1L,
         "누구누구님이 거래 요청을 보넀어요! \n오늘 거래하러 갈래요?",
         ContentType.BOOK_PURCHASE_REQUEST_SELLER,
         LocalDateTime.of(2023, 9, 22, 12, 30, 12)
@@ -159,6 +163,7 @@ class ChatControllerTest extends BaseControllerTest {
                         "보낼 메시지 -> 메시지를 따로 보내는게 아니면, null을 담아주시면 됩니다")
                 ),
                 responseFields(
+                    fieldWithPath("[].chatRoomId").description("채팅방 id"),
                     fieldWithPath("[].message").description("메시지"),
                     fieldWithPath("[].contentType").description("채팅 타입"),
                     fieldWithPath("[].createdAt").description("채팅을 보낸 시간")
@@ -175,6 +180,7 @@ class ChatControllerTest extends BaseControllerTest {
         tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     ChatMessageResponse response = ChatMessageResponse.of(
+        1L,
         "누구누구님이 거래 요청을 보넀어요! \n오늘 거래하러 갈래요?",
         ContentType.BOOK_PURCHASE_REQUEST_SELLER,
         LocalDateTime.of(2023, 9, 22, 12, 30, 12)
@@ -202,6 +208,7 @@ class ChatControllerTest extends BaseControllerTest {
                     parameterWithName("chatRoomId").description("채팅방 id")
                 ),
                 responseFields(
+                    fieldWithPath("[].chatRoomId").description("채팅방 id"),
                     fieldWithPath("[].message").description("메시지"),
                     fieldWithPath("[].contentType").description("채팅 타입"),
                     fieldWithPath("[].createdAt").description("채팅을 보낸 시간")

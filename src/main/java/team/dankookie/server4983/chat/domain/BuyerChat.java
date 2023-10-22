@@ -71,6 +71,7 @@ public class BuyerChat {
 
     public ChatMessageResponse toChatMessageResponse() {
         return ChatMessageResponse.of(
+            chatRoom.getChatRoomId(),
             message,
             contentType,
             createdAt

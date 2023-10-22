@@ -65,7 +65,7 @@ class MemberServiceTest extends BaseServiceTest {
         //given
         LoginRequest loginRequest = LoginRequest.of("studentId", "password");
 
-        Member member = Member.builder().nickname("nickname").studentId("studentId").password("password").build();
+        Member member = Member.builder().nickname("nickname").studentId("studentId").password("password").isWithdraw(false).build();
 
         when(memberRepository.findByStudentId(loginRequest.studentId()))
                 .thenReturn(Optional.of(member));
@@ -102,7 +102,7 @@ class MemberServiceTest extends BaseServiceTest {
         //given
         LoginRequest loginRequest = LoginRequest.of("studentId", "password");
 
-        Member member = Member.builder().nickname("nickname").studentId("studentId").password("password").build();
+        Member member = Member.builder().nickname("nickname").studentId("studentId").password("password").isWithdraw(false).build();
 
         when(memberRepository.findByStudentId(loginRequest.studentId()))
                 .thenReturn(Optional.of(member));

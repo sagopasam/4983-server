@@ -44,7 +44,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
 
     @Override
     public List<ChatMessageResponse> getNotReadSellerChattingData(long chatRoomId) {
-        return jpaQueryFactory.select(new QChatMessageResponse(sellerChat.message , sellerChat.contentType , sellerChat.createdAt))
+        return jpaQueryFactory.select(new QChatMessageResponse(chatRoom.chatRoomId ,sellerChat.message , sellerChat.contentType , sellerChat.createdAt))
                 .from(chatRoom)
                 .innerJoin(chatRoom.sellerChats , sellerChat).on(sellerChat.isRead.eq(false))
                 .where(chatRoom.chatRoomId.eq(chatRoomId))
@@ -62,7 +62,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
 
     @Override
     public List<ChatMessageResponse> getNotReadBuyerChattingData(long chatRoomId) {
-        return jpaQueryFactory.select(new QChatMessageResponse(buyerChat.message , buyerChat.contentType , buyerChat.createdAt))
+        return jpaQueryFactory.select(new QChatMessageResponse(chatRoom.chatRoomId, buyerChat.message , buyerChat.contentType , buyerChat.createdAt))
                 .from(chatRoom)
                 .innerJoin(chatRoom.buyerChats , buyerChat).on(buyerChat.isRead.eq(false))
                 .where(chatRoom.chatRoomId.eq(chatRoomId))
@@ -203,6 +203,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
         return jpaQueryFactory
                 .select(Projections.constructor(
                         ChatMessageResponse.class,
+                        buyerChat.chatRoom.chatRoomId,
                         buyerChat.message,
                         buyerChat.contentType,
                         buyerChat.createdAt
@@ -219,6 +220,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
         return jpaQueryFactory
                 .select(Projections.constructor(
                         ChatMessageResponse.class,
+                        sellerChat.chatRoom.chatRoomId,
                         sellerChat.message,
                         sellerChat.contentType,
                         sellerChat.createdAt
