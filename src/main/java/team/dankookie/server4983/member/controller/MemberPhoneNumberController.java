@@ -17,9 +17,7 @@ public class MemberPhoneNumberController {
 
     @GetMapping("/certification-number")
     public ResponseEntity<SmsCertificationNumber> getCertificationNumber(@RequestParam final String phoneNumber){
-
-        Long time = System.currentTimeMillis();
-        SmsCertificationNumber certificationNumber = smsService.sendCertificationNumberToPhoneNumber(phoneNumber, time );
+        SmsCertificationNumber certificationNumber = smsService.sendCertificationNumberToPhoneNumber(phoneNumber);
         return ResponseEntity.ok(certificationNumber);
     }
 }

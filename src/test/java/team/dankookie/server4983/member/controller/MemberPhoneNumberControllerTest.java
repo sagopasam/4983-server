@@ -37,7 +37,7 @@ class MemberPhoneNumberControllerTest extends BaseControllerTest {
         final String certificationNumber = "123456";
         final SmsCertificationNumber smsCertificationNumber = SmsCertificationNumber.of(certificationNumber);
 
-        when(smsService.sendCertificationNumberToPhoneNumber(anyString(), anyLong()))
+        when(smsService.sendCertificationNumberToPhoneNumber(anyString()))
                 .thenReturn(smsCertificationNumber);
         //when
         ResultActions resultActions = mockMvc.perform(get(API + "/my-pages/certification-number")

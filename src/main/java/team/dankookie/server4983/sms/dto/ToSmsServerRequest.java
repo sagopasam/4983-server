@@ -10,11 +10,7 @@ import java.util.List;
 @Getter
 @Builder
 public class ToSmsServerRequest {
-    String type;
-    String contentType;
-    String countryCode;
-    String from;
-    String content;
-    List<SmsMessageDto> messages;
-
+    String body;
+    String sendNo;
+    List<RecipientList> recipientList;
 }

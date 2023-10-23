@@ -327,7 +327,7 @@ class MemberServiceTest extends BaseServiceTest {
     void 프로필_전체_수정(){
         //given
         AccessToken accessToken = new AccessToken("dummy_access_token", "testNickname");
-        MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "test image content".getBytes());
+        MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "test image body".getBytes());
 
         Member findMember = Member.builder()
                 .id(1L)

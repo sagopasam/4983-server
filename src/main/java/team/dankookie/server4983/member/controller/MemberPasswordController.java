@@ -22,8 +22,7 @@ public class MemberPasswordController {
     public ResponseEntity<SmsCertificationNumber> getCertificationNumber(@RequestParam final String studentId, @RequestParam final String phoneNumber) {
         memberService.isMemberExistsByMemberPasswordRequest(studentId, phoneNumber);
 
-        Long time = System.currentTimeMillis();
-        SmsCertificationNumber certificationNumber = smsService.sendCertificationNumberToPhoneNumber(phoneNumber, time);
+        SmsCertificationNumber certificationNumber = smsService.sendCertificationNumberToPhoneNumber(phoneNumber);
         return ResponseEntity.ok(certificationNumber);
     }
 

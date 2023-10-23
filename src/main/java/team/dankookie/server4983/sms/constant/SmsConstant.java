@@ -8,16 +8,13 @@ import org.springframework.stereotype.Component;
 @Getter
 public class SmsConstant {
 
-    @Value("${naver-cloud-sms.accessKey}")
-    public String accessKey;
+    @Value("${nhn-cloud-sms.appKey}")
+    public String appKey;
 
-    @Value("${naver-cloud-sms.secretKey}")
+    @Value("${nhn-cloud-sms.secretKey}")
     public String secretKey;
 
-    @Value("${naver-cloud-sms.serviceId}")
-    public String serviceId;
-
-    @Value("${naver-cloud-sms.senderPhone}")
+    @Value("${nhn-cloud-sms.senderPhone}")
     public String phone;
 
 }

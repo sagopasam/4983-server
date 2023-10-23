@@ -43,7 +43,7 @@ class MemberPasswordControllerTest extends BaseControllerTest {
         when(memberService.isMemberExistsByMemberPasswordRequest(studentId, phoneNumber))
                 .thenReturn(true);
 
-        when(smsService.sendCertificationNumberToPhoneNumber(anyString(), anyLong()))
+        when(smsService.sendCertificationNumberToPhoneNumber(anyString()))
                 .thenReturn(smsCertificationNumber);
         //when
 
