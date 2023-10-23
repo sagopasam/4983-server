@@ -75,6 +75,7 @@ public record MemberRegisterRequest(
                 .accountBank(accountBank)
                 .accountNumber(accountNumber)
                 .firebaseToken(firebaseToken)
+                .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/ba760a510066638ed5cc7e1bc3b38f1e.png")
                 .build();
     }
 }
