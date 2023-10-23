@@ -42,6 +42,7 @@ public class UsedBook extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Department department;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private BookStatus bookStatus;
 

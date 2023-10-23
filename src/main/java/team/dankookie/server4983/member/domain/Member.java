@@ -77,12 +77,19 @@ public class Member extends BaseEntity implements UserDetails {
     @ColumnDefault("false")
     private Boolean isWithdraw;
 
+    @ColumnDefault("false")
+    private Boolean isBlocked;
+
     public void changePassword(String password) {
         this.password = password;
     }
 
     @Builder
-    public Member(Long id, String studentId, College college, Department department, Integer yearOfAdmission, String nickname, String password, String phoneNumber, String accountHolder, AccountBank accountBank, String accountNumber, String imageUrl, Boolean marketingAgree, String firebaseToken, UserRole role, Boolean isWithdraw) {
+    public Member(Long id, String studentId, College college, Department department,
+        Integer yearOfAdmission, String nickname, String password, String phoneNumber,
+        String accountHolder, AccountBank accountBank, String accountNumber, String imageUrl,
+        Boolean marketingAgree, String firebaseToken, UserRole role, Boolean isWithdraw,
+        Boolean isBlocked) {
         this.id = id;
         this.studentId = studentId;
         this.college = college;
@@ -99,13 +106,18 @@ public class Member extends BaseEntity implements UserDetails {
         this.firebaseToken = firebaseToken;
         this.role = role;
         this.isWithdraw = isWithdraw;
+        this.isBlocked = isBlocked;
     }
-
 
     public void withdraw() {
         if (!this.isWithdraw) {
             this.isWithdraw = true;
         }
+    }
+
+    public boolean updateBlocked() {
+        this.isBlocked = !this.isBlocked;
+        return this.isBlocked;
     }
 
     public void updateMemberProfile(MemberProfileSaveRequest member){

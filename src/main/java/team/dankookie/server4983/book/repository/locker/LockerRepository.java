@@ -13,6 +13,8 @@ public interface LockerRepository extends JpaRepository<Locker, Long>, LockerRep
 
     Optional<Locker> findByChatRoom(ChatRoom chatRoom);
 
+    Optional<Locker> findByLockerNumber(Integer lockerNumber);
+
     @Query("select l from Locker l where l.lockerNumber = :lockerNumber and l.isExists = true")
     Locker findByLockerNumberAndIsExists(@Param("lockerNumber") Integer lockerNumber);
 

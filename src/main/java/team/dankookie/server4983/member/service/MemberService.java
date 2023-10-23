@@ -232,61 +232,171 @@ public class MemberService {
         usedBookRepository.save(usedBook8);
         usedBookRepository.save(usedBook9);
         usedBookRepository.save(usedBook10);
-
-        bookImageRepository.save(BookImage.builder()
-                    .usedBook(usedBook1)
-                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
-                    .build());
-        bookImageRepository.save(BookImage.builder()
-            .usedBook(usedBook1)
-            .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
-            .build());
-        bookImageRepository.save(BookImage.builder()
-            .usedBook(usedBook1)
-            .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
-            .build());
-        bookImageRepository.save(BookImage.builder()
-            .usedBook(usedBook1)
-            .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
-            .build());
-        bookImageRepository.save(BookImage.builder()
-                    .usedBook(usedBook2)
-                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
-                    .build());
-        bookImageRepository.save(BookImage.builder()
-                    .usedBook(usedBook3)
-                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
-                    .build());
-        bookImageRepository.save(BookImage.builder()
-                    .usedBook(usedBook4)
-                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
-                    .build());
-        bookImageRepository.save(BookImage.builder()
-                    .usedBook(usedBook5)
-                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
-                    .build());
-        bookImageRepository.save(BookImage.builder()
-                    .usedBook(usedBook6)
-                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
-                    .build());
-        bookImageRepository.save(BookImage.builder()
-                    .usedBook(usedBook7)
-                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
-                    .build());
-        bookImageRepository.save(BookImage.builder()
-                    .usedBook(usedBook8)
-                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
-                    .build());
-        bookImageRepository.save(BookImage.builder()
-                    .usedBook(usedBook9)
-                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
-                    .build());
-        bookImageRepository.save(BookImage.builder()
-                    .usedBook(usedBook10)
-                    .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
-                    .build());
-
-
+        usedBookRepository.save(
+            UsedBook.builder()
+                .bookStatus(BookStatus.SALE)
+                .name("사회과학통계방법")
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12, 30, 30))
+                .price(13000)
+                .isUnderlinedOrWrite(false)
+                .isCoverDamaged(true)
+                .isDiscolorationAndDamage(true)
+                .department(Department.COMMUNICATION_DESIGN)
+                .college(College.MUSIC_AND_ARTS)
+                .publisher("한국도서출판")
+                .sellerMember(testMember1)
+                .build()
+        );
+usedBookRepository.save(
+            UsedBook.builder()
+                .bookStatus(BookStatus.SALE)
+                .name("사회과학통계방법")
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12, 30, 30))
+                .price(13000)
+                .isUnderlinedOrWrite(false)
+                .isCoverDamaged(true)
+                .isDiscolorationAndDamage(true)
+                .department(Department.COMMUNICATION_DESIGN)
+                .college(College.MUSIC_AND_ARTS)
+                .publisher("한국도서출판")
+                .sellerMember(testMember1)
+                .build()
+        );
+usedBookRepository.save(
+            UsedBook.builder()
+                .bookStatus(BookStatus.SALE)
+                .name("사회과학통계방법")
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12, 30, 30))
+                .price(13000)
+                .isUnderlinedOrWrite(false)
+                .isCoverDamaged(true)
+                .isDiscolorationAndDamage(true)
+                .department(Department.COMMUNICATION_DESIGN)
+                .college(College.MUSIC_AND_ARTS)
+                .publisher("한국도서출판")
+                .sellerMember(testMember1)
+                .build()
+        );
+usedBookRepository.save(
+            UsedBook.builder()
+                .bookStatus(BookStatus.SALE)
+                .name("사회과학통계방법")
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12, 30, 30))
+                .price(13000)
+                .isUnderlinedOrWrite(false)
+                .isCoverDamaged(true)
+                .isDiscolorationAndDamage(true)
+                .department(Department.COMMUNICATION_DESIGN)
+                .college(College.MUSIC_AND_ARTS)
+                .publisher("한국도서출판")
+                .sellerMember(testMember1)
+                .build()
+        );
+usedBookRepository.save(
+            UsedBook.builder()
+                .bookStatus(BookStatus.SALE)
+                .name("사회과학통계방법")
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12, 30, 30))
+                .price(13000)
+                .isUnderlinedOrWrite(false)
+                .isCoverDamaged(true)
+                .isDiscolorationAndDamage(true)
+                .department(Department.COMMUNICATION_DESIGN)
+                .college(College.MUSIC_AND_ARTS)
+                .publisher("한국도서출판")
+                .sellerMember(testMember1)
+                .build()
+        );
+usedBookRepository.save(
+            UsedBook.builder()
+                .bookStatus(BookStatus.SALE)
+                .name("사회과학통계방법")
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12, 30, 30))
+                .price(13000)
+                .isUnderlinedOrWrite(false)
+                .isCoverDamaged(true)
+                .isDiscolorationAndDamage(true)
+                .department(Department.COMMUNICATION_DESIGN)
+                .college(College.MUSIC_AND_ARTS)
+                .publisher("한국도서출판")
+                .sellerMember(testMember1)
+                .build()
+        );
+usedBookRepository.save(
+            UsedBook.builder()
+                .bookStatus(BookStatus.SALE)
+                .name("사회과학통계방법")
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12, 30, 30))
+                .price(13000)
+                .isUnderlinedOrWrite(false)
+                .isCoverDamaged(true)
+                .isDiscolorationAndDamage(true)
+                .department(Department.COMMUNICATION_DESIGN)
+                .college(College.MUSIC_AND_ARTS)
+                .publisher("한국도서출판")
+                .sellerMember(testMember1)
+                .build()
+        );
+usedBookRepository.save(
+            UsedBook.builder()
+                .bookStatus(BookStatus.SALE)
+                .name("사회과학통계방법")
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12, 30, 30))
+                .price(13000)
+                .isUnderlinedOrWrite(false)
+                .isCoverDamaged(true)
+                .isDiscolorationAndDamage(true)
+                .department(Department.COMMUNICATION_DESIGN)
+                .college(College.MUSIC_AND_ARTS)
+                .publisher("한국도서출판")
+                .sellerMember(testMember1)
+                .build()
+        );
+usedBookRepository.save(
+            UsedBook.builder()
+                .bookStatus(BookStatus.SALE)
+                .name("사회과학통계방법")
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12, 30, 30))
+                .price(13000)
+                .isUnderlinedOrWrite(false)
+                .isCoverDamaged(true)
+                .isDiscolorationAndDamage(true)
+                .department(Department.COMMUNICATION_DESIGN)
+                .college(College.MUSIC_AND_ARTS)
+                .publisher("한국도서출판")
+                .sellerMember(testMember1)
+                .build()
+        );
+usedBookRepository.save(
+            UsedBook.builder()
+                .bookStatus(BookStatus.SALE)
+                .name("사회과학통계방법")
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12, 30, 30))
+                .price(13000)
+                .isUnderlinedOrWrite(false)
+                .isCoverDamaged(true)
+                .isDiscolorationAndDamage(true)
+                .department(Department.COMMUNICATION_DESIGN)
+                .college(College.MUSIC_AND_ARTS)
+                .publisher("한국도서출판")
+                .sellerMember(testMember1)
+                .build()
+        );
+usedBookRepository.save(
+            UsedBook.builder()
+                .bookStatus(BookStatus.SALE)
+                .name("사회과학통계방법")
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 7, 29, 12, 30, 30))
+                .price(13000)
+                .isUnderlinedOrWrite(false)
+                .isCoverDamaged(true)
+                .isDiscolorationAndDamage(true)
+                .department(Department.COMMUNICATION_DESIGN)
+                .college(College.MUSIC_AND_ARTS)
+                .publisher("한국도서출판")
+                .sellerMember(testMember1)
+                .build()
+        );
 
         ChatRoom chatRoom_1 = buildChatRoom(testMember1 , testMember2 , usedBook1);
         ChatRoom chatRoom_2 = buildChatRoom(testMember2 , testMember1 , usedBook2);
