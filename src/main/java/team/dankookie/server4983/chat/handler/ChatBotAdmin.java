@@ -44,7 +44,7 @@ public class ChatBotAdmin {
                     TRADE_STOP_REQUEST_BEFORE_DEPOSIT_BUYER, chatRoom);
                 chatRoom.addSellerChat(sellerChatCase1);
                 chatRoom.addBuyerChat(buyerChatCase1);
-                chatRoom.setInteractStep(999);
+                chatRoom.setInteractStep(1000);
                 buyerChatRepository.save(buyerChatCase1);
                 sellerChatRepository.save(sellerChatCase1);
                 fcmService.sendChattingNotificationByToken(
@@ -100,7 +100,7 @@ public class ChatBotAdmin {
                     TRADE_STOP_REQUEST_BEFORE_DEPOSIT_BUYER, chatRoom);
                 chatRoom.addSellerChat(sellerChatCase1);
                 chatRoom.addBuyerChat(buyerChatCase1);
-                chatRoom.setInteractStep(999);
+                chatRoom.setInteractStep(1001);
                 buyerChatRepository.save(buyerChatCase1);
                 sellerChatRepository.save(sellerChatCase1);
                 fcmService.sendChattingNotificationByToken(

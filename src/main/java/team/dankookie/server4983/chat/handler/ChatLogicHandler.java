@@ -172,9 +172,9 @@ public class ChatLogicHandler {
 //        schedulerService.setSchedulerAboutNotReply(chatRoom);
         return List.of();
       }
-      case BOOK_PLACEMENT_SET -> { // 사물함에 서적 배치
+      case BOOK_PLACEMENT_SET -> { // 서적 배치할 사물함 선택
         if (chatRoom.getInteractStep() >= 4) {
-          throw new ChatException("이미 서적 배치를 완료 했습니다.");
+          throw new ChatException("이미 사물함을 선택 하였습니다.");
         }
 
         Locker locker = lockerRepository.findByChatRoom(chatRoom)
@@ -197,7 +197,7 @@ public class ChatLogicHandler {
         }
 
         Locker locker = lockerRepository.findByChatRoom(chatRoom)
-            .orElseThrow(() -> new ChatException("사물함을 찾을 수 없습니다."));
+            .orElseThrow(() -> new ChatException("서적을 배치할 사물함을 찾을 수 없습니다."));
 
         String buyerMessage = getMessage(BOOK_PLACEMENT_COMPLETE, chatRoom, locker);
         saveBuyerChat(chatRoom, BOOK_PLACEMENT_COMPLETE_BUYER, buyerMessage);
@@ -240,7 +240,7 @@ public class ChatLogicHandler {
   }
 
   private static void ifChattingAlreadyFinishedThrowError(ChatRoom chatRoom) {
-    if (chatRoom.getInteractStep() == 999) {
+    if (chatRoom.getInteractStep() == 999 || chatRoom.getInteractStep() == 1000 || chatRoom.getInteractStep() == 1001) {
       throw new ChatException("이미 종료된 거래입니다.");
     }
   }
