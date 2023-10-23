@@ -1,26 +1,15 @@
 package team.dankookie.server4983.member.service;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import team.dankookie.server4983.book.constant.BookStatus;
-import team.dankookie.server4983.book.constant.College;
-import team.dankookie.server4983.book.constant.Department;
-import team.dankookie.server4983.book.domain.BookImage;
-import team.dankookie.server4983.book.domain.UsedBook;
-import team.dankookie.server4983.book.repository.bookImage.BookImageRepository;
-import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
-import team.dankookie.server4983.chat.domain.ChatRoom;
-import team.dankookie.server4983.chat.repository.ChatRoomRepository;
 import team.dankookie.server4983.common.exception.LoginFailedException;
 import team.dankookie.server4983.jwt.constants.TokenSecretKey;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
-import team.dankookie.server4983.member.constant.AccountBank;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.domain.MemberImage;
 import team.dankookie.server4983.member.dto.*;
@@ -28,10 +17,6 @@ import team.dankookie.server4983.member.repository.MemberRepository;
 import team.dankookie.server4983.member.repository.memberImage.MemberImageRepository;
 import team.dankookie.server4983.s3.dto.S3Response;
 import team.dankookie.server4983.s3.service.S3UploadService;
-
-import java.time.LocalDateTime;
-
-import static team.dankookie.server4983.chat.domain.ChatRoom.buildChatRoom;
 
 @RequiredArgsConstructor
 @Service
@@ -177,5 +162,11 @@ public class MemberService {
             }
         return MemberProfileSaveResponse.of(member.getId());
         }
+
+    public MemberMyPageResponse getMyPageMemberInfo(String nickname) {
+        Member member = findMemberByNickname(nickname);
+
+        return MemberMyPageResponse.of(member.getImageUrl(), member.getNickname());
+    }
 }
 

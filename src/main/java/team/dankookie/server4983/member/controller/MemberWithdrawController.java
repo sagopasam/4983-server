@@ -19,7 +19,6 @@ public class MemberWithdrawController {
     private final MemberService memberService;
 
     @PatchMapping("/withdraw")
-
     public ResponseEntity<String> withdraw(HttpServletResponse response, AccessToken accessToken, @CookieValue(name = "refreshToken", required = false) Cookie refreshTokenCookie) {
 
         boolean isWithdraw = memberService.checkMemberAndWithdraw(accessToken);
