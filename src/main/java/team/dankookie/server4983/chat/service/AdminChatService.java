@@ -8,12 +8,15 @@ import static team.dankookie.server4983.chat.constant.ContentType.BOOK_SALE_REJE
 import static team.dankookie.server4983.chat.constant.ContentType.PAYMENT_CONFIRMATION_COMPLETE;
 import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE;
 
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team.dankookie.server4983.book.domain.Locker;
+import team.dankookie.server4983.book.repository.locker.LockerRepository;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.dto.AdminChatMessageResponse;
 import team.dankookie.server4983.chat.dto.AdminChatRoomListResponse;
@@ -29,6 +32,8 @@ public class AdminChatService {
   private final ChatRoomRepository chatRoomRepository;
   private final ChatLogicHandler chatLogicHandler;
   private final ChatBotAdmin chatBotAdmin;
+  private final LockerRepository lockerRepository;
+
 
   public Page<AdminChatRoomListResponse> getChatList(Pageable pageable, String searchKeyword,
       int interact) {
@@ -63,6 +68,8 @@ public class AdminChatService {
       }
       case 6 -> {
         initChatRoomInteract(chatRoom);
+        ifChatRoomEmptySaveMockLocker(chatRoom);
+
         chatLogicHandler.chatLogic(ChatRequest.of(chatRoomId, TRADE_COMPLETE));
       }
       case 999 -> {
@@ -82,6 +89,20 @@ public class AdminChatService {
             chatRoomRepository.getBuyer(chatRoomId)
         );
       }
+    }
+  }
+
+  private void ifChatRoomEmptySaveMockLocker(ChatRoom chatRoom) {
+    if (lockerRepository.findByChatRoom(chatRoom).isEmpty()) {
+      lockerRepository.save(
+          Locker.builder()
+              .chatRoom(chatRoom)
+              .isExists(false)
+              .lockerNumber(0)
+              .password("1234")
+              .tradeDate(LocalDate.now())
+              .build()
+      );
     }
   }
 
