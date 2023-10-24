@@ -24,10 +24,17 @@ public class BookSalesDetailRepositoryImpl implements BookSalesDetailRepositoryC
         JPAQuery<UsedBookListResponse> query = queryFactory.select(
                 new QUsedBookListResponse(
                         usedBook.id,
-                        JPAExpressions.select(bookImage.imageUrl)
-                                .from(bookImage)
-                                .where(bookImage.usedBook.eq(usedBook))
-                                .orderBy(bookImage.id.asc()),
+                    JPAExpressions
+                        .select(bookImage.imageUrl)
+                        .from(bookImage)
+                        .where(bookImage.usedBook.eq(usedBook)
+                            .and(bookImage.id.eq(
+                                JPAExpressions
+                                    .select(bookImage.id.min())
+                                    .from(bookImage)
+                                    .where(bookImage.usedBook.eq(usedBook))
+                            ))
+                        ),
                         usedBook.bookStatus,
                         usedBook.name,
                         usedBook.tradeAvailableDatetime,
