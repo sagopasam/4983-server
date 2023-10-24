@@ -64,6 +64,9 @@ public class MemberLoginController {
                         .build()
         );
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setMaxAge((int) REFRESH_TOKEN_DURATION.getDuration() / 1000);
+
         response.addCookie(refreshTokenCookie);
     }
 }
