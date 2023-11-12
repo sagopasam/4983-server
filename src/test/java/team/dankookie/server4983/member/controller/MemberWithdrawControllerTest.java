@@ -58,7 +58,7 @@ class MemberWithdrawControllerTest extends BaseControllerTest {
         ResultActions resultActions = mockMvc.perform(patch(withdrawUrl)
                         .contentType(MediaType.APPLICATION_JSON)
                         .cookie(refreshTokenCookie)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer "+ accessToken))
+                        .header(HttpHeaders.AUTHORIZATION,  accessToken))
                 .andDo(print());
         //then
         resultActions.andExpect(status().isOk())

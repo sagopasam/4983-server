@@ -79,7 +79,7 @@ class LockerControllerTest extends BaseControllerTest {
     when(lockerService.saveLocker(any(LockerSaveRequest.class), any(AccessToken.class))).thenReturn(true);
     //when
     ResultActions resultActions = mockMvc.perform(post(API + "/locker")
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andDo(MockMvcResultHandlers.print());

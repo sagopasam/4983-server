@@ -55,7 +55,7 @@ class MemberUpdateControllerTest extends BaseControllerTest {
         ResultActions resultActions = mockMvc.perform(multipart(API + "/my-pages/update")
                         .file(fileImage)
                         .file(member)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                        .header(HttpHeaders.AUTHORIZATION, accessToken)
         ).andDo(print());
         //then
         resultActions.andExpect(status().isOk())

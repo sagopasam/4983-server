@@ -55,7 +55,7 @@ class ChatControllerTest extends BaseControllerTest {
 
     //when
     ResultActions resultActions = mockMvc.perform(post(API + "/chat-room")
-        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        .header(HttpHeaders.AUTHORIZATION, accessToken)
         .contentType(APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(chatRoomRequest))
     ).andDo(print());
@@ -102,7 +102,7 @@ class ChatControllerTest extends BaseControllerTest {
     //when
     ResultActions resultActions = mockMvc.perform(
             RestDocumentationRequestBuilders.get(API + "/chat-room/{chatRoomId}", chatRoomId)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                .header(HttpHeaders.AUTHORIZATION, accessToken))
         .andDo(print());
 
     //then
@@ -144,7 +144,7 @@ class ChatControllerTest extends BaseControllerTest {
         .thenReturn(List.of(response));
     //when
     ResultActions resultActions = mockMvc.perform(post(API + "/chat-room/interact")
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(chatRequest)))
         .andDo(print());
@@ -194,7 +194,7 @@ class ChatControllerTest extends BaseControllerTest {
     //when
     ResultActions resultActions = mockMvc.perform(
             get(API + "/chat-room/not-read/{chatRoomId}", chatRoomId)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                .header(HttpHeaders.AUTHORIZATION, accessToken))
         .andDo(print());
 
     //then
@@ -228,7 +228,7 @@ class ChatControllerTest extends BaseControllerTest {
 
     //when
     ResultActions resultActions = mockMvc.perform(post(API + "/chat-room/stop")
-        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        .header(HttpHeaders.AUTHORIZATION, accessToken)
         .contentType(APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(request))
     ).andDo(print());

@@ -39,7 +39,7 @@ class ChatListControllerTest extends BaseControllerTest {
                 .thenReturn(List.of(chatListResponse1, chatListResponse2));
         //when
         ResultActions resultActions = mockMvc.perform(get(API + "/chat/list")
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+                        .header(HttpHeaders.AUTHORIZATION, accessToken))
                 .andDo(print());
 
         //then

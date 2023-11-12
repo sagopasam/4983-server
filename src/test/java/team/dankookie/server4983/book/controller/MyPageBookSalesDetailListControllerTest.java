@@ -71,7 +71,7 @@ class MyPageBookSalesDetailListControllerTest extends BaseControllerTest {
         ResultActions resultActions = mockMvc.perform(get(API + "/my-pages/book-sales-detail-list?canBuy=true")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("canBuy", String.valueOf(canBuy))
-                .header("Authorization", "Bearer "+accessToken))
+                .header("Authorization", accessToken))
                 .andDo(print());
         //then
         resultActions.andExpect(status().isOk())
@@ -114,7 +114,7 @@ class MyPageBookSalesDetailListControllerTest extends BaseControllerTest {
         ResultActions resultActions = mockMvc.perform(get(API + "/my-pages/book-sales-detail-list")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("canBuy", String.valueOf(canBuy))
-                        .header("Authorization", "Bearer "+accessToken))
+                        .header("Authorization", accessToken))
                 .andDo(print());
         //then
         resultActions.andExpect(status().isOk())
@@ -162,7 +162,7 @@ class MyPageBookSalesDetailListControllerTest extends BaseControllerTest {
         ResultActions resultActions = mockMvc.perform(get(API + "/my-pages/book-sales-detail-list?canBuy=false")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("canBuy", String.valueOf(canBuy))
-                        .header("Authorization", "Bearer "+accessToken))
+                        .header("Authorization", accessToken))
                 .andDo(print());
         //then
         resultActions.andExpect(status().isOk())
@@ -205,7 +205,7 @@ class MyPageBookSalesDetailListControllerTest extends BaseControllerTest {
         ResultActions resultActions = mockMvc.perform(get(API + "/my-pages/book-sales-detail-list")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("canBuy", String.valueOf(canBuy))
-                        .header("Authorization", "Bearer "+accessToken))
+                        .header("Authorization", accessToken))
                 .andDo(print());
         //then
         resultActions.andExpect(status().isOk())
@@ -232,7 +232,7 @@ class MyPageBookSalesDetailListControllerTest extends BaseControllerTest {
         ResultActions resultActions = mockMvc.perform(get(API + "/my-pages/book-sales-detail-list")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("canBuy", String.valueOf(canBuy))
-                        .header("Authorization", "Bearer "+accessToken))
+                        .header("Authorization", accessToken))
                 .andDo(print());
 
 

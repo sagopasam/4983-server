@@ -93,7 +93,7 @@ class UsedBookControllerTest extends BaseControllerTest {
             .file(file3)
             .file(file4)
             .file(usedBook)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
     ).andDo(print());
 
     //then
@@ -154,7 +154,7 @@ class UsedBookControllerTest extends BaseControllerTest {
         .thenReturn(usedBookResponse);
     //when
     ResultActions resultActions = mockMvc.perform(get(API + "/used-book/{id}", usedBookId)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+            .header(HttpHeaders.AUTHORIZATION, accessToken))
         .andDo(print());
 
     //then
@@ -199,7 +199,7 @@ class UsedBookControllerTest extends BaseControllerTest {
         .thenReturn(true);
     //when
     ResultActions resultActions = mockMvc.perform(delete(API + "/used-book/{id}", usedBookId)
-        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        .header(HttpHeaders.AUTHORIZATION, accessToken)
     ).andDo(print());
 
     //then
@@ -228,7 +228,7 @@ class UsedBookControllerTest extends BaseControllerTest {
 
     //when
     ResultActions resultActions = mockMvc.perform(delete(API + "/used-book/{id}", usedBookId)
-        .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+        .header(HttpHeaders.AUTHORIZATION, accessToken)
     ).andDo(print());
 
     //then
@@ -257,7 +257,7 @@ class UsedBookControllerTest extends BaseControllerTest {
     //when
     ResultActions resultActions = mockMvc.perform(
         delete(API + "/used-book/{id}/image/{image}", usedBookId, image)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
     ).andDo(print());
 
     //then
@@ -319,7 +319,7 @@ class UsedBookControllerTest extends BaseControllerTest {
             .file(file3)
             .file(file4)
             .file(usedBook)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
     ).andDo(print());
 
     //then
@@ -398,7 +398,7 @@ class UsedBookControllerTest extends BaseControllerTest {
             .file(file3)
             .file(file4)
             .file(usedBook)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
     ).andDo(print());
 
     //then

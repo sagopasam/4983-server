@@ -73,7 +73,7 @@ class MyPageBookPurchaseDetailListControllerTest extends BaseControllerTest {
         ResultActions resultActions = mockMvc.perform(get(API + "/my-pages/book-purchase-detail-list")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("bookStatus", String.valueOf(BookStatus.SOLD))
-                        .header("Authorization", "Bearer "+accessToken))
+                        .header("Authorization", accessToken))
                 .andDo(print());
         //then
         resultActions.andExpect(status().isOk())
@@ -115,7 +115,7 @@ class MyPageBookPurchaseDetailListControllerTest extends BaseControllerTest {
         ResultActions resultActions = mockMvc.perform(get(API + "/my-pages/book-purchase-detail-list")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("bookStatus", String.valueOf(BookStatus.SOLD))
-                        .header("Authorization", "Bearer "+accessToken))
+                        .header("Authorization", accessToken))
                 .andDo(print());
         //then
         resultActions.andExpect(status().isOk())
@@ -142,7 +142,7 @@ class MyPageBookPurchaseDetailListControllerTest extends BaseControllerTest {
         ResultActions resultActions = mockMvc.perform(get(API + "/my-pages/book-purchase-detail-list")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("bookStatus", String.valueOf(BookStatus.SOLD))
-                        .header("Authorization", "Bearer "+accessToken))
+                        .header("Authorization", accessToken))
                 .andDo(print());
         //then
         resultActions.andExpect(status().isBadRequest())

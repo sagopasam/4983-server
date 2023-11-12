@@ -35,7 +35,7 @@ class MemberReadControllerTest extends BaseControllerTest {
                 .thenReturn(MemberCollegeAndDepartment.of(Department.BUSINESS));
         //when
         ResultActions resultActions = mockMvc.perform(get("/api/v1/college-department")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
         ).andDo(print());
 
         //then
