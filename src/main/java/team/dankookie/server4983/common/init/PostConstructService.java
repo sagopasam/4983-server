@@ -17,6 +17,7 @@ import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
 import team.dankookie.server4983.member.constant.AccountBank;
+import team.dankookie.server4983.member.constant.UserRole;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.repository.MemberRepository;
 
@@ -44,6 +45,7 @@ public class PostConstructService {
         .accountNumber("12500104097324")
         .marketingAgree(true)
         .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/ba760a510066638ed5cc7e1bc3b38f1e.png")
+        .role(UserRole.USER)
         .build();
 
     Member testMember2 = Member.builder()
@@ -59,12 +61,28 @@ public class PostConstructService {
         .accountNumber("12500104097324")
         .marketingAgree(true)
         .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/ba760a510066638ed5cc7e1bc3b38f1e.png")
+        .role(UserRole.USER)
         .build();
 
+    Member testAdmin = Member.builder()
+        .studentId("admin")
+        .college(Department.COMPUTER.getCollege())
+        .department(Department.COMPUTER)
+        .yearOfAdmission(2020)
+        .nickname("admin")
+        .password(passwordEncoder.encode("1234"))
+        .phoneNumber("01073352306")
+        .accountHolder("박박박")
+        .accountBank(AccountBank.KB)
+        .accountNumber("12500104097324")
+        .marketingAgree(true)
+        .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/ba760a510066638ed5cc7e1bc3b38f1e.png")
+        .role(UserRole.ADMIN)
+        .build();
 
     memberRepository.save(testMember1);
     memberRepository.save(testMember2);
-
+    memberRepository.save(testAdmin);
 
 
     UsedBook usedBook1 = UsedBook.builder()
