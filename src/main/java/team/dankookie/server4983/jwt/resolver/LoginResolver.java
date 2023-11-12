@@ -35,8 +35,6 @@ public class LoginResolver implements HandlerMethodArgumentResolver {
       throw new NotAuthorizedException();
     }
 
-    accessToken = accessToken.split(" ")[1];
-
     if (jwtTokenUtils.isTokenExpired(accessToken)) {
 
       log.error("accessToken 토큰이 만료되었습니다.");
