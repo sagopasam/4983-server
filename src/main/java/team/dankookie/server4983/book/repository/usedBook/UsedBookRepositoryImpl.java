@@ -57,6 +57,37 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
       return new PageImpl<>(content, pageable, count);
     }
 
+    if (bookStatus == BookStatus.DELETE) {
+      List<AdminUsedBookListResponse> content = jpaQueryFactory
+          .select(
+              new QAdminUsedBookListResponse(
+                  usedBook.id,
+                  usedBook.bookStatus,
+                  usedBook.name,
+                  usedBook.publisher,
+                  usedBook.price,
+                  usedBook.createdAt
+              )
+          ).from(usedBook)
+          .where(
+              usedBook.delYn.eq(true),
+              usedBook.isDeleted,
+              boolNameOrPublisherContains(searchKeyword)
+          ).orderBy(usedBook.id.desc())
+          .offset(pageable.getOffset())
+          .limit(12)
+          .fetch();
+      Long count = jpaQueryFactory
+          .select(usedBook.count())
+          .from(usedBook)
+          .where(
+              usedBook.delYn.eq(true),
+              boolNameOrPublisherContains(searchKeyword)
+          ).fetchOne();
+      return new PageImpl<>(content, pageable, count);
+    }
+
+
     List<AdminUsedBookListResponse> content = jpaQueryFactory
         .select(
             new QAdminUsedBookListResponse(
