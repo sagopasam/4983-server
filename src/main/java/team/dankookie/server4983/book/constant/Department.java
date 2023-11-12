@@ -64,4 +64,13 @@ public enum Department {
 
     private final String koName;
     private final College college;
+
+    public static Department getByKoName(String koName) {
+        for (Department department : values()) {
+            if (department.getKoName().equals(koName)) {
+                return department;
+            }
+        }
+        return null;
+    }
 }

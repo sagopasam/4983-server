@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.member.dto.AdminMemberListResponse;
 import team.dankookie.server4983.member.dto.QAdminMemberListResponse;
 
@@ -19,6 +20,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
   @Override
   public Page<AdminMemberListResponse> getMember(Pageable pageable, String searchKeyword) {
+
+    Department department = Department.getByKoName(searchKeyword);
     List<AdminMemberListResponse> content = jpaQueryFactory
         .select(
             new QAdminMemberListResponse(
@@ -33,7 +36,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 member.isBlocked
             )
         ).from(member)
-        .where(studentIdOrNicknameAndPhoneNumberLike(searchKeyword))
+        .where(studentIdOrNicknameAndPhoneNumberLike(searchKeyword).or(isSearchKeywordDepartment(department))
+            )
         .orderBy(member.id.desc())
         .offset(pageable.getOffset())
         .limit(12)
@@ -45,6 +49,14 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         .where(studentIdOrNicknameAndPhoneNumberLike(searchKeyword)).fetchOne();
 
     return new PageImpl<>(content, pageable, count);  }
+
+  private static BooleanExpression isSearchKeywordDepartment(Department department) {
+    System.out.println(department);
+    if (department == null) {
+      return null;
+    }
+    return member.department.eq(department);
+  }
 
   @Override
   public Page<AdminMemberListResponse> getBlockedMember(Pageable pageable, String searchKeyword) {

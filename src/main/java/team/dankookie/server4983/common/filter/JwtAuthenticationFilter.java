@@ -43,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       return;
     }
 
-    String accessToken = parseBearerToken(request);
+    String accessToken = request.getHeader(AUTHORIZATION);
 
     String nickname = jwtTokenUtils.getNickname(accessToken);
 

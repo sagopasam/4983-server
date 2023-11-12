@@ -22,7 +22,8 @@ public class AdminUsedBookController {
   private final AdminUsedBookService adminUsedBookService;
 
   @GetMapping
-  public Page<AdminUsedBookListResponse> getMember(Pageable pageable, @RequestParam(value = "") String searchKeyword, @RequestParam BookStatus bookStatus){
+  public Page<AdminUsedBookListResponse> getMember(Pageable pageable, @RequestParam(value = "") String searchKeyword, @RequestParam(required = false) BookStatus bookStatus){
+
     return adminUsedBookService.getUsedBook(pageable, searchKeyword, bookStatus);
   }
 
