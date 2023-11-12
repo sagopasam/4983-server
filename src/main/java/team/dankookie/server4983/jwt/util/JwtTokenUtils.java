@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -13,12 +14,15 @@ import java.util.Date;
 @Component
 public class JwtTokenUtils {
 
-    public Boolean validate(String token, String nickname, String key) {
-        String nicknameByToken = getNickname(token, key);
-        return nicknameByToken.equals(nickname) && !isTokenExpired(token, key);
+    @Value("${jwt.secret-key}")
+    private String key;
+
+    public Boolean validate(String token, String nickname) {
+        String nicknameByToken = getNickname(token);
+        return nicknameByToken.equals(nickname) && !isTokenExpired(token);
     }
 
-    public Claims extractAllClaims(String token, String key) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey(key))
                 .build()
@@ -26,8 +30,8 @@ public class JwtTokenUtils {
                 .getBody();
     }
 
-    public String getNickname(String token, String key) {
-        return extractAllClaims(token, key).get("nickname", String.class);
+    public String getNickname(String token) {
+        return extractAllClaims(token).get("nickname", String.class);
     }
 
     private Key getSigningKey(String secretKey) {
@@ -35,12 +39,12 @@ public class JwtTokenUtils {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public Boolean isTokenExpired(String token, String key) {
-        Date expiration = extractAllClaims(token, key).getExpiration();
+    public Boolean isTokenExpired(String token) {
+        Date expiration = extractAllClaims(token).getExpiration();
         return expiration.before(new Date());
     }
 
-    public String generateJwtToken(String nickname, String key, long expiredTimeMs) {
+    public String generateJwtToken(String nickname, long expiredTimeMs) {
         return doGenerateToken(nickname, expiredTimeMs, key);
     }
 

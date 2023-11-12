@@ -27,11 +27,6 @@ public class MemberService {
     private final MemberImageRepository memberImageRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
-    private final TokenSecretKey tokenSecretKey;
-
-    @Value("${jwt.secret-key}")
-    private String secretKey;
-
 
     public Member findMemberById(Long id) {
         return memberRepository.findById(id)
@@ -113,20 +108,16 @@ public class MemberService {
     }
 
     public boolean isMemberPasswordMatch(String password, String accessToken) {
-        String nickname = jwtTokenUtils.getNickname(accessToken, secretKey);
+        String nickname = jwtTokenUtils.getNickname(accessToken);
 
         Member findMember = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
-        if (passwordEncoder.matches(password, findMember.getPassword())) {
-            return true;
-        }else {
-            return false;
-        }
+        return passwordEncoder.matches(password, findMember.getPassword());
     }
 
     public MemberCollegeAndDepartment findMemberCollegeAndDepartment(AccessToken accessToken) {
-        String nickname = jwtTokenUtils.getNickname(accessToken.value(), tokenSecretKey.getSecretKey());
+        String nickname = jwtTokenUtils.getNickname(accessToken.value());
         Member member = findMemberByNickname(nickname);
 
         return MemberCollegeAndDepartment.of(member.getDepartment());
@@ -134,7 +125,7 @@ public class MemberService {
 
     @Transactional
     public boolean checkMemberAndWithdraw(AccessToken accessToken){
-        String nickname = jwtTokenUtils.getNickname(accessToken.value(), tokenSecretKey.getSecretKey());
+        String nickname = jwtTokenUtils.getNickname(accessToken.value());
         Member member = findMemberByNickname(nickname);
         if (!member.getIsWithdraw()) {
             member.withdraw();

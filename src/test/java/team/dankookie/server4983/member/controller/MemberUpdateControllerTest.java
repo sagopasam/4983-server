@@ -44,7 +44,7 @@ class MemberUpdateControllerTest extends BaseControllerTest {
                 "938002-00-613983"
         );
 
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         MockMultipartFile fileImage = new MockMultipartFile("fileImage", "fileImage.png", MediaType.MULTIPART_FORM_DATA_VALUE, "fileImage".getBytes(UTF_8));
         MockMultipartFile member = new MockMultipartFile("member", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(memberProfileSaveRequest).getBytes(UTF_8));

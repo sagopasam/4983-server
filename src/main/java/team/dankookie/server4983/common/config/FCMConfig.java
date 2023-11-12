@@ -39,6 +39,7 @@ public class FCMConfig {
             firebaseApp = FirebaseApp.initializeApp(options);
         }
         log.info("firebase init successful");
+        assert firebaseApp != null;
         return FirebaseMessaging.getInstance(firebaseApp);
     }
 }

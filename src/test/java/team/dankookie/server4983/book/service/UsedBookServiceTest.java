@@ -77,7 +77,7 @@ class UsedBookServiceTest extends BaseServiceTest {
         final Member member = Member.builder().build();
         final long usedBookId = 1L;
 
-        when(jwtTokenUtils.getNickname(any(), any()))
+        when(jwtTokenUtils.getNickname(any()))
                 .thenReturn(nickname);
         when(memberService.findMemberByNickname(nickname))
                 .thenReturn(member);
@@ -137,7 +137,7 @@ class UsedBookServiceTest extends BaseServiceTest {
         String nickname = "nickname";
         Member member = Member.builder().build();
 
-        when(jwtTokenUtils.getNickname(any(), any()))
+        when(jwtTokenUtils.getNickname(any()))
                 .thenReturn(nickname);
         when(memberService.findMemberByNickname(nickname))
                 .thenReturn(member);
@@ -159,7 +159,7 @@ class UsedBookServiceTest extends BaseServiceTest {
         String nickname = "nickname";
         Member member = Member.builder().build();
 
-        when(jwtTokenUtils.getNickname(any(), any()))
+        when(jwtTokenUtils.getNickname(any()))
                 .thenReturn(nickname);
         when(memberService.findMemberByNickname(nickname))
                 .thenReturn(member);

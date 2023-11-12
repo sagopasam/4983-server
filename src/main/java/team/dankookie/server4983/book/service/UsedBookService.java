@@ -148,8 +148,7 @@ public class UsedBookService {
   }
 
   private String getNicknameWithAccessToken(AccessToken accessToken) {
-    String nickname = jwtTokenUtils.getNickname(accessToken.value(), tokenSecretKey.getSecretKey());
-    return nickname;
+    return jwtTokenUtils.getNickname(accessToken.value());
   }
 
   private UsedBook getUsedBookById(Long id) {

@@ -46,7 +46,7 @@ class ChatControllerTest extends BaseControllerTest {
     //given
     final long usedBookId = 1L;
     final String accessToken = jwtTokenUtils.generateJwtToken("nickname",
-        tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     final ChatRoomRequest chatRoomRequest = ChatRoomRequest.of(usedBookId);
 
@@ -81,7 +81,7 @@ class ChatControllerTest extends BaseControllerTest {
     //given
     final long chatRoomId = 1L;
     final String accessToken = jwtTokenUtils.generateJwtToken("nickname",
-        tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     ChatMessageResponse response1 = ChatMessageResponse.of(
         chatRoomId,
@@ -131,7 +131,7 @@ class ChatControllerTest extends BaseControllerTest {
     final ChatRequest chatRequest = ChatRequest.of(1L, BOOK_PURCHASE_REQUEST);
 
     final String accessToken = jwtTokenUtils.generateJwtToken("nickname",
-        tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     ChatMessageResponse response = ChatMessageResponse.of(
         1L,
@@ -177,7 +177,7 @@ class ChatControllerTest extends BaseControllerTest {
     //given
     final long chatRoomId = 1L;
     final String accessToken = jwtTokenUtils.generateJwtToken("nickname",
-        tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     ChatMessageResponse response = ChatMessageResponse.of(
         1L,
@@ -224,7 +224,7 @@ class ChatControllerTest extends BaseControllerTest {
     ChatStopRequest request = ChatStopRequest.builder().chatRoomId(1L).build();
 
     final String accessToken = jwtTokenUtils.generateJwtToken("nickname",
-        tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     //when
     ResultActions resultActions = mockMvc.perform(post(API + "/chat-room/stop")

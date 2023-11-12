@@ -50,12 +50,12 @@ public class MemberLoginController {
     }
 
     private void setAccessTokenToHeader(HttpServletResponse response, Member member) {
-        String accessToken = jwtTokenUtils.generateJwtToken(member.getNickname(), secretKey, ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken(member.getNickname(), ACCESS_TOKEN_DURATION.getDuration());
         response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
     }
 
     private void setRefreshTokenToCookie(HttpServletResponse response, Member member) {
-        String refreshToken = jwtTokenUtils.generateJwtToken(member.getNickname(), secretKey, REFRESH_TOKEN_DURATION.getDuration());
+        String refreshToken = jwtTokenUtils.generateJwtToken(member.getNickname(), REFRESH_TOKEN_DURATION.getDuration());
         refreshTokenService.save(
                 member,
                 RefreshToken.builder()

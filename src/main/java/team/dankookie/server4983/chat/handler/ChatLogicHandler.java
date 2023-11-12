@@ -311,7 +311,7 @@ public class ChatLogicHandler {
                 String.format("'%s' 님께 '%s' 서적 거래를 요청을 수락했습니다. \n" +
                               "아래 계좌정보로 결제금액을 송금하여 주십시오. \n" +
                               "\n계좌번호:\n" +
-                              "우리 은행 1002-3597-18283 (사고팔삼)\n" +
+                              "카카오 7979-86-67501 (사고파삼) \n" +
                               "결제 금액 : %d원", chatRoom.getSeller().getNickname(),
                     chatRoom.getUsedBook().getName(), chatRoom.getUsedBook().getPrice());
 

@@ -17,34 +17,34 @@ import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 @RequiredArgsConstructor
 public class LoginResolver implements HandlerMethodArgumentResolver {
 
-    private final TokenSecretKey tokenSecretKey;
-    private final JwtTokenUtils jwtTokenUtils;
+  private final JwtTokenUtils jwtTokenUtils;
 
-    @Override
-    public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(AccessToken.class);
+  @Override
+  public boolean supportsParameter(MethodParameter parameter) {
+    return parameter.getParameterType().equals(AccessToken.class);
+  }
+
+  @Override
+  public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+      NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+
+    String accessToken = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
+
+    if (accessToken == null || accessToken.equals("")) {
+      log.error("accessToken 토큰이 존재하지 않습니다.");
+      throw new NotAuthorizedException();
     }
 
-    @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+    accessToken = accessToken.split(" ")[1];
 
-        String accessToken = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
+    if (jwtTokenUtils.isTokenExpired(accessToken)) {
 
-        if (accessToken == null || accessToken.equals("")) {
-            log.error("accessToken 토큰이 존재하지 않습니다.");
-            throw new NotAuthorizedException();
-        }
-
-        accessToken = accessToken.split(" ")[1];
-
-        if (jwtTokenUtils.isTokenExpired(accessToken, tokenSecretKey.getSecretKey())) {
-
-            log.error("accessToken 토큰이 만료되었습니다.");
-            throw new NotAuthorizedException();
-        }
-
-        String nickname = jwtTokenUtils.getNickname(accessToken, tokenSecretKey.getSecretKey());
-
-        return AccessToken.of(accessToken, nickname);
+      log.error("accessToken 토큰이 만료되었습니다.");
+      throw new NotAuthorizedException();
     }
+
+    String nickname = jwtTokenUtils.getNickname(accessToken);
+
+    return AccessToken.of(accessToken, nickname);
+  }
 }

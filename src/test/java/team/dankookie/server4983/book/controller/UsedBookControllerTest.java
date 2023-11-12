@@ -65,7 +65,7 @@ class UsedBookControllerTest extends BaseControllerTest {
         true
     );
 
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(),
+    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     MockMultipartFile file1 = new MockMultipartFile("fileList", "file1.png",
@@ -128,7 +128,7 @@ class UsedBookControllerTest extends BaseControllerTest {
   @Test
   void 중고서적의_id로_중고서적_데이터를_리턴한다() throws Exception {
     //given
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(),
+    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
     String nickname = "nickname";
     final Long usedBookId = 1L;
@@ -190,7 +190,7 @@ class UsedBookControllerTest extends BaseControllerTest {
   @Test
   void 중고서적을_삭제한다() throws Exception {
     //given
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(),
+    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     final Long usedBookId = 1L;
@@ -217,7 +217,7 @@ class UsedBookControllerTest extends BaseControllerTest {
   @Test
   void 중고서적을_삭제한다_실패_글을_올린_사용자가_아님() throws Exception {
     //given
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(),
+    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     final Long usedBookId = 1L;
@@ -248,7 +248,7 @@ class UsedBookControllerTest extends BaseControllerTest {
     //given
     final Long usedBookId = 1L;
     final String image = "image.png";
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(),
+    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     when(usedBookService.deleteUsedBookImage(usedBookId, image))
@@ -292,7 +292,7 @@ class UsedBookControllerTest extends BaseControllerTest {
         true
     );
 
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(),
+    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     MockMultipartFile file1 = new MockMultipartFile("fileList", "file1.png",
@@ -371,7 +371,7 @@ class UsedBookControllerTest extends BaseControllerTest {
         true
     );
 
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(),
+    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
         1000L);
 
     MockMultipartFile file1 = new MockMultipartFile("fileList", "file1.png",

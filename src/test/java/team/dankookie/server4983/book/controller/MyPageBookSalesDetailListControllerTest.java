@@ -40,7 +40,7 @@ class MyPageBookSalesDetailListControllerTest extends BaseControllerTest {
     @Test
     void 판매중인_리스트를_리턴한다() throws Exception {
 
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
         final boolean canBuy = true;
 
         UsedBookListResponse usedBookListResponse1 = UsedBookListResponse.builder()
@@ -99,7 +99,7 @@ class MyPageBookSalesDetailListControllerTest extends BaseControllerTest {
     @Test
     void 판매중인_책이_없는경우_빈리스트를_리턴한다() throws Exception {
         //given
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
         final boolean canBuy = true;
 
         UsedBookListResponse usedBookListResponse = UsedBookListResponse.builder().build();
@@ -131,7 +131,7 @@ class MyPageBookSalesDetailListControllerTest extends BaseControllerTest {
 
     @Test
     void 거래완료한_내역의_리스트를_리턴한다() throws Exception{
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
         final boolean canBuy = false;
 
         UsedBookListResponse usedBookListResponse1 = UsedBookListResponse.builder()
@@ -190,7 +190,7 @@ class MyPageBookSalesDetailListControllerTest extends BaseControllerTest {
     @Test
     void 거래완료한_내역이_없는경우_빈리스트를_리턴한다() throws Exception {
         //given
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
         final boolean canBuy = false;
 
         UsedBookListResponse usedBookListResponse = UsedBookListResponse.builder().build();
@@ -223,7 +223,7 @@ class MyPageBookSalesDetailListControllerTest extends BaseControllerTest {
     @Test
     void 회원이_존재하지_않는경우_에러를_리턴한다() throws Exception{
         //given
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
         final boolean canBuy = true;
 
         when(myPageBookSalesDetailListService.getMyPageBookSalesDetailList(canBuy, AccessToken.of(accessToken, "nickname")))

@@ -42,7 +42,6 @@ public class ChatService {
   private final UsedBookRepository usedBookRepository;
   private final MemberService memberService;
   private final JwtTokenUtils jwtTokenUtils;
-  private final TokenSecretKey tokenSecretKey;
   private final ChatBotAdmin chatBotAdmin;
   private final LockerRepository lockerRepository;
   private final BuyerChatRepository buyerChatRepository;
@@ -110,7 +109,7 @@ public class ChatService {
 
   public ChatRoomResponse getChatRoom(Long chatRoom, HttpServletRequest request) {
     String token = request.getHeader("Authorization").substring(7);
-    String userName = jwtTokenUtils.getNickname(token, tokenSecretKey.getSecretKey());
+    String userName = jwtTokenUtils.getNickname(token);
 
     ChatRoom result = chatRoomRepository.findById(chatRoom)
         .orElseThrow(() -> new ChatException("존재하지 않는 채팅방 입니다."));
@@ -166,7 +165,7 @@ public class ChatService {
   }
 
   public List<ChatListResponse> getChatListWithAccessToken(AccessToken accessToken) {
-    String nickname = jwtTokenUtils.getNickname(accessToken.value(), tokenSecretKey.getSecretKey());
+    String nickname = jwtTokenUtils.getNickname(accessToken.value());
 
     return chatRoomRepository.findByChatroomListWithNickname(nickname);
   }

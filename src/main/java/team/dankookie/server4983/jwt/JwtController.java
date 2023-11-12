@@ -21,24 +21,19 @@ public class JwtController {
 
   private final JwtTokenUtils jwtTokenUtils;
 
-  @Value("${jwt.secret-key}")
-  private String secretKey;
-
   @GetMapping("/valid")
   public ResponseEntity<Void> isAccessTokenValid(HttpServletRequest request,
       HttpServletResponse response) {
 
-    String accessTokenWithPrefix = request.getHeader(HttpHeaders.AUTHORIZATION);
+    String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-    if (accessTokenWithPrefix == null || !accessTokenWithPrefix.startsWith("Bearer ")) {
+    if (accessToken == null ) {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
     }
 
-    String accessToken = accessTokenWithPrefix.split("Bearer ")[1];
-
-    String nickname = jwtTokenUtils.getNickname(accessToken, secretKey);
-    Boolean validate = jwtTokenUtils.validate(accessToken, nickname, secretKey);
+    String nickname = jwtTokenUtils.getNickname(accessToken);
+    Boolean validate = jwtTokenUtils.validate(accessToken, nickname);
 
     if (validate) {
       return ResponseEntity.ok().build();
@@ -54,11 +49,11 @@ public class JwtController {
 
     String refreshToken = refreshTokenCookie.getValue();
 
-    String nickname = jwtTokenUtils.getNickname(refreshToken, secretKey);
-    Boolean validate = jwtTokenUtils.validate(refreshToken, nickname, secretKey);
+    String nickname = jwtTokenUtils.getNickname(refreshToken);
+    Boolean validate = jwtTokenUtils.validate(refreshToken, nickname);
 
     if (validate) {
-      String newAccessToken = jwtTokenUtils.generateJwtToken(nickname, secretKey,
+      String newAccessToken = jwtTokenUtils.generateJwtToken(nickname,
           TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
       return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, newAccessToken).build();
     } else {

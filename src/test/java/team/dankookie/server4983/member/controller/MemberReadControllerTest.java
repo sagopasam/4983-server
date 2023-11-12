@@ -29,7 +29,7 @@ class MemberReadControllerTest extends BaseControllerTest {
     @Test
     void 멤버의_단과대와_학과를_리턴한다() throws Exception {
         //given
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname", tokenSecretKey.getSecretKey(), TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         when(memberService.findMemberCollegeAndDepartment(AccessToken.of(accessToken, "nickname")))
                 .thenReturn(MemberCollegeAndDepartment.of(Department.BUSINESS));
