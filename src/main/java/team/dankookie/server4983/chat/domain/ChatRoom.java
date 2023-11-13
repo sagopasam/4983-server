@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -15,7 +16,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import team.dankookie.server4983.book.domain.Locker;
 import team.dankookie.server4983.book.domain.UsedBook;
+import team.dankookie.server4983.common.domain.BaseEntity;
 import team.dankookie.server4983.member.domain.Member;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,7 +26,7 @@ import team.dankookie.server4983.member.domain.Member;
 @Entity
 @Builder
 @AllArgsConstructor
-public class ChatRoom {
+public class ChatRoom extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -47,6 +50,9 @@ public class ChatRoom {
     @Setter
     @Builder.Default
     private int interactStep = 0; // ContentType 에 따른 1 ~ 5 단계
+
+    @OneToOne(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Locker locker;
 
     public static ChatRoom buildChatRoom(Member buyer , Member seller , UsedBook usedBook) {
         return ChatRoom.builder().buyer(buyer).seller(seller).usedBook(usedBook).build();
