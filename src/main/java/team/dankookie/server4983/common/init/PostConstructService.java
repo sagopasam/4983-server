@@ -80,9 +80,26 @@ public class PostConstructService {
         .role(UserRole.ADMIN)
         .build();
 
+    Member testAdmin2 = Member.builder()
+        .studentId("4983admin")
+        .college(Department.COMPUTER.getCollege())
+        .department(Department.COMPUTER)
+        .yearOfAdmission(2020)
+        .nickname("4983admin")
+        .password(passwordEncoder.encode("tkrhvktka"))
+        .phoneNumber("01000000000")
+        .accountHolder("admin")
+        .accountBank(AccountBank.KB)
+        .accountNumber("admin")
+        .marketingAgree(true)
+        .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/ba760a510066638ed5cc7e1bc3b38f1e.png")
+        .role(UserRole.ADMIN)
+        .build();
+
     memberRepository.save(testMember1);
     memberRepository.save(testMember2);
     memberRepository.save(testAdmin);
+    memberRepository.save(testAdmin2);
 
 
     UsedBook usedBook1 = UsedBook.builder()
