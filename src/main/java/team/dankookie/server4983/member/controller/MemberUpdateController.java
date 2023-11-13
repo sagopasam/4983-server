@@ -2,10 +2,7 @@ package team.dankookie.server4983.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.member.dto.MemberProfileSaveRequest;
@@ -30,4 +27,9 @@ public class MemberUpdateController {
         return ResponseEntity.ok().body(memberProfileSaveResponse);
     }
 
+    @DeleteMapping("/delete/image/{image}")
+    public ResponseEntity<Void> deleteMyPageProfileImage(@PathVariable String image, AccessToken accessToken) {
+    boolean isDeleted = memberService.deleteMyPageProfileImage(image, accessToken.nickname());
+    return ResponseEntity.noContent().build();
+    }
 }
