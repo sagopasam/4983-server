@@ -1,5 +1,6 @@
 package team.dankookie.server4983.sms.service;
 
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +28,9 @@ public class CoolSmsService {
   private DefaultMessageService messageService;
 
   @PostConstruct
-  private void init(){
-    this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecretKey, "https://api.coolsms.co.kr");
+  private void init() {
+    this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecretKey,
+        "https://api.coolsms.co.kr");
   }
 
   public SingleMessageSentResponse sendMessage(String to, String content) {
@@ -58,6 +60,16 @@ public class CoolSmsService {
   }
 
 
+  public void sendAdminToSms(String content) {
+    List<String> adminPhoneNumberList = List.of("01044873122", "01096100950", "01073730246",
+        "01032910525");
 
-
+      Message message = new Message();
+    for (String phoneNumber : adminPhoneNumberList) {
+      message.setFrom(senderPhone);
+      message.setTo(phoneNumber);
+      message.setText(content);
+      this.messageService.sendOne(new SingleMessageSendingRequest(message));
+    }
+  }
 }

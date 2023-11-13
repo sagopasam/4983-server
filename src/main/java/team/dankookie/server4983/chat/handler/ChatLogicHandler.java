@@ -44,6 +44,7 @@ import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.scheduler.repository.SchedulerRepository;
 import team.dankookie.server4983.scheduler.service.SchedulerService;
+import team.dankookie.server4983.sms.service.CoolSmsService;
 
 @Component
 @RequiredArgsConstructor
@@ -57,6 +58,7 @@ public class ChatLogicHandler {
 //  private final ChatBotInteract chatBotInteract;
   private final BuyerChatRepository buyerChatRepository;
   private final SellerChatRepository sellerChatRepository;
+  private final CoolSmsService smsService;
 
   private enum UserRole {
     SELLER, BUYER, ALL
@@ -120,6 +122,9 @@ public class ChatLogicHandler {
         sendNotification(buyer, buyerMessage);
 
         chatRoom.setInteractStep(2);
+
+        smsService.sendAdminToSms(
+            "관리자님 입금을 확인해주세요! \n판매글 ID는 " + chatRoom.getUsedBook().getId() + " 입니다.");
 
 //                schedulerService.setSchedulerAboutSetPlacement(chatRoom);
 //                schedulerService.setSchedulerAboutNotDeposit(chatRoom,
