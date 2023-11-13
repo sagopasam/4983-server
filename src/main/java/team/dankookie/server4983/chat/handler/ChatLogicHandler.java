@@ -55,7 +55,6 @@ public class ChatLogicHandler {
   private final LockerRepository lockerRepository;
   private final SchedulerService schedulerService;
   private final SchedulerRepository schedulerRepository;
-//  private final ChatBotInteract chatBotInteract;
   private final BuyerChatRepository buyerChatRepository;
   private final SellerChatRepository sellerChatRepository;
   private final CoolSmsService smsService;
