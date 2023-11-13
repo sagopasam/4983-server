@@ -279,3 +279,29 @@ include::{snippets}/my-pages/update/success/request-parts.adoc[]
 
 ==== MemberField
 include::{snippets}/my-pages/update/success/request-part-member-fields.adoc[]
+
+=== 마이페이지 프로필을 삭제한다
+
+==== Request
+include::{snippets}/my-pages/image/delete/success/http-request.adoc[]
+
+==== PathParameters
+include::{snippets}/my-pages/image/delete/success/path-parameters.adoc[]
+
+==== RequestHeaders
+include::{snippets}/my-pages/image/delete/success/request-headers.adoc[]
+
+==== Response
+include::{snippets}/my-pages/image/delete/success/http-response.adoc[]
+
+=== 마이페이지 프로필 수정시 멤버의 데이터를 가져온다
+
+==== Request
+include::{snippets}/my-pages/member/modifyInfo/success/http-request.adoc[]
+
+==== RequestHeaders
+include::{snippets}/my-pages/member/modifyInfo/success/request-headers.adoc[]
+
+==== Response
+include::{snippets}/my-pages/member/modifyInfo/success/http-response.adoc[]
+include::{snippets}/my-pages/member/modifyInfo/success/response-fields.adoc[]

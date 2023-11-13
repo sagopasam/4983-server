@@ -10,4 +10,6 @@ public interface MemberImageRepository extends JpaRepository<MemberImage, Long> 
     MemberImage findByMember(Member member);
 
     long deleteByMember(Member member);
+
+    long deleteMemberImageByMemberAndImageUrl(Member member, String imageUrl);
 }
