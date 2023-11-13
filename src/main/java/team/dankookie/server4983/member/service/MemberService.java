@@ -175,5 +175,10 @@ public class MemberService {
         uploadService.deleteFile(image);
         return true;
     }
+
+    public MemberMyPageModifyResponse getMyPageMemberModifyInfo(String nickname) {
+        Member member = findMemberByNickname(nickname);
+        return MemberMyPageModifyResponse.of(member.getImageUrl(), member.getNickname(), member.getAccountBank(), member.getAccountNumber(), member.getPhoneNumber());
+    }
 }
 
