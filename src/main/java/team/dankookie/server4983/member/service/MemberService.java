@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.common.exception.LoginFailedException;
 import team.dankookie.server4983.jwt.constants.TokenSecretKey;
 import team.dankookie.server4983.jwt.dto.AccessToken;
@@ -158,6 +159,21 @@ public class MemberService {
         Member member = findMemberByNickname(nickname);
 
         return MemberMyPageResponse.of(member.getImageUrl(), member.getNickname());
+    }
+
+    @Transactional
+    public boolean deleteMyPageProfileImage(String image, String nickname) {
+        Member member = findMemberByNickname(nickname);
+
+        String imageUrl = uploadService.s3Bucket + image;
+
+        long deleteCount = memberImageRepository.deleteMemberImageByMemberAndImageUrl(member, imageUrl);
+        if (deleteCount == 0) {
+            return false;
+        }
+
+        uploadService.deleteFile(image);
+        return true;
     }
 }
 
