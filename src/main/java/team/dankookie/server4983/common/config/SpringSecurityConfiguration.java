@@ -44,6 +44,7 @@ public class SpringSecurityConfiguration {
             .requestMatchers(antMatcher("/api/v1/members/password")).permitAll()
             .requestMatchers(antMatcher("/api/v1/register/duplicate/studentId")).permitAll()
             .requestMatchers(antMatcher("/api/v1/register/duplicate/nickname")).permitAll()
+            .requestMatchers(antMatcher("/api/v1/my-pages/certification-number")).permitAll()
             .requestMatchers(antMatcher("/api/v1/register")).permitAll()
             .requestMatchers(antMatcher("/api/v1/admin/login")).permitAll()
             .requestMatchers(antMatcher("/api/v1/admin/**")).hasAuthority("ADMIN")
