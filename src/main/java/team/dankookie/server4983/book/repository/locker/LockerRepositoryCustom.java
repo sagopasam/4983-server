@@ -9,6 +9,5 @@ public interface LockerRepositoryCustom {
 
   List<LockerResponse> findByTradeDateBetweenAndIsExistsTrue(LocalDate startDate, LocalDate endDate);
 
-  List<AdminLockerListResponse> getAdminLockerList(String searchKeyword,
-      Boolean isExists);
+  List<AdminLockerListResponse> getAdminLockerList(String searchKeyword);
 }

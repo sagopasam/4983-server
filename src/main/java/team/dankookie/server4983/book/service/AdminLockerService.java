@@ -1,6 +1,7 @@
 package team.dankookie.server4983.book.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,18 +21,22 @@ public class AdminLockerService {
       Boolean isExists) {
 
     List<AdminLockerListResponse> queryList = lockerRepository.getAdminLockerList(
-        searchKeyword, isExists);
+        searchKeyword);
 
-    if (searchKeyword.equals("")) {
+    if (isExists) {
+      return queryList;
+    } else {
+      List<AdminLockerListResponse> list = new ArrayList<>();
       for (int i = 1; i <= 32; i++) {
-        int finalI = i;
-        if (queryList.stream().noneMatch(
-            adminLockerListResponse -> adminLockerListResponse.getLockerNumber() == finalI)) {
-          queryList.add(AdminLockerListResponse.of(i, "", false, "", LocalDate.now()));
-        }
+        list.add(AdminLockerListResponse.of(i, "", false, "", null));
       }
+
+      List<Integer> isExistsLockerNumberList = queryList.stream().map(AdminLockerListResponse::getLockerNumber)
+          .toList();
+
+      list.removeIf(locker -> isExistsLockerNumberList.contains(locker.getLockerNumber()));
+    return list;
     }
-    return queryList;
   }
 
   @Transactional

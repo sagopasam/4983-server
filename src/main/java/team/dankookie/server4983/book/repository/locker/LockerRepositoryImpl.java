@@ -37,14 +37,13 @@ public class LockerRepositoryImpl implements LockerRepositoryCustom {
   }
 
   @Override
-  public List<AdminLockerListResponse> getAdminLockerList(String searchKeyword,
-      Boolean isExists) {
+  public List<AdminLockerListResponse> getAdminLockerList(String searchKeyword) {
     QMember seller = new QMember("seller");
     QMember buyer = new QMember("buyer");
 
     BooleanExpression isStudentIdContains =
         searchKeyword.equals("") ? null :
-            seller.studentId.contains(searchKeyword)
+                seller.studentId.contains(searchKeyword)
                 .or(buyer.studentId.contains(searchKeyword))
                 .or(locker.lockerNumber.eq(Integer.parseInt(searchKeyword)));
 
@@ -62,7 +61,7 @@ public class LockerRepositoryImpl implements LockerRepositoryCustom {
         .leftJoin(seller).on(seller.eq(chatRoom.seller))
         .leftJoin(buyer).on(buyer.eq(chatRoom.buyer))
         .where(
-            locker.isExists.eq(isExists),
+            locker.isExists.eq(true),
             isStudentIdContains
         )
         .orderBy(locker.lockerNumber.asc())
