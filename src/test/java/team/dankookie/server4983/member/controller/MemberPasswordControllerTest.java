@@ -8,6 +8,7 @@ import team.dankookie.server4983.common.exception.ErrorResponse;
 import team.dankookie.server4983.member.dto.MemberPasswordChangeRequest;
 import team.dankookie.server4983.member.service.MemberService;
 import team.dankookie.server4983.sms.dto.SmsCertificationNumber;
+import team.dankookie.server4983.sms.service.CoolSmsService;
 import team.dankookie.server4983.sms.service.SmsService;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -30,7 +31,7 @@ class MemberPasswordControllerTest extends BaseControllerTest {
     MemberService memberService;
 
     @MockBean
-    SmsService smsService;
+    CoolSmsService smsService;
 
     @Test
     void 학번과_휴대폰번호를_받으면_인증번호를_리턴한다() throws Exception {

@@ -6,6 +6,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import team.dankookie.server4983.common.BaseControllerTest;
 import team.dankookie.server4983.member.service.MemberService;
 import team.dankookie.server4983.sms.dto.SmsCertificationNumber;
+import team.dankookie.server4983.sms.service.CoolSmsService;
 import team.dankookie.server4983.sms.service.SmsService;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -28,7 +29,7 @@ class MemberPhoneNumberControllerTest extends BaseControllerTest {
     MemberService memberService;
 
     @MockBean
-    SmsService smsService;
+    CoolSmsService smsService;
 
     @Test
     void 휴대폰번호를_받으면_인증번호를_리턴한다() throws Exception{

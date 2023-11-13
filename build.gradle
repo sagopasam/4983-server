@@ -76,6 +76,9 @@ dependencies {
 
 //    Firebase Admin
     implementation 'com.google.firebase:firebase-admin:9.2.0'
+
+//    Cool SMS
+    implementation 'net.nurigo:sdk:4.3.0'
 }
 
 ext {

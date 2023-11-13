@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import team.dankookie.server4983.member.dto.MemberPasswordChangeRequest;
 import team.dankookie.server4983.member.service.MemberService;
 import team.dankookie.server4983.sms.dto.SmsCertificationNumber;
+import team.dankookie.server4983.sms.service.CoolSmsService;
 import team.dankookie.server4983.sms.service.SmsService;
 
 @Slf4j
@@ -16,13 +17,14 @@ import team.dankookie.server4983.sms.service.SmsService;
 public class MemberPasswordController {
 
     private final MemberService memberService;
-    private final SmsService smsService;
+    private final CoolSmsService smsService;
 
     @GetMapping("/password/certification-number")
     public ResponseEntity<SmsCertificationNumber> getCertificationNumber(@RequestParam final String studentId, @RequestParam final String phoneNumber) {
         memberService.isMemberExistsByMemberPasswordRequest(studentId, phoneNumber);
 
-        SmsCertificationNumber certificationNumber = smsService.sendCertificationNumberToPhoneNumber(phoneNumber);
+        SmsCertificationNumber certificationNumber = smsService.sendCertificationNumberToPhoneNumber(
+            phoneNumber);
         return ResponseEntity.ok(certificationNumber);
     }
 
