@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import team.dankookie.server4983.common.BaseControllerTest;
 import team.dankookie.server4983.common.exception.ErrorResponse;
+import team.dankookie.server4983.jwt.constants.TokenDuration;
 import team.dankookie.server4983.member.service.MemberService;
 
 import static io.jsonwebtoken.lang.Strings.UTF_8;
@@ -30,7 +31,7 @@ public class MemberChangePasswordControllerTest extends BaseControllerTest {
     void 현재비밀번호와_작성한_비밀번호가_같은경우_true를_리턴한다() throws Exception{
         //given
         final String password = "password";
-        final String accessToken = "accessToken";
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         when(memberService.isMemberPasswordMatch(any(), anyString()))
                 .thenReturn(true);
@@ -64,7 +65,7 @@ public class MemberChangePasswordControllerTest extends BaseControllerTest {
     void 회원이_존재하지_않는경우_에러를_리턴한다() throws Exception{
         //given
         final String password = "password";
-        final String accessToken = "accessToken";
+        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         when(memberService.isMemberPasswordMatch(any(), anyString()))
                 .thenThrow(new IllegalArgumentException("존재하지 않는 사용자입니다."));

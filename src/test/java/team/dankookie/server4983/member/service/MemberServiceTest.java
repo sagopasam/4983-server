@@ -23,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 import team.dankookie.server4983.common.BaseServiceTest;
 import team.dankookie.server4983.common.exception.LoginFailedException;
+import team.dankookie.server4983.jwt.constants.TokenDuration;
 import team.dankookie.server4983.jwt.constants.TokenSecretKey;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
@@ -256,18 +257,15 @@ class MemberServiceTest extends BaseServiceTest {
   @Test
   void 비밀번호_변경_닉네임과_일치하는_회원이_없으면_에러를_던진다() {
     //given
-    String accessToken = "mockedAccessToken";
     String password = "mockedPassword";
     String nickname = "mockedNickname";
-
-    when(jwtTokenUtils.getNickname(any())).thenReturn(nickname);
 
     when(memberRepository.findByNickname(nickname))
         .thenThrow(new IllegalArgumentException("존재하지 않는 사용자입니다."));
     //when
     //then
     assertThatThrownBy(() ->
-        memberService.isMemberPasswordMatch(password, accessToken))
+        memberService.isMemberPasswordMatch(password, nickname))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("존재하지 않는 사용자입니다.");
   }
@@ -275,19 +273,16 @@ class MemberServiceTest extends BaseServiceTest {
   @Test
   void 현재_비밀번호와_작성한_비밀번호가_일치하면_true를_리턴한다() {
     //given
-    String accessToken = "mockedAccessToken";
     String password = "mockedPassword";
     String nickname = "mockedNickname";
 
-    when(jwtTokenUtils.getNickname(Mockito.any())).thenReturn(nickname);
-
     Member findMember = Member.builder().nickname("nickname").build();
     when(memberRepository.findByNickname(nickname))
-        .thenReturn(Optional.of(findMember));
+            .thenReturn(Optional.of(findMember));
     when(passwordEncoder.matches(password, findMember.getPassword()))
-        .thenReturn(true);
+            .thenReturn(true);
     //when
-    boolean result = memberService.isMemberPasswordMatch(password, accessToken);
+    boolean result = memberService.isMemberPasswordMatch(password, nickname);
     //then
     assertThat(result).isTrue();
   }
@@ -295,11 +290,9 @@ class MemberServiceTest extends BaseServiceTest {
   @Test
   void 현재_비밀번호와_작성한_비밀번호가_다르면_false를_리턴한다() {
     //given
-    String accessToken = "mockedAccessToken";
     String password = "mockedPassword";
     String nickname = "mockedNickname";
 
-    when(jwtTokenUtils.getNickname(Mockito.any())).thenReturn(nickname);
 
     Member findMember = Member.builder().nickname("nickname").build();
     when(memberRepository.findByNickname(nickname))
@@ -308,10 +301,10 @@ class MemberServiceTest extends BaseServiceTest {
         .thenReturn(false);
 
     //when
-    boolean result = memberService.isMemberPasswordMatch(password, accessToken);
+    boolean result = memberService.isMemberPasswordMatch(password, nickname);
 
     //then
-    assertFalse(result);
+    assertThat(result).isFalse();
   }
 
   @Test
