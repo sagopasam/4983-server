@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.common.exception.LoginFailedException;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
