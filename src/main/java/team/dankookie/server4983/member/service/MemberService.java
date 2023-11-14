@@ -180,11 +180,7 @@ public class MemberService {
     @Transactional
     public boolean checkPhoneNumberDuplicate(String phoneNumber, String nickname) {
         Member findMember = findMemberByNickname(nickname);
-    if(findMember.getPhoneNumber().equals(phoneNumber)){
-        return true;
-    }else{
-        return false;
-    }
+        return findMember.getPhoneNumber().equals(phoneNumber) || memberRepository.existsMemberByPhoneNumber(phoneNumber);
     }
 }
 
