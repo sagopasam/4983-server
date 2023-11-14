@@ -30,7 +30,7 @@ public class MemberUpdateController {
 
     @DeleteMapping("/delete/image")
     public ResponseEntity<Void> deleteMyPageProfileImage(@RequestBody MemberImageRequest memberImageRequest, AccessToken accessToken) {
-    boolean isDeleted = memberService.deleteMyPageProfileImage(memberImageRequest, accessToken.nickname());
-    return ResponseEntity.noContent().build();
+        memberService.deleteMyPageProfileImage(memberImageRequest, accessToken.nickname());
+        return ResponseEntity.noContent().build();
     }
 }

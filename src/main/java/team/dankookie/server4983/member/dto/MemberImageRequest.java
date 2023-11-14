@@ -3,10 +3,10 @@ package team.dankookie.server4983.member.dto;
 import team.dankookie.server4983.member.domain.Member;
 
 public record MemberImageRequest(
-        String image
+        String imageUrl
 ) {
-    public static MemberImageRequest of(String image){
-        return new MemberImageRequest(image);
+    public static MemberImageRequest of(String imageUrl){
+        return new MemberImageRequest(imageUrl);
     }
 
     public Member toEntity(String nickname){

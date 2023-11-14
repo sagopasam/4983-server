@@ -21,11 +21,11 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -81,20 +81,20 @@ class MemberUpdateControllerTest extends BaseControllerTest {
     @Test
     void 마이페이지_프로필_이미지를_삭제한다() throws Exception {
         //given
-        MemberImageRequest request = MemberImageRequest.of("image.png");
+        MemberImageRequest request = MemberImageRequest.of("https://s3.4983.com/imageUrl.png");
         String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
-        when(memberService.deleteMyPageProfileImage(MemberImageRequest.of(request.image()), accessToken)).thenReturn(true);
+
         //when
         ResultActions resultActions = mockMvc.perform(delete(API + "/my-pages/delete/image")
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"image\":\""+request.image()+"\"}"))
+                .content("{\"imageUrl\":\""+request.imageUrl()+"\"}"))
         .andDo(print());
         //then
         resultActions.andExpect(status().isNoContent())
                 .andDo(document("my-pages/image/delete/success",
                         requestFields(
-                                fieldWithPath("image").description("삭제할 이미지")
+                                fieldWithPath("imageUrl").description("삭제할 이미지")
                         ),
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("accessToken")
