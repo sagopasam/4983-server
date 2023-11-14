@@ -7,9 +7,10 @@ public record MemberProfileSaveRequest(
 
         String nickname,
         AccountBank accountBank,
-        String accountNumber
+        String accountNumber,
+        String phoneNumber
 ) {
-    public static MemberProfileSaveRequest of(String nickname, AccountBank accountBank, String accountNumber){
-        return new MemberProfileSaveRequest(nickname, accountBank, accountNumber);
+    public static MemberProfileSaveRequest of(String nickname, AccountBank accountBank, String accountNumber, String phoneNumber){
+        return new MemberProfileSaveRequest(nickname, accountBank, accountNumber, phoneNumber);
     }
 }

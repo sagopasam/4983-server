@@ -42,7 +42,8 @@ class MemberUpdateControllerTest extends BaseControllerTest {
         final MemberProfileSaveRequest memberProfileSaveRequest = MemberProfileSaveRequest.of(
                 "김민진",
                 AccountBank.KB,
-                "938002-00-613983"
+                "938002-00-613983",
+                "010-1234-5678"
         );
 
         String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
@@ -72,7 +73,8 @@ class MemberUpdateControllerTest extends BaseControllerTest {
                                 "member",
                                 fieldWithPath("nickname").description("수정할 닉네임"),
                                 fieldWithPath("accountBank").description("수정할 은행계좌"),
-                                fieldWithPath("accountNumber").description("수정할 계좌번호")
+                                fieldWithPath("accountNumber").description("수정할 계좌번호"),
+                                fieldWithPath("phoneNumber").description("수정할 전화번호")
                         )
                 )
                 );

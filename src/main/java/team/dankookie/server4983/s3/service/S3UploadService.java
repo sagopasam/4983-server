@@ -23,7 +23,11 @@ public class S3UploadService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String s3Bucket = "https://4983-s3.s3.ap-northeast-2.amazonaws.com/";
+    private String s3Bucket = "https://4983-s3.s3.ap-northeast-2.amazonaws.com/";
+
+    public String getS3BucketUrl() {
+        return s3Bucket;
+    }
 
     public S3Response saveFileWithUUID(MultipartFile multipartFile) {
         try {

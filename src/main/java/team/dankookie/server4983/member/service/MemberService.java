@@ -1,9 +1,9 @@
 package team.dankookie.server4983.member.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.common.exception.LoginFailedException;
@@ -21,168 +21,169 @@ import team.dankookie.server4983.s3.service.S3UploadService;
 @Service
 public class MemberService {
 
-    private final S3UploadService uploadService;
-    private final MemberRepository memberRepository;
-    private final MemberImageRepository memberImageRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenUtils jwtTokenUtils;
+  private final S3UploadService uploadService;
+  private final MemberRepository memberRepository;
+  private final MemberImageRepository memberImageRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final JwtTokenUtils jwtTokenUtils;
 
-    public Member findMemberById(Long id) {
-        return memberRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+  public Member findMemberById(Long id) {
+    return memberRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+  }
+
+  public Member findMemberByNickname(String nickname) {
+    return memberRepository.findByNickname(nickname)
+        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+  }
+
+  public boolean login(LoginRequest loginRequest) {
+
+    Member member = memberRepository.findByStudentId(loginRequest.studentId())
+        .orElseThrow(() -> new LoginFailedException("존재하지 않는 학번입니다."));
+
+    if (member.getIsWithdraw()) {
+      throw new LoginFailedException("탈퇴한 회원입니다.");
     }
 
-    public Member findMemberByNickname(String nickname) {
-        return memberRepository.findByNickname(nickname)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    if (!passwordEncoder.matches(loginRequest.password(), member.getPassword())) {
+      throw new LoginFailedException("잘못된 비밀번호입니다!");
+    }
+    return true;
+  }
 
+  public Member findMemberNicknameByStudentId(String studentId) {
+    Member member = memberRepository.findByStudentId(studentId)
+        .orElseThrow(() -> new LoginFailedException("존재하지 않는 학번입니다."));
+    return member;
+  }
+
+  public boolean isMemberExistsByMemberPasswordRequest(String studentId, String phoneNumber) {
+
+    Member member = memberRepository.findByStudentId(studentId)
+        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학번입니다."));
+
+    if (!member.getPhoneNumber().equals(phoneNumber)) {
+      throw new IllegalArgumentException("학번과 맞지 않는 휴대폰번호입니다.");
     }
 
-    public boolean login(LoginRequest loginRequest) {
+    return true;
+  }
 
-        Member member = memberRepository.findByStudentId(loginRequest.studentId())
-                .orElseThrow(() -> new LoginFailedException("존재하지 않는 학번입니다."));
+  @Transactional
+  public boolean changeMemberPassword(MemberPasswordChangeRequest request) {
+    Member member = memberRepository.findByStudentId(request.studentId())
+        .orElseThrow(
+            () -> new IllegalArgumentException("존재하지 않는 학번입니다.")
+        );
 
-        if (member.getIsWithdraw()) {
-            throw new LoginFailedException("탈퇴한 회원입니다.");
-        }
-
-        if (!passwordEncoder.matches(loginRequest.password(), member.getPassword())) {
-            throw new LoginFailedException("잘못된 비밀번호입니다!");
-        }
-        return true;
+    if (!member.getPhoneNumber().equals(request.phoneNumber())) {
+      throw new IllegalArgumentException("학번과 맞지 않는 휴대폰번호입니다.");
     }
 
-    public Member findMemberNicknameByStudentId(String studentId) {
-        Member member = memberRepository.findByStudentId(studentId)
-                .orElseThrow(() -> new LoginFailedException("존재하지 않는 학번입니다."));
-        return member;
+    member.changePassword(passwordEncoder.encode(request.password()));
+    return true;
+  }
+
+  public boolean isStudentIdDuplicate(String studentId) {
+    return memberRepository.existsByStudentId(studentId);
+  }
+
+  public boolean isNicknameDuplicate(String nickname) {
+    return memberRepository.existsByNickname(nickname);
+  }
+
+  @Transactional
+  public Member register(MemberRegisterRequest request) {
+
+    String encodedPassword = passwordEncoder.encode(request.password());
+
+    return memberRepository.save(request.toEntity(encodedPassword));
+  }
+
+  public Boolean checkNicknameDuplicate(String nickname) {
+    return memberRepository.existsMemberByNickname(nickname);
+  }
+
+  public boolean isMemberPasswordMatch(String password, String nickname) {
+    Member findMember = memberRepository.findByNickname(nickname)
+        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+
+    return passwordEncoder.matches(password, findMember.getPassword());
+  }
+
+  public MemberCollegeAndDepartment findMemberCollegeAndDepartment(AccessToken accessToken) {
+    String nickname = jwtTokenUtils.getNickname(accessToken.value());
+    Member member = findMemberByNickname(nickname);
+
+    return MemberCollegeAndDepartment.of(member.getDepartment());
+  }
+
+  @Transactional
+  public boolean checkMemberAndWithdraw(AccessToken accessToken) {
+    String nickname = jwtTokenUtils.getNickname(accessToken.value());
+    Member member = findMemberByNickname(nickname);
+    if (!member.getIsWithdraw()) {
+      member.withdraw();
+    }
+    return member.getIsWithdraw();
+  }
+
+  @Transactional
+  public MemberProfileSaveResponse updateMemberProfile(MultipartFile multipartFile,
+      MemberProfileSaveRequest memberProfileSaveRequest, AccessToken accessToken) {
+
+    String nickname = accessToken.nickname();
+    Member member = memberRepository.findByNickname(nickname)
+        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+    member.updateMemberProfile(memberProfileSaveRequest);
+
+    if (multipartFile != null) {
+      String imageUrl = member.getImageUrl();
+      String s3BucketUrl = uploadService.getS3BucketUrl();
+      String imageKey = imageUrl.split(s3BucketUrl)[1];
+
+      uploadService.deleteFile(imageKey);
+
+      S3Response s3Response = uploadService.saveFileWithUUID(multipartFile);
+      member.setImageUrl(s3Response.s3ImageUrl());
     }
 
-    public boolean isMemberExistsByMemberPasswordRequest(String studentId, String phoneNumber) {
+    return MemberProfileSaveResponse.of(member.getId());
+  }
 
-        Member member = memberRepository.findByStudentId(studentId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학번입니다."));
+  public MemberMyPageResponse getMyPageMemberInfo(String nickname) {
+    Member member = findMemberByNickname(nickname);
 
-        if (!member.getPhoneNumber().equals(phoneNumber)) {
-            throw new IllegalArgumentException("학번과 맞지 않는 휴대폰번호입니다.");
-        }
+    return MemberMyPageResponse.of(member.getImageUrl(), member.getNickname());
+  }
 
-        return true;
-    }
+  @Transactional
+  public void deleteMyPageProfileImage(MemberImageRequest memberImageRequest, String nickname) {
+    String imageUrl = memberImageRequest.imageUrl();
+    String imageKey = imageUrl.split(uploadService.getS3BucketUrl())[1];
 
-    @Transactional
-    public boolean changeMemberPassword(MemberPasswordChangeRequest request) {
-        Member member = memberRepository.findByStudentId(request.studentId())
-                .orElseThrow(
-                        () -> new IllegalArgumentException("존재하지 않는 학번입니다.")
-                );
+    uploadService.deleteFile(imageKey);
 
-        if (!member.getPhoneNumber().equals(request.phoneNumber())) {
-            throw new IllegalArgumentException("학번과 맞지 않는 휴대폰번호입니다.");
-        }
+    final String BASE_IMAGE = "https://4983-s3.s3.ap-northeast-2.amazonaws.com/baseImage.png";
 
-        member.changePassword(passwordEncoder.encode(request.password()));
-        return true;
-    }
+    Member member = findMemberByNickname(nickname);
+    member.setImageUrl(BASE_IMAGE);
+  }
 
-    public boolean isStudentIdDuplicate(String studentId) {
-        return memberRepository.existsByStudentId(studentId);
-    }
+  public MemberMyPageModifyResponse getMyPageMemberModifyInfo(String nickname) {
+    Member member = findMemberByNickname(nickname);
+    return MemberMyPageModifyResponse.of(member.getImageUrl(), member.getNickname(),
+        member.getAccountBank(), member.getAccountNumber(), member.getPhoneNumber());
+  }
 
-    public boolean isNicknameDuplicate(String nickname) {
-        return memberRepository.existsByNickname(nickname);
-    }
-
-    @Transactional
-    public Member register(MemberRegisterRequest request) {
-
-        String encodedPassword = passwordEncoder.encode(request.password());
-
-        return memberRepository.save(request.toEntity(encodedPassword));
-    }
-
-    public Boolean checkNicknameDuplicate(String nickname) {
-        return memberRepository.existsMemberByNickname(nickname);
-    }
-
-    public boolean isMemberPasswordMatch(String password, String nickname) {
-        Member findMember = memberRepository.findByNickname(nickname)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-
-        return passwordEncoder.matches(password, findMember.getPassword());
-    }
-
-    public MemberCollegeAndDepartment findMemberCollegeAndDepartment(AccessToken accessToken) {
-        String nickname = jwtTokenUtils.getNickname(accessToken.value());
-        Member member = findMemberByNickname(nickname);
-
-        return MemberCollegeAndDepartment.of(member.getDepartment());
-    }
-
-    @Transactional
-    public boolean checkMemberAndWithdraw(AccessToken accessToken){
-        String nickname = jwtTokenUtils.getNickname(accessToken.value());
-        Member member = findMemberByNickname(nickname);
-        if (!member.getIsWithdraw()) {
-            member.withdraw();
-        }
-        return member.getIsWithdraw();
-    }
-
-    @Transactional
-    public MemberProfileSaveResponse updateMemberProfile(MultipartFile multipartFile, MemberProfileSaveRequest memberProfileSaveRequest, AccessToken accessToken) {
-
-        String nickname = accessToken.nickname();
-        Member member = memberRepository.findByNickname(nickname)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-
-
-        member.updateMemberProfile(memberProfileSaveRequest);
-
-        if (multipartFile != null) {
-            String imageUrl = member.getImageUrl();
-            if(imageUrl != null) {
-                String s3Bucket = uploadService.s3Bucket;
-                if(s3Bucket != null) {
-                    String imageKey = imageUrl.split(s3Bucket)[1];
-                    uploadService.deleteFile(imageKey);
-                }
-            }
-                S3Response s3Response = uploadService.saveFileWithUUID(multipartFile);
-                member.setImageUrl(s3Response.s3ImageUrl());
-            }
-        return MemberProfileSaveResponse.of(member.getId());
-        }
-
-    public MemberMyPageResponse getMyPageMemberInfo(String nickname) {
-        Member member = findMemberByNickname(nickname);
-
-        return MemberMyPageResponse.of(member.getImageUrl(), member.getNickname());
-    }
-
-    @Transactional
-    public void deleteMyPageProfileImage(MemberImageRequest memberImageRequest, String nickname) {
-        String imageUrl = memberImageRequest.imageUrl();
-        String imageKey = imageUrl.split(uploadService.s3Bucket)[1];
-
-        uploadService.deleteFile(imageKey);
-
-        final String BASE_IMAGE = "https://4983-s3.s3.ap-northeast-2.amazonaws.com/baseImage.png";
-
-        Member member = findMemberByNickname(nickname);
-        member.setImageUrl(BASE_IMAGE);
-    }
-
-    public MemberMyPageModifyResponse getMyPageMemberModifyInfo(String nickname) {
-        Member member = findMemberByNickname(nickname);
-        return MemberMyPageModifyResponse.of(member.getImageUrl(), member.getNickname(), member.getAccountBank(), member.getAccountNumber(), member.getPhoneNumber());
-    }
-
-    @Transactional
-    public boolean checkPhoneNumberDuplicate(String phoneNumber, String nickname) {
-        Member findMember = findMemberByNickname(nickname);
-        return findMember.getPhoneNumber().equals(phoneNumber) || memberRepository.existsMemberByPhoneNumber(phoneNumber);
-    }
+  @Transactional
+  public boolean checkPhoneNumberDuplicate(String phoneNumber, String nickname) {
+    Member findMember = findMemberByNickname(nickname);
+    return findMember.getPhoneNumber().equals(phoneNumber)
+           || memberRepository.existsMemberByPhoneNumber(phoneNumber);
+  }
 }
 

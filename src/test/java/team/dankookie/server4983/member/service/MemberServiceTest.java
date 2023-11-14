@@ -3,9 +3,7 @@ package team.dankookie.server4983.member.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -23,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 import team.dankookie.server4983.common.BaseServiceTest;
 import team.dankookie.server4983.common.exception.LoginFailedException;
-import team.dankookie.server4983.jwt.constants.TokenDuration;
 import team.dankookie.server4983.jwt.constants.TokenSecretKey;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
@@ -293,7 +290,6 @@ class MemberServiceTest extends BaseServiceTest {
     String password = "mockedPassword";
     String nickname = "mockedNickname";
 
-
     Member findMember = Member.builder().nickname("nickname").build();
     when(memberRepository.findByNickname(nickname))
         .thenReturn(Optional.of(findMember));
@@ -341,6 +337,9 @@ class MemberServiceTest extends BaseServiceTest {
         .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/test.png")
         .build();
 
+    when(uploadService.getS3BucketUrl())
+        .thenReturn("https://4983-s3.s3.ap-northeast-2.amazonaws.com/");
+
     when(memberRepository.findByNickname("testNickname"))
         .thenReturn(Optional.of(findMember));
 
@@ -350,7 +349,8 @@ class MemberServiceTest extends BaseServiceTest {
     MemberProfileSaveRequest memberProfileSaveRequest = MemberProfileSaveRequest.of(
         "김민진",
         AccountBank.KB,
-        "938002-00-613983"
+        "938002-00-613983",
+        "01012341234"
     );
     //when
     MemberProfileSaveResponse response = memberService.updateMemberProfile(multipartFile,
@@ -378,7 +378,8 @@ class MemberServiceTest extends BaseServiceTest {
     MemberProfileSaveRequest memberProfileSaveRequest = MemberProfileSaveRequest.of(
         "김민진",
         AccountBank.KB,
-        "938002-00-613983"
+        "938002-00-613983",
+        "01012341234"
     );
     //when
     MemberProfileSaveResponse response = memberService.updateMemberProfile(null,

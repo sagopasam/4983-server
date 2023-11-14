@@ -109,7 +109,7 @@ public class UsedBookService {
   public boolean deleteUsedBookImage(Long id, String image) {
     UsedBook usedBook = getUsedBookById(id);
 
-    String imageUrl = uploadService.s3Bucket + image;
+    String imageUrl = uploadService.getS3BucketUrl() + image;
 
     long deleteCount = bookImageRepository.deleteBookImageByUsedBookAndImageUrl(usedBook, imageUrl);
     if (deleteCount == 0) {
