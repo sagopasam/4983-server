@@ -278,9 +278,9 @@ class MemberServiceTest extends BaseServiceTest {
 
     Member findMember = Member.builder().nickname("nickname").build();
     when(memberRepository.findByNickname(nickname))
-            .thenReturn(Optional.of(findMember));
+        .thenReturn(Optional.of(findMember));
     when(passwordEncoder.matches(password, findMember.getPassword()))
-            .thenReturn(true);
+        .thenReturn(true);
     //when
     boolean result = memberService.isMemberPasswordMatch(password, nickname);
     //then
@@ -338,7 +338,7 @@ class MemberServiceTest extends BaseServiceTest {
         .nickname("testNickname")
         .accountBank(AccountBank.K)
         .accountNumber("000000-00-000000")
-            .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/test.png")
+        .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/test.png")
         .build();
 
     when(memberRepository.findByNickname("testNickname"))
