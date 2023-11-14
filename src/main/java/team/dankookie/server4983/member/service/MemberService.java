@@ -106,9 +106,7 @@ public class MemberService {
         return memberRepository.existsMemberByNickname(nickname);
     }
 
-    public boolean isMemberPasswordMatch(String password, String accessToken) {
-        String nickname = jwtTokenUtils.getNickname(accessToken);
-
+    public boolean isMemberPasswordMatch(String password, String nickname) {
         Member findMember = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
@@ -143,8 +141,14 @@ public class MemberService {
         member.updateMemberProfile(memberProfileSaveRequest);
 
         if (multipartFile != null) {
-            String imageKey = member.getImageUrl().split(uploadService.s3Bucket)[1];
-            uploadService.deleteFile(imageKey);
+            String imageUrl = member.getImageUrl();
+            if(imageUrl != null) {
+                String s3Bucket = uploadService.s3Bucket;
+                if(s3Bucket != null) {
+                    String imageKey = imageUrl.split(s3Bucket)[1];
+                    uploadService.deleteFile(imageKey);
+                }
+            }
                 S3Response s3Response = uploadService.saveFileWithUUID(multipartFile);
                 member.setImageUrl(s3Response.s3ImageUrl());
             }

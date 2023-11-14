@@ -27,8 +27,8 @@ public class MemberMyPageController {
   }
 
   @PostMapping("/password")
-  public ResponseEntity<MemberPasswordMatchResponse> checkPasswordMatch(@RequestBody String password, HttpServletRequest request){
-    boolean isPasswordMatch = memberService.isMemberPasswordMatch(password, request.getHeader(HttpHeaders.AUTHORIZATION));
+  public ResponseEntity<MemberPasswordMatchResponse> checkPasswordMatch(@RequestBody String password, AccessToken accessToken){
+    boolean isPasswordMatch = memberService.isMemberPasswordMatch(password, accessToken.nickname());
     return ResponseEntity.ok(MemberPasswordMatchResponse.of(isPasswordMatch));
   }
 
