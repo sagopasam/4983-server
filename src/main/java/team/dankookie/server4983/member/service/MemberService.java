@@ -143,12 +143,10 @@ public class MemberService {
         member.updateMemberProfile(memberProfileSaveRequest);
 
         if (multipartFile != null) {
-            memberImageRepository.deleteByMember(member);
+            String imageKey = member.getImageUrl().split(uploadService.s3Bucket)[1];
+            uploadService.deleteFile(imageKey);
                 S3Response s3Response = uploadService.saveFileWithUUID(multipartFile);
-                MemberImage memberImage = MemberImage.builder()
-                        .member(member)
-                        .imageUrl(s3Response.s3ImageUrl()).build();
-                memberImageRepository.save(memberImage);
+                member.setImageUrl(s3Response.s3ImageUrl());
             }
         return MemberProfileSaveResponse.of(member.getId());
         }
