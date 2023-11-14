@@ -176,5 +176,11 @@ public class MemberService {
         Member member = findMemberByNickname(nickname);
         return MemberMyPageModifyResponse.of(member.getImageUrl(), member.getNickname(), member.getAccountBank(), member.getAccountNumber(), member.getPhoneNumber());
     }
+
+    @Transactional
+    public boolean checkPhoneNumberDuplicate(String phoneNumber, String nickname) {
+        Member findMember = findMemberByNickname(nickname);
+        return findMember.getPhoneNumber().equals(phoneNumber) || memberRepository.existsMemberByPhoneNumber(phoneNumber);
+    }
 }
 
