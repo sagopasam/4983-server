@@ -162,7 +162,8 @@ public class MemberService {
     }
 
     @Transactional
-    public boolean deleteMyPageProfileImage(String image, String nickname) {
+    public boolean deleteMyPageProfileImage(MemberImageRequest memberImageRequest, String nickname) {
+        String image = memberImageRequest.image();
         Member member = findMemberByNickname(nickname);
 
         String imageUrl = uploadService.s3Bucket + image;
@@ -173,6 +174,7 @@ public class MemberService {
         }
 
         uploadService.deleteFile(image);
+        memberRepository.save(memberImageRequest.toEntity(nickname));
         return true;
     }
 

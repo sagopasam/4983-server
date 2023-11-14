@@ -10,6 +10,7 @@ import team.dankookie.server4983.common.BaseControllerTest;
 import team.dankookie.server4983.jwt.constants.TokenDuration;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.member.constant.AccountBank;
+import team.dankookie.server4983.member.dto.MemberImageRequest;
 import team.dankookie.server4983.member.dto.MemberProfileSaveRequest;
 import team.dankookie.server4983.member.dto.MemberProfileSaveResponse;
 import team.dankookie.server4983.member.service.MemberService;
@@ -22,8 +23,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestPartFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -81,22 +81,23 @@ class MemberUpdateControllerTest extends BaseControllerTest {
     @Test
     void 마이페이지_프로필_이미지를_삭제한다() throws Exception {
         //given
-        String image = "image.png";
+        MemberImageRequest request = MemberImageRequest.of("image.png");
         String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
-        when(memberService.deleteMyPageProfileImage(image, accessToken)).thenReturn(true);
+        when(memberService.deleteMyPageProfileImage(MemberImageRequest.of(request.image()), accessToken)).thenReturn(true);
         //when
-        ResultActions resultActions = mockMvc.perform(delete(API + "/my-pages/delete/image/{image}", image)
+        ResultActions resultActions = mockMvc.perform(delete(API + "/my-pages/delete/image")
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
-        ).andDo(print());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"image\":\""+request.image()+"\"}"))
+        .andDo(print());
         //then
         resultActions.andExpect(status().isNoContent())
                 .andDo(document("my-pages/image/delete/success",
-                        pathParameters(
-                                parameterWithName("image").description(
-                                        "https://4983-s3.s3.ap-northeast-2.amazonaws.com/ 이후의 이미지 명")
+                        requestFields(
+                                fieldWithPath("image").description("삭제할 이미지")
                         ),
                         requestHeaders(
-                                headerWithName(org.springframework.http.HttpHeaders.AUTHORIZATION).description("accessToken")
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("accessToken")
                         )
                 ));
     }
