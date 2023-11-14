@@ -65,6 +65,7 @@ public class MemberLoginController {
         );
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setPath("/");
         refreshTokenCookie.setMaxAge((int) REFRESH_TOKEN_DURATION.getDuration() / 1000);
 
         response.addCookie(refreshTokenCookie);
