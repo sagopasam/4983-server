@@ -2,10 +2,7 @@ package team.dankookie.server4983.member.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
@@ -64,6 +61,7 @@ public class Member extends BaseEntity implements UserDetails {
     @NotNull
     private String accountNumber;
 
+    @Setter
     private String imageUrl;
 
     @ColumnDefault("false")

@@ -2,13 +2,11 @@ package team.dankookie.server4983.member.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.common.exception.LoginFailedException;
-import team.dankookie.server4983.jwt.constants.TokenSecretKey;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.domain.Member;
@@ -162,18 +160,16 @@ public class MemberService {
     }
 
     @Transactional
-    public boolean deleteMyPageProfileImage(String image, String nickname) {
+    public void deleteMyPageProfileImage(MemberImageRequest memberImageRequest, String nickname) {
+        String imageUrl = memberImageRequest.imageUrl();
+        String imageKey = imageUrl.split(uploadService.s3Bucket)[1];
+
+        uploadService.deleteFile(imageKey);
+
+        final String BASE_IMAGE = "https://4983-s3.s3.ap-northeast-2.amazonaws.com/baseImage.png";
+
         Member member = findMemberByNickname(nickname);
-
-        String imageUrl = uploadService.s3Bucket + image;
-
-        long deleteCount = memberImageRepository.deleteMemberImageByMemberAndImageUrl(member, imageUrl);
-        if (deleteCount == 0) {
-            return false;
-        }
-
-        uploadService.deleteFile(image);
-        return true;
+        member.setImageUrl(BASE_IMAGE);
     }
 
     public MemberMyPageModifyResponse getMyPageMemberModifyInfo(String nickname) {
