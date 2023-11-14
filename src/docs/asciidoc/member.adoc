@@ -303,3 +303,18 @@ include::{snippets}/my-pages/member/modifyInfo/success/request-headers.adoc[]
 ==== Response
 include::{snippets}/my-pages/member/modifyInfo/success/http-response.adoc[]
 include::{snippets}/my-pages/member/modifyInfo/success/response-fields.adoc[]
+
+=== 전화번호가 중복인 경우 true를 리턴한다
+
+==== Request
+include::{snippets}/my-pages/phoneNumber/duplicate/success/http-request.adoc[]
+
+==== RequestHeaders
+include::{snippets}/my-pages/phoneNumber/duplicate/success/request-headers.adoc[]
+
+==== QueryParameters
+include::{snippets}/my-pages/phoneNumber/duplicate/success/query-parameters.adoc[]
+
+==== Response
+include::{snippets}/my-pages/phoneNumber/duplicate/success/http-response.adoc[]
+include::{snippets}/my-pages/phoneNumber/duplicate/success/response-fields.adoc[]
