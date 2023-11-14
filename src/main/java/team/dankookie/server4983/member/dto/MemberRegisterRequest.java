@@ -2,6 +2,7 @@ package team.dankookie.server4983.member.dto;
 
 import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.member.constant.AccountBank;
+import team.dankookie.server4983.member.constant.UserRole;
 import team.dankookie.server4983.member.domain.Member;
 
 public record MemberRegisterRequest(
@@ -75,6 +76,7 @@ public record MemberRegisterRequest(
                 .accountBank(accountBank)
                 .accountNumber(accountNumber)
                 .firebaseToken(firebaseToken)
+                .role(UserRole.USER)
                 .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/ba760a510066638ed5cc7e1bc3b38f1e.png")
                 .build();
     }
