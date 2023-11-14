@@ -24,7 +24,6 @@ import team.dankookie.server4983.member.service.MemberService;
 import team.dankookie.server4983.s3.dto.S3Response;
 import team.dankookie.server4983.s3.service.S3UploadService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -72,14 +71,14 @@ class UsedBookServiceTest extends BaseServiceTest {
                 true,
                 true
         );
-        final AccessToken accessToken = AccessToken.of("accessToken", "nickname");
-        final String nickname = "nickname";
+        final AccessToken accessToken = AccessToken.of("accessToken", "studentId");
+        final String studentId = "studentId";
         final Member member = Member.builder().build();
         final long usedBookId = 1L;
 
-        when(jwtTokenUtils.getNickname(any()))
-                .thenReturn(nickname);
-        when(memberService.findMemberByNickname(nickname))
+        when(jwtTokenUtils.getStudentId(any()))
+                .thenReturn(studentId);
+        when(memberService.findMemberByStudentId(studentId))
                 .thenReturn(member);
         when(usedBookRepository.save(any()))
                 .thenReturn(UsedBook.builder().id(usedBookId).build());
@@ -96,7 +95,7 @@ class UsedBookServiceTest extends BaseServiceTest {
     @Test
     void 중고서적의_id값으로_중고서적을_찾는다() {
         //given
-        final String nickname = "nickname";
+        final String nickname = "studentId";
         final long usedBookId = 1L;
         final String bookName = "책이름";
         final String publisher = "출판사";
@@ -134,12 +133,12 @@ class UsedBookServiceTest extends BaseServiceTest {
     void 중고서적을_삭제에_성공한다() {
         //given
         Long usedBookId = 1L;
-        String nickname = "nickname";
+        String nickname = "studentId";
         Member member = Member.builder().build();
 
-        when(jwtTokenUtils.getNickname(any()))
+        when(jwtTokenUtils.getStudentId(any()))
                 .thenReturn(nickname);
-        when(memberService.findMemberByNickname(nickname))
+        when(memberService.findMemberByStudentId(nickname))
                 .thenReturn(member);
         when(usedBookRepository.existsUsedBookByIdAndSellerMember(usedBookId, member))
                 .thenReturn(true);
@@ -156,12 +155,12 @@ class UsedBookServiceTest extends BaseServiceTest {
     void 해당_사용자가_등록한_게시물이_아니면_삭제가_실패한다() {
         //given
         Long usedBookId = 1L;
-        String nickname = "nickname";
+        String nickname = "studentId";
         Member member = Member.builder().build();
 
-        when(jwtTokenUtils.getNickname(any()))
+        when(jwtTokenUtils.getStudentId(any()))
                 .thenReturn(nickname);
-        when(memberService.findMemberByNickname(nickname))
+        when(memberService.findMemberByStudentId(nickname))
                 .thenReturn(member);
         when(usedBookRepository.existsUsedBookByIdAndSellerMember(usedBookId, member))
                 .thenReturn(false);

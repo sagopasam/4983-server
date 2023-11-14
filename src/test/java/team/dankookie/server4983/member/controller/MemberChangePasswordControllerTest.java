@@ -31,7 +31,7 @@ public class MemberChangePasswordControllerTest extends BaseControllerTest {
     void 현재비밀번호와_작성한_비밀번호가_같은경우_true를_리턴한다() throws Exception{
         //given
         final String password = "password";
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("studentId",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         when(memberService.isMemberPasswordMatch(any(), anyString()))
                 .thenReturn(true);
@@ -65,7 +65,7 @@ public class MemberChangePasswordControllerTest extends BaseControllerTest {
     void 회원이_존재하지_않는경우_에러를_리턴한다() throws Exception{
         //given
         final String password = "password";
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("studentId",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         when(memberService.isMemberPasswordMatch(any(), anyString()))
                 .thenThrow(new IllegalArgumentException("존재하지 않는 사용자입니다."));

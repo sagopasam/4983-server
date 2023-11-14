@@ -35,13 +35,13 @@ public interface ChatRoomRepositoryCustom {
   Optional<ChatRoom> findBookBySellerAndBuyerAndBook(Member seller, Member buyer,
       UsedBook usedBook);
 
-  List<ChatListResponse> findByChatroomListWithNickname(String nickname);
+  List<ChatListResponse> findByChatroomListWithStudentId(String studentId);
 
-  List<ChatMessageResponse> findChatMessageByChatroomIdWithBuyerNickname(long chatRoomId,
-      String nickname);
+  List<ChatMessageResponse> findChatMessageByChatroomIdWithBuyerStudentId(long chatRoomId,
+      String studentId);
 
-  List<ChatMessageResponse> findChatMessageByChatroomIdWithSellerNickname(long chatRoomId,
-      String nickname);
+  List<ChatMessageResponse> findChatMessageByChatroomIdWithSellerStudentId(long chatRoomId,
+      String studentId);
 
   void updateSellerChattingToRead(long chatRoomId);
 

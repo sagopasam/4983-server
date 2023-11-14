@@ -4,7 +4,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -32,8 +31,8 @@ public class JwtController {
       return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();
     }
 
-    String nickname = jwtTokenUtils.getNickname(accessToken);
-    Boolean validate = jwtTokenUtils.validate(accessToken, nickname);
+    String studentId = jwtTokenUtils.getStudentId(accessToken);
+    Boolean validate = jwtTokenUtils.validate(accessToken, studentId);
 
     if (validate) {
       return ResponseEntity.ok().build();
@@ -49,11 +48,11 @@ public class JwtController {
 
     String refreshToken = refreshTokenCookie.getValue();
 
-    String nickname = jwtTokenUtils.getNickname(refreshToken);
-    Boolean validate = jwtTokenUtils.validate(refreshToken, nickname);
+    String studentId = jwtTokenUtils.getStudentId(refreshToken);
+    Boolean validate = jwtTokenUtils.validate(refreshToken, studentId);
 
     if (validate) {
-      String newAccessToken = jwtTokenUtils.generateJwtToken(nickname,
+      String newAccessToken = jwtTokenUtils.generateJwtToken(studentId,
           TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
       return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, newAccessToken).build();
     } else {

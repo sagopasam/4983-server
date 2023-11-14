@@ -1,8 +1,6 @@
 package team.dankookie.server4983.member.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team.dankookie.server4983.jwt.dto.AccessToken;
@@ -18,7 +16,7 @@ public class MemberChangePasswordController {
     @PostMapping("/change-password/verify-current-password")
     public ResponseEntity<MemberPasswordMatchResponse> getCurrentPassword(@RequestBody final String password, AccessToken accessToken){
 
-        boolean isPasswordMatch = memberService.isMemberPasswordMatch(password, accessToken.nickname());
+        boolean isPasswordMatch = memberService.isMemberPasswordMatch(password, accessToken.studentId());
         return ResponseEntity.ok(MemberPasswordMatchResponse.of(isPasswordMatch));
     }
 

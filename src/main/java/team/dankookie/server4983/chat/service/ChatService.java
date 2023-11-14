@@ -18,7 +18,6 @@ import team.dankookie.server4983.chat.handler.ChatLogicHandler;
 import team.dankookie.server4983.chat.repository.BuyerChatRepository;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
 import team.dankookie.server4983.chat.repository.SellerChatRepository;
-import team.dankookie.server4983.jwt.constants.TokenSecretKey;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.domain.Member;
@@ -55,7 +54,7 @@ public class ChatService {
   public List<ChatMessageResponse> chatRequestHandler(ChatRequest chatRequest,
       AccessToken accessToken) {
 
-    Member member = memberService.findMemberByNickname(accessToken.nickname());
+    Member member = memberService.findMemberByStudentId(accessToken.studentId());
 
     chatRoomRepository.findBySellerOrBuyerAndChatRoomId(member.getId(), member.getId(),
             chatRequest.getChatRoomId())
@@ -67,16 +66,16 @@ public class ChatService {
   @Transactional
   public ChatRoomResponse createChatRoom(ChatRoomRequest chatRoomRequest, AccessToken accessToken)
       throws AccountException {
-    String buyerNickname = accessToken.nickname();
+    String buyerStudentId = accessToken.studentId();
 
     UsedBook usedBook = usedBookRepository.findById(chatRoomRequest.getUsedBookId())
         .orElseThrow(() -> new ChatException("거래 글을 찾을 수 없습니다."));
 
     Member seller = usedBook.getSellerMember();
-    Member buyer = memberRepository.findByNickname(buyerNickname)
+    Member buyer = memberRepository.findByStudentId(buyerStudentId)
         .orElseThrow(() -> new ChatException("사용자를 찾을 수 없습니다."));
 
-    if (seller.getNickname().equals(buyerNickname)) {
+    if (seller.getStudentId().equals(buyerStudentId)) {
       throw new ChatException("자신의 판매글에 거래요청을 할 수 없습니다.");
     }
 
@@ -109,7 +108,7 @@ public class ChatService {
 
   public ChatRoomResponse getChatRoom(Long chatRoom, HttpServletRequest request) {
     String token = request.getHeader("Authorization").substring(7);
-    String userName = jwtTokenUtils.getNickname(token);
+    String userName = jwtTokenUtils.getStudentId(token);
 
     ChatRoom result = chatRoomRepository.findById(chatRoom)
         .orElseThrow(() -> new ChatException("존재하지 않는 채팅방 입니다."));
@@ -120,25 +119,25 @@ public class ChatService {
   @Transactional
   public List<ChatMessageResponse> getChattingData(long chatRoomId, AccessToken accessToken) {
 
-    String nickname = accessToken.nickname();
+    String studentId = accessToken.studentId();
 
-    boolean isMemberBuyer = chatRoomRepository.existsByChatRoomIdAndBuyer_Nickname(chatRoomId,
-        nickname);
+    boolean isMemberBuyer = chatRoomRepository.existsByChatRoomIdAndBuyer_StudentId(chatRoomId,
+        studentId);
 
     if (!isMemberBuyer) {
-      boolean isMemberSeller = chatRoomRepository.existsByChatRoomIdAndSeller_Nickname(chatRoomId,
-          nickname);
+      boolean isMemberSeller = chatRoomRepository.existsByChatRoomIdAndSeller_StudentId(chatRoomId,
+          studentId);
 
       if (!isMemberSeller) {
         throw new ChatException("채팅방에 속해있지 않습니다.");
       } else {
         chatRoomRepository.updateSellerChattingToRead(chatRoomId);
-        return chatRoomRepository.findChatMessageByChatroomIdWithSellerNickname(chatRoomId,
-            nickname);
+        return chatRoomRepository.findChatMessageByChatroomIdWithSellerStudentId(chatRoomId,
+            studentId);
       }
     } else {
       chatRoomRepository.updateBuyerChattingToRead(chatRoomId);
-      return chatRoomRepository.findChatMessageByChatroomIdWithBuyerNickname(chatRoomId, nickname);
+      return chatRoomRepository.findChatMessageByChatroomIdWithBuyerStudentId(chatRoomId, studentId);
     }
   }
 
@@ -147,14 +146,14 @@ public class ChatService {
       AccessToken accessToken) {
     ChatRoom chatRoom = findByChatRoomId(chatRoomId);
 
-    if (chatRoom.getSeller().getNickname().equals(accessToken.nickname())) {
+    if (chatRoom.getSeller().getStudentId().equals(accessToken.studentId())) {
       List<ChatMessageResponse> responseList = chatRoomRepository.getNotReadSellerChattingData(
           chatRoomId);
       chatRoomRepository.modifySellerChattingToRead(chatRoomId);
       return responseList;
     }
 
-    if (chatRoom.getBuyer().getNickname().equals(accessToken.nickname())) {
+    if (chatRoom.getBuyer().getStudentId().equals(accessToken.studentId())) {
       List<ChatMessageResponse> responseList = chatRoomRepository.getNotReadBuyerChattingData(
           chatRoomId);
       chatRoomRepository.modifyBuyerChattingToRead(chatRoomId);
@@ -165,23 +164,23 @@ public class ChatService {
   }
 
   public List<ChatListResponse> getChatListWithAccessToken(AccessToken accessToken) {
-    String nickname = jwtTokenUtils.getNickname(accessToken.value());
+    String studentId = jwtTokenUtils.getStudentId(accessToken.value());
 
-    return chatRoomRepository.findByChatroomListWithNickname(nickname);
+    return chatRoomRepository.findByChatroomListWithStudentId(studentId);
   }
 
   @Transactional
   public void stopTrade(ChatStopRequest chatStopRequest, AccessToken accessToken) {
-    String accessTokenNickname = accessToken.nickname();
+    String studentId = accessToken.studentId();
 
     ChatRoom chatRoom = findByChatRoomId(chatStopRequest.getChatRoomId());
 
     Member seller = chatRoomRepository.getSeller(chatStopRequest.getChatRoomId());
     Member buyer = chatRoomRepository.getBuyer(chatStopRequest.getChatRoomId());
 
-    if (seller.getNickname().equals(accessTokenNickname)) {
+    if (seller.getStudentId().equals(studentId)) {
       chatBotAdmin.tradeStopBySeller(chatRoom, seller, buyer);
-    } else if (buyer.getNickname().equals(accessTokenNickname)) {
+    } else if (buyer.getStudentId().equals(studentId)) {
       chatBotAdmin.tradeStopByBuyer(chatRoom, seller, buyer);
     } else {
       throw new ChatException("해당 채팅방에 존재하지 않는 회원입니다.");

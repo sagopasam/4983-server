@@ -66,7 +66,7 @@ class MemberServiceTest extends BaseServiceTest {
     //given
     LoginRequest loginRequest = LoginRequest.of("studentId", "password");
 
-    Member member = Member.builder().nickname("nickname").studentId("studentId")
+    Member member = Member.builder().nickname("studentId").studentId("studentId")
         .password("password").isWithdraw(false).build();
 
     when(memberRepository.findByStudentId(loginRequest.studentId()))
@@ -87,7 +87,7 @@ class MemberServiceTest extends BaseServiceTest {
     //given
     LoginRequest loginRequest = LoginRequest.of("studentId", "password");
 
-    Member member = Member.builder().nickname("nickname").studentId("studentId")
+    Member member = Member.builder().nickname("studentId").studentId("studentId")
         .password("password").build();
 
     when(memberRepository.findByStudentId(loginRequest.studentId()))
@@ -105,7 +105,7 @@ class MemberServiceTest extends BaseServiceTest {
     //given
     LoginRequest loginRequest = LoginRequest.of("studentId", "password");
 
-    Member member = Member.builder().nickname("nickname").studentId("studentId")
+    Member member = Member.builder().nickname("studentId").studentId("studentId")
         .password("password").isWithdraw(false).build();
 
     when(memberRepository.findByStudentId(loginRequest.studentId()))
@@ -125,7 +125,7 @@ class MemberServiceTest extends BaseServiceTest {
   void 학번으로_유저의_닉네임을_알아낸다() {
     //given
     String studentId = "studentId";
-    Member member = Member.builder().nickname("nickname").build();
+    Member member = Member.builder().nickname("studentId").build();
 
     when(memberRepository.findByStudentId(studentId))
         .thenReturn(Optional.of(member));
@@ -140,7 +140,7 @@ class MemberServiceTest extends BaseServiceTest {
   void 학번이_존재하지_않으면_에러를_던진다() {
     //given
     String studentId = "studentId";
-    Member member = Member.builder().nickname("nickname").build();
+    Member member = Member.builder().nickname("studentId").build();
 
     when(memberRepository.findByStudentId(studentId))
         .thenReturn(Optional.empty());
@@ -204,7 +204,7 @@ class MemberServiceTest extends BaseServiceTest {
     MemberPasswordChangeRequest request = MemberPasswordChangeRequest.of("studentId", "phoneNumber",
         "password");
 
-    Member member = Member.builder().nickname("nickname").studentId("studentId")
+    Member member = Member.builder().nickname("studentId").studentId("studentId")
         .phoneNumber("phoneNumber").password("password").build();
 
     when(memberRepository.findByStudentId(request.studentId()))
@@ -255,14 +255,14 @@ class MemberServiceTest extends BaseServiceTest {
   void 비밀번호_변경_닉네임과_일치하는_회원이_없으면_에러를_던진다() {
     //given
     String password = "mockedPassword";
-    String nickname = "mockedNickname";
+    String studentId = "mockedStudentId";
 
-    when(memberRepository.findByNickname(nickname))
+    when(memberRepository.findByStudentId(studentId))
         .thenThrow(new IllegalArgumentException("존재하지 않는 사용자입니다."));
     //when
     //then
     assertThatThrownBy(() ->
-        memberService.isMemberPasswordMatch(password, nickname))
+        memberService.isMemberPasswordMatch(password, studentId))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("존재하지 않는 사용자입니다.");
   }
@@ -271,15 +271,15 @@ class MemberServiceTest extends BaseServiceTest {
   void 현재_비밀번호와_작성한_비밀번호가_일치하면_true를_리턴한다() {
     //given
     String password = "mockedPassword";
-    String nickname = "mockedNickname";
+    String studentId = "mockedStudentId";
 
-    Member findMember = Member.builder().nickname("nickname").build();
-    when(memberRepository.findByNickname(nickname))
+    Member findMember = Member.builder().studentId("studentId").build();
+    when(memberRepository.findByStudentId(studentId))
         .thenReturn(Optional.of(findMember));
     when(passwordEncoder.matches(password, findMember.getPassword()))
         .thenReturn(true);
     //when
-    boolean result = memberService.isMemberPasswordMatch(password, nickname);
+    boolean result = memberService.isMemberPasswordMatch(password, studentId);
     //then
     assertThat(result).isTrue();
   }
@@ -288,16 +288,16 @@ class MemberServiceTest extends BaseServiceTest {
   void 현재_비밀번호와_작성한_비밀번호가_다르면_false를_리턴한다() {
     //given
     String password = "mockedPassword";
-    String nickname = "mockedNickname";
+    String studentId = "mockedStudentId";
 
-    Member findMember = Member.builder().nickname("nickname").build();
-    when(memberRepository.findByNickname(nickname))
+    Member findMember = Member.builder().studentId("studentId").build();
+    when(memberRepository.findByStudentId(studentId))
         .thenReturn(Optional.of(findMember));
     when(passwordEncoder.matches(password, findMember.getPassword()))
         .thenReturn(false);
 
     //when
-    boolean result = memberService.isMemberPasswordMatch(password, nickname);
+    boolean result = memberService.isMemberPasswordMatch(password, studentId);
 
     //then
     assertThat(result).isFalse();
@@ -309,10 +309,10 @@ class MemberServiceTest extends BaseServiceTest {
     AccessToken accessToken = new AccessToken("dummy_access_token", "testNickname");
     String nickname = "testNickname";
 
-    when(jwtTokenUtils.getNickname(Mockito.any())).thenReturn(nickname);
+    when(jwtTokenUtils.getStudentId(Mockito.any())).thenReturn(nickname);
 
-    Member findMember = Member.builder().nickname("nickname").isWithdraw(false).build();
-    when(memberRepository.findByNickname("testNickname"))
+    Member findMember = Member.builder().nickname("studentId").isWithdraw(false).build();
+    when(memberRepository.findByStudentId("testNickname"))
         .thenReturn(Optional.of(findMember));
 
     //when
@@ -325,12 +325,13 @@ class MemberServiceTest extends BaseServiceTest {
   @Test
   void 프로필_전체_수정() {
     //given
-    AccessToken accessToken = new AccessToken("dummy_access_token", "testNickname");
+    AccessToken accessToken = new AccessToken("dummy_access_token", "studentId");
     MultipartFile multipartFile = new MockMultipartFile("file", "test.jpg",
         MediaType.IMAGE_JPEG_VALUE, "test image body".getBytes());
 
     Member findMember = Member.builder()
         .id(1L)
+        .studentId("studentId")
         .nickname("testNickname")
         .accountBank(AccountBank.K)
         .accountNumber("000000-00-000000")
@@ -340,7 +341,7 @@ class MemberServiceTest extends BaseServiceTest {
     when(uploadService.getS3BucketUrl())
         .thenReturn("https://4983-s3.s3.ap-northeast-2.amazonaws.com/");
 
-    when(memberRepository.findByNickname("testNickname"))
+    when(memberRepository.findByStudentId("studentId"))
         .thenReturn(Optional.of(findMember));
 
     S3Response s3Response = S3Response.of("test.jpg", "testKey", "http://example.com/test.jpg");
@@ -363,16 +364,17 @@ class MemberServiceTest extends BaseServiceTest {
   @Test
   void 프로필_이미지_외_나머지_수정() {
     //given
-    AccessToken accessToken = new AccessToken("dummy_access_token", "testNickname");
+    AccessToken accessToken = new AccessToken("dummy_access_token", "studentId");
 
     Member findMember = Member.builder()
         .id(1L)
+        .studentId("studentId")
         .nickname("testNickname")
         .accountBank(AccountBank.K)
         .accountNumber("000000-00-000000")
         .build();
 
-    when(memberRepository.findByNickname("testNickname"))
+    when(memberRepository.findByStudentId("studentId"))
         .thenReturn(Optional.of(findMember));
 
     MemberProfileSaveRequest memberProfileSaveRequest = MemberProfileSaveRequest.of(

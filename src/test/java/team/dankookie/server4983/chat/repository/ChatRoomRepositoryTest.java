@@ -39,9 +39,9 @@ class ChatRoomRepositoryTest extends BaseRepositoryTest {
     @Test
     void 유저의_채팅_리스트를_리턴한다() {
         //given
-        String nickname = "testNickname";
-        Member member = MemberFixture.createMemberByNickname(nickname);
-        Member otherMember = MemberFixture.createMember();
+        String studentId = "studentId";
+        Member member = MemberFixture.createMemberByStudentIdAndNickname(studentId, "testNickname");
+        Member otherMember = MemberFixture.createMemberByStudentIdAndNickname("otherStudentId", "otherNickname");
         memberRepository.save(member);
         memberRepository.save(otherMember);
 
@@ -74,7 +74,7 @@ class ChatRoomRepositoryTest extends BaseRepositoryTest {
         sellerChatRepository.save(sellerChat);
 
         //when
-        List<ChatListResponse> chatListResponseList = chatRoomRepository.findByChatroomListWithNickname(nickname);
+        List<ChatListResponse> chatListResponseList = chatRoomRepository.findByChatroomListWithStudentId(studentId);
 
         //then
         assertThat(chatListResponseList).hasSize(1);
@@ -101,7 +101,7 @@ class ChatRoomRepositoryTest extends BaseRepositoryTest {
         ChatRoom chatRoom = ChatRoom.buildChatRoom(member, otherMember, usedBook1);
         chatRoomRepository.save(chatRoom);
 
-        boolean isExists = chatRoomRepository.existsByChatRoomIdAndBuyer_Nickname(1L, "testNickname");
+        boolean isExists = chatRoomRepository.existsByChatRoomIdAndBuyer_StudentId(1L, "testNickname");
     }
 
 }

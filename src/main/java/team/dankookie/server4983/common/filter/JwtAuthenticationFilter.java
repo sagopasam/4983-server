@@ -45,9 +45,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     String accessToken = request.getHeader(AUTHORIZATION);
 
-    String nickname = jwtTokenUtils.getNickname(accessToken);
+    String studentId = jwtTokenUtils.getStudentId(accessToken);
 
-    Boolean isTokenValid = jwtTokenUtils.validate(accessToken, nickname);
+    Boolean isTokenValid = jwtTokenUtils.validate(accessToken, studentId);
 
     if (!isTokenValid) {
       throw new NotAuthorizedException("유효하지 않은 토큰입니다.");
@@ -58,7 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       throw new NotAuthorizedException("만료된 토큰입니다.");
     }
 
-    UserDetails member = memberDetailsService.loadUserByUsername(nickname);
+    UserDetails member = memberDetailsService.loadUserByUsername(studentId);
 
     AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
         member,

@@ -46,10 +46,10 @@ class MemberWithdrawControllerTest extends BaseControllerTest {
     @Test
     void 회원을_탈퇴한다() throws Exception {
         //given
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("studentId",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
         String withdrawUrl = API + "/withdraw";
         Cookie refreshTokenCookie = new Cookie("refreshToken", "example_refresh_token");
-        when(memberService.checkMemberAndWithdraw(AccessToken.of(accessToken, "nickname")))
+        when(memberService.checkMemberAndWithdraw(AccessToken.of(accessToken, "studentId")))
                 .thenReturn(true);
 
         when(request.getCookies()).thenReturn(new Cookie[]{refreshTokenCookie});

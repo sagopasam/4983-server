@@ -36,8 +36,8 @@ public class UsedBookService {
   public UsedBookSaveResponse saveAndSaveFiles(List<MultipartFile> multipartFileList,
       UsedBookSaveRequest usedBookSaveRequest, AccessToken accessToken) {
 
-    String nickname = getNicknameWithAccessToken(accessToken);
-    Member member = memberService.findMemberByNickname(nickname);
+    String studentId = getStudentIdWithAccessToken(accessToken);
+    Member member = memberService.findMemberByStudentId(studentId);
 
     UsedBook usedBook = usedBookRepository.save(usedBookSaveRequest.toEntity(member));
 
@@ -52,11 +52,11 @@ public class UsedBookService {
     return UsedBookSaveResponse.of(usedBook.getId());
   }
 
-  public UsedBookResponse findByUsedBookId(Long id, String nickname) {
+  public UsedBookResponse findByUsedBookId(Long id, String studentId) {
 
     UsedBook usedBook = getUsedBookById(id);
 
-    Member requestMember = memberService.findMemberByNickname(nickname);
+    Member requestMember = memberService.findMemberByStudentId(studentId);
 
     boolean isBookOwner = usedBook.getSellerMember().equals(requestMember);
 
@@ -88,9 +88,9 @@ public class UsedBookService {
   @Transactional
   public boolean deleteUsedBook(Long id, AccessToken accessToken) {
 
-    String nickname = getNicknameWithAccessToken(accessToken);
+    String studentId = getStudentIdWithAccessToken(accessToken);
 
-    Member member = memberService.findMemberByNickname(nickname);
+    Member member = memberService.findMemberByStudentId(studentId);
 
     boolean isUsedBookSavedByThisMember = usedBookRepository.existsUsedBookByIdAndSellerMember(id,
         member);
@@ -123,8 +123,8 @@ public class UsedBookService {
   @Transactional
   public UsedBookSaveResponse updateUsedBook(Long id, List<MultipartFile> multipartFileList,
       UsedBookSaveRequest usedBookSaveRequest, AccessToken accessToken) {
-    String nickname = getNicknameWithAccessToken(accessToken);
-    Member member = memberService.findMemberByNickname(nickname);
+    String studentId = getStudentIdWithAccessToken(accessToken);
+    Member member = memberService.findMemberByStudentId(studentId);
 
     UsedBook usedBook = getUsedBookById(id);
 
@@ -147,8 +147,8 @@ public class UsedBookService {
     return UsedBookSaveResponse.of(usedBook.getId());
   }
 
-  private String getNicknameWithAccessToken(AccessToken accessToken) {
-    return jwtTokenUtils.getNickname(accessToken.value());
+  private String getStudentIdWithAccessToken(AccessToken accessToken) {
+    return jwtTokenUtils.getStudentId(accessToken.value());
   }
 
   private UsedBook getUsedBookById(Long id) {

@@ -17,9 +17,9 @@ public class JwtTokenUtils {
     @Value("${jwt.secret-key}")
     private String key;
 
-    public Boolean validate(String token, String nickname) {
-        String nicknameByToken = getNickname(token);
-        return nicknameByToken.equals(nickname) && !isTokenExpired(token);
+    public Boolean validate(String token, String studentId) {
+        String studentIdByToken = getStudentId(token);
+        return studentIdByToken.equals(studentId) && !isTokenExpired(token);
     }
 
     public Claims extractAllClaims(String token) {
@@ -30,8 +30,8 @@ public class JwtTokenUtils {
                 .getBody();
     }
 
-    public String getNickname(String token) {
-        return extractAllClaims(token).get("nickname", String.class);
+    public String getStudentId(String token) {
+        return extractAllClaims(token).get("studentId", String.class);
     }
 
     private Key getSigningKey(String secretKey) {
@@ -44,13 +44,13 @@ public class JwtTokenUtils {
         return expiration.before(new Date());
     }
 
-    public String generateJwtToken(String nickname, long expiredTimeMs) {
-        return doGenerateToken(nickname, expiredTimeMs, key);
+    public String generateJwtToken(String studentId, long expiredTimeMs) {
+        return doGenerateToken(studentId, expiredTimeMs, key);
     }
 
-    private String doGenerateToken(String nickname, long expireTime, String key) {
+    private String doGenerateToken(String studentId, long expireTime, String key) {
         Claims claims = Jwts.claims();
-        claims.put("nickname", nickname);
+        claims.put("studentId", studentId);
 
         return Jwts.builder()
                 .setClaims(claims)

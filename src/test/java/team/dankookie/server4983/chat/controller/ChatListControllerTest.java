@@ -33,7 +33,7 @@ class ChatListControllerTest extends BaseControllerTest {
         ChatListResponse chatListResponse1 = ChatListResponse.of(1L, "사회과학통계방법", "안녕하세요", LocalDateTime.of(2023,9,22,12,30,12), false, "imageUrl");
         ChatListResponse chatListResponse2 = ChatListResponse.of(2L, "컴퓨터공학개론", "테스트입니다.", LocalDateTime.of(2023,5,10,12,30,12), true, "imageUrl");
 
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname", TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("studentId", TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         when(chatService.getChatListWithAccessToken(any()))
                 .thenReturn(List.of(chatListResponse1, chatListResponse2));

@@ -15,8 +15,8 @@ public class MemberDetailsService implements UserDetailsService, Serializable {
   private final MemberRepository memberRepository;
 
   @Override
-  public UserDetails loadUserByUsername(String nickname) throws UsernameNotFoundException {
-    return memberRepository.findByNickname(nickname)
+  public UserDetails loadUserByUsername(String studentId) throws UsernameNotFoundException {
+    return memberRepository.findByStudentId(studentId)
         .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
   }
 }

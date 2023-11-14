@@ -36,7 +36,7 @@ public class BookPurchaseDetailRepositoryTest extends BaseRepositoryTest {
                 .accountHolder("홍길동")
                 .phoneNumber("010-1234-5678")
                 .password("password")
-                .nickname("nickname")
+                .nickname("studentId")
                 .yearOfAdmission(2022)
                 .studentId("20151234")
                 .accountNumber("123123123")

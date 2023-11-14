@@ -58,7 +58,7 @@ public class SchedulerRepositoryTest extends BaseRepositoryTest  {
     @Test
     public void 특정시간이전의채팅방가져오기() {
         // given
-        Member member = memberRepository.save(MemberFixture.createMemberByNickname("nickname"));
+        Member member = memberRepository.save(MemberFixture.createMemberByNickname("studentId"));
         UsedBook usedBook01 = usedBookRepository.save(UsedBook.builder().name("name01").price(1).tradeAvailableDatetime(LocalDateTime.now().minusMinutes(20)).sellerMember(member).build());
         chatRoomRepository.save(ChatRoom.builder().usedBook(usedBook01).interactStep(0).build());
         UsedBook usedBook02 = usedBookRepository.save(UsedBook.builder().name("name01").price(1).tradeAvailableDatetime(LocalDateTime.now().minusMinutes(10)).sellerMember(member).build());
@@ -83,7 +83,7 @@ public class SchedulerRepositoryTest extends BaseRepositoryTest  {
     @Test
     public void 특정날짜이전의채팅방가져오기() {
         // given
-        Member member = memberRepository.save(MemberFixture.createMemberByNickname("nickname"));
+        Member member = memberRepository.save(MemberFixture.createMemberByNickname("studentId"));
         UsedBook usedBook01 = usedBookRepository.save(UsedBook.builder().name("name01").price(1).tradeAvailableDatetime(LocalDateTime.now().minusMinutes(144)).sellerMember(member).build());
         chatRoomRepository.save(ChatRoom.builder().usedBook(usedBook01).interactStep(0).build());
         UsedBook usedBook02 = usedBookRepository.save(UsedBook.builder().name("name01").price(1).tradeAvailableDatetime(LocalDateTime.now().minusMinutes(288)).sellerMember(member).build());
@@ -108,7 +108,7 @@ public class SchedulerRepositoryTest extends BaseRepositoryTest  {
     @Test
     public void 특정시간이후의채팅방가져오기() {
         // given
-        Member member = memberRepository.save(MemberFixture.createMemberByNickname("nickname"));
+        Member member = memberRepository.save(MemberFixture.createMemberByNickname("studentId"));
         UsedBook usedBook01 = usedBookRepository.save(UsedBook.builder().name("name01").price(1).tradeAvailableDatetime(LocalDateTime.now().plusMinutes(20)).sellerMember(member).build());
         chatRoomRepository.save(ChatRoom.builder().usedBook(usedBook01).interactStep(0).build());
         UsedBook usedBook02 = usedBookRepository.save(UsedBook.builder().name("name01").price(1).tradeAvailableDatetime(LocalDateTime.now().plusMinutes(10)).sellerMember(member).build());
@@ -133,7 +133,7 @@ public class SchedulerRepositoryTest extends BaseRepositoryTest  {
     @Test
     public void 특정날짜이후의채팅방가져오기() {
         // given
-        Member member = memberRepository.save(MemberFixture.createMemberByNickname("nickname"));
+        Member member = memberRepository.save(MemberFixture.createMemberByNickname("studentId"));
         UsedBook usedBook01 = usedBookRepository.save(UsedBook.builder().name("name01").price(1).tradeAvailableDatetime(LocalDateTime.now().plusMinutes(200)).sellerMember(member).build());
         chatRoomRepository.save(ChatRoom.builder().usedBook(usedBook01).interactStep(0).build());
         UsedBook usedBook02 = usedBookRepository.save(UsedBook.builder().name("name01").price(1).tradeAvailableDatetime(LocalDateTime.now().plusMinutes(100)).sellerMember(member).build());

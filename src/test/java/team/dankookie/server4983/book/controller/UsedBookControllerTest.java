@@ -65,7 +65,7 @@ class UsedBookControllerTest extends BaseControllerTest {
         true
     );
 
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
+    String accessToken = jwtTokenUtils.generateJwtToken("studentId",
         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     MockMultipartFile file1 = new MockMultipartFile("fileList", "file1.png",
@@ -128,14 +128,14 @@ class UsedBookControllerTest extends BaseControllerTest {
   @Test
   void 중고서적의_id로_중고서적_데이터를_리턴한다() throws Exception {
     //given
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
+    String accessToken = jwtTokenUtils.generateJwtToken("studentId",
         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
-    String nickname = "nickname";
+    String studentId = "studentId";
     final Long usedBookId = 1L;
     final UsedBookResponse usedBookResponse = UsedBookResponse.of(
         College.LAW.name(),
         Department.BUSINESS.name(),
-        "nickname",
+        "studentId",
         "profileImageUrl",
         LocalDateTime.of(2023, 9, 13, 12, 0, 0),
         List.of("image1Url", "image2Url"),
@@ -150,7 +150,7 @@ class UsedBookControllerTest extends BaseControllerTest {
         true
     );
 
-    when(usedBookService.findByUsedBookId(usedBookId, nickname))
+    when(usedBookService.findByUsedBookId(usedBookId, studentId))
         .thenReturn(usedBookResponse);
     //when
     ResultActions resultActions = mockMvc.perform(get(API + "/used-book/{id}", usedBookId)
@@ -190,12 +190,12 @@ class UsedBookControllerTest extends BaseControllerTest {
   @Test
   void 중고서적을_삭제한다() throws Exception {
     //given
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
+    String accessToken = jwtTokenUtils.generateJwtToken("studentId",
         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     final Long usedBookId = 1L;
 
-    when(usedBookService.deleteUsedBook(usedBookId, AccessToken.of(accessToken, "nickname")))
+    when(usedBookService.deleteUsedBook(usedBookId, AccessToken.of(accessToken, "studentId")))
         .thenReturn(true);
     //when
     ResultActions resultActions = mockMvc.perform(delete(API + "/used-book/{id}", usedBookId)
@@ -217,13 +217,13 @@ class UsedBookControllerTest extends BaseControllerTest {
   @Test
   void 중고서적을_삭제한다_실패_글을_올린_사용자가_아님() throws Exception {
     //given
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
+    String accessToken = jwtTokenUtils.generateJwtToken("studentId",
         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     final Long usedBookId = 1L;
 
     Mockito.
-        when(usedBookService.deleteUsedBook(usedBookId, AccessToken.of(accessToken, "nickname")))
+        when(usedBookService.deleteUsedBook(usedBookId, AccessToken.of(accessToken, "studentId")))
         .thenThrow(new IllegalArgumentException("글을 올린 사용자만 삭제할 수 있습니다."));
 
     //when
@@ -248,7 +248,7 @@ class UsedBookControllerTest extends BaseControllerTest {
     //given
     final Long usedBookId = 1L;
     final String image = "image.png";
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
+    String accessToken = jwtTokenUtils.generateJwtToken("studentId",
         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     when(usedBookService.deleteUsedBookImage(usedBookId, image))
@@ -292,7 +292,7 @@ class UsedBookControllerTest extends BaseControllerTest {
         true
     );
 
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
+    String accessToken = jwtTokenUtils.generateJwtToken("studentId",
         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     MockMultipartFile file1 = new MockMultipartFile("fileList", "file1.png",
@@ -371,7 +371,7 @@ class UsedBookControllerTest extends BaseControllerTest {
         true
     );
 
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
+    String accessToken = jwtTokenUtils.generateJwtToken("studentId",
         1000L);
 
     MockMultipartFile file1 = new MockMultipartFile("fileList", "file1.png",

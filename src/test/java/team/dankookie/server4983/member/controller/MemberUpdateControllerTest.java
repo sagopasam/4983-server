@@ -46,7 +46,7 @@ class MemberUpdateControllerTest extends BaseControllerTest {
                 "010-1234-5678"
         );
 
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("studentId",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         MockMultipartFile fileImage = new MockMultipartFile("fileImage", "fileImage.png", MediaType.MULTIPART_FORM_DATA_VALUE, "fileImage".getBytes(UTF_8));
         MockMultipartFile member = new MockMultipartFile("member", null, MediaType.APPLICATION_JSON_VALUE, objectMapper.writeValueAsString(memberProfileSaveRequest).getBytes(UTF_8));
@@ -84,7 +84,7 @@ class MemberUpdateControllerTest extends BaseControllerTest {
     void 마이페이지_프로필_이미지를_삭제한다() throws Exception {
         //given
         MemberImageRequest request = MemberImageRequest.of("https://s3.4983.com/imageUrl.png");
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("studentId",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         //when
         ResultActions resultActions = mockMvc.perform(delete(API + "/my-pages/delete/image")

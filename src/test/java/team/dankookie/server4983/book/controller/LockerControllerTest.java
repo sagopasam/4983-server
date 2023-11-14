@@ -73,7 +73,7 @@ class LockerControllerTest extends BaseControllerTest {
       //given
     LockerSaveRequest request = LockerSaveRequest.of(1, "1234", 1L);
 
-    final String accessToken = jwtTokenUtils.generateJwtToken("nickname",
+    final String accessToken = jwtTokenUtils.generateJwtToken("studentId",
          TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     when(lockerService.saveLocker(any(LockerSaveRequest.class), any(AccessToken.class))).thenReturn(true);

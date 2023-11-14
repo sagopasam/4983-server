@@ -43,7 +43,7 @@ class MemberLoginControllerTest extends BaseControllerTest {
         when(memberService.login(loginRequest))
                 .thenReturn(true);
         when(memberService.findMemberNicknameByStudentId(any()))
-                .thenReturn(Member.builder().nickname("nickname").studentId("studentId").password("password").build());
+                .thenReturn(Member.builder().nickname("studentId").studentId("studentId").password("password").build());
 
         //when
         ResultActions resultActions = mockMvc.perform(post(loginUrl)

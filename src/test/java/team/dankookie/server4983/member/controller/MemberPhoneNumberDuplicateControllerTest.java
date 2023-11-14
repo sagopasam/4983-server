@@ -30,7 +30,7 @@ class MemberPhoneNumberDuplicateControllerTest extends BaseControllerTest {
     @Test
     void 멤버의_전화번호가_중복인경우_true를_리턴한다() throws Exception {
         //given
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("studentId",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
         String phoneNumber = "010-1234-1234";
         when(memberService.checkPhoneNumberDuplicate(any(), anyString())).thenReturn(true);
         //when

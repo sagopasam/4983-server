@@ -29,9 +29,9 @@ class MemberReadControllerTest extends BaseControllerTest {
     @Test
     void 멤버의_단과대와_학과를_리턴한다() throws Exception {
         //given
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("studentId",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
-        when(memberService.findMemberCollegeAndDepartment(AccessToken.of(accessToken, "nickname")))
+        when(memberService.findMemberCollegeAndDepartment(AccessToken.of(accessToken, "studentId")))
                 .thenReturn(MemberCollegeAndDepartment.of(Department.BUSINESS));
         //when
         ResultActions resultActions = mockMvc.perform(get("/api/v1/college-department")

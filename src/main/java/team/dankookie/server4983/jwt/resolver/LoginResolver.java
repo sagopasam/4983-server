@@ -9,7 +9,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import team.dankookie.server4983.common.exception.NotAuthorizedException;
-import team.dankookie.server4983.jwt.constants.TokenSecretKey;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 
@@ -41,8 +40,8 @@ public class LoginResolver implements HandlerMethodArgumentResolver {
       throw new NotAuthorizedException();
     }
 
-    String nickname = jwtTokenUtils.getNickname(accessToken);
+    String studentId = jwtTokenUtils.getStudentId(accessToken);
 
-    return AccessToken.of(accessToken, nickname);
+    return AccessToken.of(accessToken, studentId);
   }
 }

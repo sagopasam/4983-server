@@ -59,9 +59,9 @@ public class LockerService {
     ChatRoom chatRoom = chatRoomRepository.findById(lockerSaveRequest.chatRoomId())
         .orElseThrow(() -> new RuntimeException("채팅방이 존재하지 않습니다."));
 
-    boolean isUserInChatRoom = chatRoomRepository.existsByBuyer_NicknameOrSeller_NicknameAndChatRoomId(
-        accessToken.nickname(),
-        accessToken.nickname(),
+    boolean isUserInChatRoom = chatRoomRepository.existsByBuyer_StudentIdOrSeller_StudentIdAndChatRoomId(
+        accessToken.studentId(),
+        accessToken.studentId(),
         lockerSaveRequest.chatRoomId());
 
     if (!isUserInChatRoom) {

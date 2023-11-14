@@ -51,7 +51,7 @@ public class AdminMemberService {
 
   }
 
-  public Member findMemberNicknameById(String id) {
+  public Member findMemberById(String id) {
     return memberRepository.findByStudentId(id)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
   }

@@ -11,7 +11,7 @@ public class MemberFixture {
                 .accountBank(AccountBank.K)
                 .accountHolder("accountHolder")
                 .accountNumber("accountNumber")
-                .nickname("nickname")
+                .nickname("studentId")
                 .studentId("studentId")
                 .phoneNumber("phoneNumber")
                 .college(Department.DEPARTMENT_OF_LAW.getCollege())
@@ -49,5 +49,20 @@ public class MemberFixture {
                 .yearOfAdmission(2023)
                 .password("password")
                 .build();
+    }
+
+    public static Member createMemberByStudentIdAndNickname(String studentId, String nickname) {
+        return Member.builder()
+            .accountBank(AccountBank.K)
+            .accountHolder("accountHolder")
+            .accountNumber("accountNumber")
+            .nickname(nickname)
+            .studentId(studentId)
+            .phoneNumber("phoneNumber")
+            .college(Department.DEPARTMENT_OF_LAW.getCollege())
+            .department(Department.DEPARTMENT_OF_LAW)
+            .yearOfAdmission(2023)
+            .password("password")
+            .build();
     }
 }

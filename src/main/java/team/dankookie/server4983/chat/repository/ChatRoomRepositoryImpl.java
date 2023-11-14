@@ -140,7 +140,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
   }
 
   @Override
-  public List<ChatListResponse> findByChatroomListWithNickname(String nickname) {
+  public List<ChatListResponse> findByChatroomListWithStudentId(String studentId) {
 
     List<ChatListResponse> chatListResponseList = jpaQueryFactory
         .select(
@@ -166,14 +166,14 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
         .innerJoin(usedBook).on(chatRoom.usedBook.eq(usedBook))
         .innerJoin(member).on(usedBook.sellerMember.eq(member))
         .where(
-            member.nickname.eq(nickname),
+            member.studentId.eq(studentId),
             Expressions.list(sellerChat.chatRoom.chatRoomId, sellerChat.id).in(
                 JPAExpressions.select(sellerChat.chatRoom.chatRoomId, sellerChat.id.max())
                     .from(sellerChat)
                     .innerJoin(chatRoom).on(sellerChat.chatRoom.eq(chatRoom))
                     .innerJoin(usedBook).on(chatRoom.usedBook.eq(usedBook))
                     .innerJoin(member).on(usedBook.sellerMember.eq(member))
-                    .where(member.nickname.eq(nickname))
+                    .where(member.studentId.eq(studentId))
                     .groupBy(sellerChat.chatRoom.chatRoomId)
             ))
         .fetch();
@@ -202,14 +202,14 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
         .innerJoin(usedBook).on(chatRoom.usedBook.eq(usedBook))
         .innerJoin(member).on(usedBook.buyerMember.eq(member))
         .where(
-            member.nickname.eq(nickname),
+            member.studentId.eq(studentId),
             Expressions.list(buyerChat.chatRoom.chatRoomId, buyerChat.id).in(
                 JPAExpressions.select(buyerChat.chatRoom.chatRoomId, buyerChat.id.max())
                     .from(buyerChat)
                     .innerJoin(chatRoom).on(buyerChat.chatRoom.eq(chatRoom))
                     .innerJoin(usedBook).on(chatRoom.usedBook.eq(usedBook))
                     .innerJoin(member).on(usedBook.buyerMember.eq(member))
-                    .where(member.nickname.eq(nickname))
+                    .where(member.studentId.eq(studentId))
                     .groupBy(buyerChat.chatRoom.chatRoomId)
             )).fetch());
 
@@ -220,8 +220,8 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
   }
 
   @Override
-  public List<ChatMessageResponse> findChatMessageByChatroomIdWithBuyerNickname(long chatRoomId,
-      String nickname) {
+  public List<ChatMessageResponse> findChatMessageByChatroomIdWithBuyerStudentId(long chatRoomId,
+      String studentId) {
     return jpaQueryFactory
         .select(Projections.constructor(
             ChatMessageResponse.class,
@@ -231,15 +231,15 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
             buyerChat.createdAt
         )).from(buyerChat)
         .where(buyerChat.chatRoom.chatRoomId.eq(chatRoomId),
-            buyerChat.chatRoom.buyer.nickname.eq(nickname)
+            buyerChat.chatRoom.buyer.studentId.eq(studentId)
         )
         .orderBy(buyerChat.createdAt.asc())
         .fetch();
   }
 
   @Override
-  public List<ChatMessageResponse> findChatMessageByChatroomIdWithSellerNickname(long chatRoomId,
-      String nickname) {
+  public List<ChatMessageResponse> findChatMessageByChatroomIdWithSellerStudentId(long chatRoomId,
+      String studentId) {
     return jpaQueryFactory
         .select(Projections.constructor(
             ChatMessageResponse.class,
@@ -249,7 +249,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
             sellerChat.createdAt
         )).from(sellerChat)
         .where(sellerChat.chatRoom.chatRoomId.eq(chatRoomId),
-            sellerChat.chatRoom.seller.nickname.eq(nickname)
+            sellerChat.chatRoom.seller.studentId.eq(studentId)
         ).orderBy(sellerChat.createdAt.asc())
         .fetch();
   }

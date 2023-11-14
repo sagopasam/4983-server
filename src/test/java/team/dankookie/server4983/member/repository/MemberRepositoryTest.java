@@ -24,13 +24,13 @@ class MemberRepositoryTest extends BaseRepositoryTest {
     @Test
     void 사용자의_nickname으로_멤버를_찾는다() {
         //given
-        final String nickname = "nickname";
+        final String studentId = "studentId";
 
-        Member member = MemberFixture.createMemberByNickname(nickname);
+        Member member = MemberFixture.createMemberByNickname(studentId);
         memberRepository.save(member);
 
         //when
-        Optional<Member> findMember = memberRepository.findByNickname(nickname);
+        Optional<Member> findMember = memberRepository.findByStudentId(studentId);
 
         //then
         assertThat(findMember).isPresent();
@@ -53,7 +53,7 @@ class MemberRepositoryTest extends BaseRepositoryTest {
         @Test
         void 닉네임이_중복인지_확인한다(){
             //given
-            final String nickname = "nickname";
+            final String nickname = "studentId";
 
             Member member = MemberFixture.createMemberByNickname(nickname);
             memberRepository.save(member);
@@ -68,7 +68,7 @@ class MemberRepositoryTest extends BaseRepositoryTest {
         void 프로필_이미지를_삭제한다(){
 
             //given
-            final String nickname = "nickname";
+            final String nickname = "studentId";
 
             Member member = MemberFixture.createMemberByNickname(nickname);
             memberRepository.save(member);

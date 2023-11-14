@@ -33,11 +33,15 @@ class MemberMyPageControllerTest extends BaseControllerTest {
   @Test
   void 마이페이지_수정시_멤버의_데이터를_가져온다() throws Exception {
     //given
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
+    String accessToken = jwtTokenUtils.generateJwtToken("studentId",
         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+
     Member findMember = Member.builder().nickname("testNickname").build();
+
     MemberMyPageModifyResponse response = MemberMyPageModifyResponse.of("test.png",
         findMember.getNickname(), AccountBank.KB, "938002-00-613983", "010-8766-5450");
+
+
     when(memberService.getMyPageMemberModifyInfo(anyString())).thenReturn(response);
     //when
     ResultActions resultActions = mockMvc.perform(get(API + "/my-pages/member/modify")
@@ -65,7 +69,7 @@ class MemberMyPageControllerTest extends BaseControllerTest {
     //given
     final String password = "password";
     MemberPasswordRequest request = MemberPasswordRequest.of(password);
-    String accessToken = jwtTokenUtils.generateJwtToken("nickname",
+    String accessToken = jwtTokenUtils.generateJwtToken("studentId",
         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
     when(memberService.isMemberPasswordMatch(any(), anyString()))
         .thenReturn(true);

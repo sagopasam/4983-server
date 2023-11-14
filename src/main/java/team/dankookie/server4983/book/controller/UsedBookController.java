@@ -32,7 +32,7 @@ public class UsedBookController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UsedBookResponse> getUsedBook(@PathVariable Long id, AccessToken accessToken) {
-        UsedBookResponse usedBookResponse = usedBookService.findByUsedBookId(id, accessToken.nickname());
+        UsedBookResponse usedBookResponse = usedBookService.findByUsedBookId(id, accessToken.studentId());
 
         return ResponseEntity.ok().body(usedBookResponse);
     }

@@ -25,7 +25,7 @@ public class MemberMyPageController {
   @GetMapping
   public ResponseEntity<MemberMyPageResponse> getMemberInfo(AccessToken accessToken) {
     MemberMyPageResponse response = memberService.getMyPageMemberInfo(
-        accessToken.nickname());
+        accessToken.studentId());
     return ResponseEntity.ok(response);
   }
 
@@ -33,14 +33,14 @@ public class MemberMyPageController {
   public ResponseEntity<MemberPasswordMatchResponse> checkPasswordMatch(
       @RequestBody MemberPasswordRequest request, AccessToken accessToken) {
     boolean isPasswordMatch = memberService.isMemberPasswordMatch(request.password(),
-        accessToken.nickname());
+        accessToken.studentId());
     return ResponseEntity.ok(MemberPasswordMatchResponse.of(isPasswordMatch));
   }
 
   @GetMapping("/modify")
   public ResponseEntity<MemberMyPageModifyResponse> getMemberModifyInfo(AccessToken accessToken) {
     MemberMyPageModifyResponse response = memberService.getMyPageMemberModifyInfo(
-        accessToken.nickname());
+        accessToken.studentId());
     return ResponseEntity.ok(response);
   }
 

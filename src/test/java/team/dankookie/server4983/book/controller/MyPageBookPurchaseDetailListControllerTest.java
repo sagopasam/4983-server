@@ -40,7 +40,7 @@ class MyPageBookPurchaseDetailListControllerTest extends BaseControllerTest {
     @Test
     void 구매내역_서적리스트를_리턴한다() throws Exception {
         BookStatus bookStatus = BookStatus.SOLD;
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("studentId",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         UsedBookListResponse usedBookListResponse1 = UsedBookListResponse.builder()
                 .usedBookId(1L)
@@ -66,7 +66,7 @@ class MyPageBookPurchaseDetailListControllerTest extends BaseControllerTest {
                 usedBookListResponse1, usedBookListResponse2
         );
 
-        when(myPageBookPurchaseDetailListService.getMyPageBookPurchaseDetailList(bookStatus, AccessToken.of(accessToken, "nickname")))
+        when(myPageBookPurchaseDetailListService.getMyPageBookPurchaseDetailList(bookStatus, AccessToken.of(accessToken, "studentId")))
                 .thenReturn(myPageBookPurchaseDetailListResponse);
 
         //when
@@ -101,7 +101,7 @@ class MyPageBookPurchaseDetailListControllerTest extends BaseControllerTest {
     void 구매내역이_없는경우_빈리스트를_리턴한다() throws Exception{
         //given
         BookStatus bookStatus = BookStatus.SOLD;
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("studentId",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
         UsedBookListResponse usedBookListResponse = UsedBookListResponse.builder().build();
 
@@ -109,7 +109,7 @@ class MyPageBookPurchaseDetailListControllerTest extends BaseControllerTest {
                 usedBookListResponse
         );
 
-        when(myPageBookPurchaseDetailListService.getMyPageBookPurchaseDetailList(bookStatus, AccessToken.of(accessToken, "nickname")))
+        when(myPageBookPurchaseDetailListService.getMyPageBookPurchaseDetailList(bookStatus, AccessToken.of(accessToken, "studentId")))
                 .thenReturn(result);
         //when
         ResultActions resultActions = mockMvc.perform(get(API + "/my-pages/book-purchase-detail-list")
@@ -133,10 +133,10 @@ class MyPageBookPurchaseDetailListControllerTest extends BaseControllerTest {
     @Test
     void 회원이_존재하지_않는경우_에러를_리턴한다() throws Exception{
         //given
-        String accessToken = jwtTokenUtils.generateJwtToken("nickname",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        String accessToken = jwtTokenUtils.generateJwtToken("studentId",  TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
         final BookStatus bookstatus = BookStatus.SOLD;
 
-        when(myPageBookPurchaseDetailListService.getMyPageBookPurchaseDetailList(bookstatus, AccessToken.of(accessToken, "nickname")))
+        when(myPageBookPurchaseDetailListService.getMyPageBookPurchaseDetailList(bookstatus, AccessToken.of(accessToken, "studentId")))
                 .thenThrow(new IllegalArgumentException("존재하지 않는 회원입니다."));
         //when
         ResultActions resultActions = mockMvc.perform(get(API + "/my-pages/book-purchase-detail-list")

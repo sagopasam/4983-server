@@ -8,12 +8,12 @@ import org.springframework.data.repository.query.Param;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> , ChatRoomRepositoryCustom {
-    boolean existsByChatRoomIdAndBuyer_Nickname(long chatRoomId, String nickname);
+    boolean existsByChatRoomIdAndBuyer_StudentId(long chatRoomId, String studentId);
 
-    boolean existsByChatRoomIdAndSeller_Nickname(long chatRoomId, String nickname);
+    boolean existsByChatRoomIdAndSeller_StudentId(long chatRoomId, String studentId);
 
-    boolean existsByBuyer_NicknameOrSeller_NicknameAndChatRoomId(String buyerNickname,
-        String sellerNickname, Long chatRoomId);
+    boolean existsByBuyer_StudentIdOrSeller_StudentIdAndChatRoomId(String buyerStudentId,
+        String sellerStudentId, Long chatRoomId);
 
     Optional<ChatRoom> findByChatRoomId(long chatRoomId);
 

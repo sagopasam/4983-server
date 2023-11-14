@@ -1,6 +1,5 @@
 package team.dankookie.server4983.member.controller;
 
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static team.dankookie.server4983.jwt.constants.TokenDuration.ACCESS_TOKEN_DURATION;
 import static team.dankookie.server4983.jwt.constants.TokenDuration.REFRESH_TOKEN_DURATION;
 
@@ -33,7 +32,7 @@ public class AdminLoginController {
   public ResponseEntity<Void> login(@RequestBody AdminLoginRequest request, HttpServletResponse response) {
     adminMemberService.login(request);
 
-    Member member = adminMemberService.findMemberNicknameById(request.id());
+    Member member = adminMemberService.findMemberById(request.id());
 
     setAccessTokenToHeader(response, member);
     setRefreshTokenToCookie(response, member);
@@ -41,12 +40,12 @@ public class AdminLoginController {
     return ResponseEntity.ok().build();
   }
   private void setAccessTokenToHeader(HttpServletResponse response, Member member) {
-    String accessToken = jwtTokenUtils.generateJwtToken(member.getNickname(), ACCESS_TOKEN_DURATION.getDuration());
+    String accessToken = jwtTokenUtils.generateJwtToken(member.getStudentId(), ACCESS_TOKEN_DURATION.getDuration());
     response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
   }
 
   private void setRefreshTokenToCookie(HttpServletResponse response, Member member) {
-    String refreshToken = jwtTokenUtils.generateJwtToken(member.getNickname(), REFRESH_TOKEN_DURATION.getDuration());
+    String refreshToken = jwtTokenUtils.generateJwtToken(member.getStudentId(), REFRESH_TOKEN_DURATION.getDuration());
     refreshTokenService.save(
         member,
         RefreshToken.builder()

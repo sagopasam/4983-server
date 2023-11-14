@@ -45,7 +45,7 @@ class ChatControllerTest extends BaseControllerTest {
   void 채팅방을_생성한다() throws Exception {
     //given
     final long usedBookId = 1L;
-    final String accessToken = jwtTokenUtils.generateJwtToken("nickname",
+    final String accessToken = jwtTokenUtils.generateJwtToken("studentId",
          TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     final ChatRoomRequest chatRoomRequest = ChatRoomRequest.of(usedBookId);
@@ -80,7 +80,7 @@ class ChatControllerTest extends BaseControllerTest {
   void 유저의_채팅방id에_해당하는_채팅들를_리턴한다() throws Exception {
     //given
     final long chatRoomId = 1L;
-    final String accessToken = jwtTokenUtils.generateJwtToken("nickname",
+    final String accessToken = jwtTokenUtils.generateJwtToken("studentId",
          TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     ChatMessageResponse response1 = ChatMessageResponse.of(
@@ -130,7 +130,7 @@ class ChatControllerTest extends BaseControllerTest {
     //given
     final ChatRequest chatRequest = ChatRequest.of(1L, BOOK_PURCHASE_REQUEST);
 
-    final String accessToken = jwtTokenUtils.generateJwtToken("nickname",
+    final String accessToken = jwtTokenUtils.generateJwtToken("studentId",
          TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     ChatMessageResponse response = ChatMessageResponse.of(
@@ -176,7 +176,7 @@ class ChatControllerTest extends BaseControllerTest {
   void 읽지않은_채팅내역들을_반환해준다() throws Exception {
     //given
     final long chatRoomId = 1L;
-    final String accessToken = jwtTokenUtils.generateJwtToken("nickname",
+    final String accessToken = jwtTokenUtils.generateJwtToken("studentId",
          TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     ChatMessageResponse response = ChatMessageResponse.of(
@@ -223,7 +223,7 @@ class ChatControllerTest extends BaseControllerTest {
     //given
     ChatStopRequest request = ChatStopRequest.builder().chatRoomId(1L).build();
 
-    final String accessToken = jwtTokenUtils.generateJwtToken("nickname",
+    final String accessToken = jwtTokenUtils.generateJwtToken("studentId",
          TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     //when

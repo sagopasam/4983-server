@@ -21,9 +21,9 @@ public class MyPageBookPurchaseDetailListService {
 
     public List<UsedBookListResponse> getMyPageBookPurchaseDetailList(BookStatus bookStatus, AccessToken accessToken){
 
-        String nickname = accessToken.nickname();
+        String studentId = accessToken.studentId();
 
-        Member member = memberRepository.findByNickname(nickname)
+        Member member = memberRepository.findByStudentId(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
     return bookPurchaseDetailRepository.getMyPageBookPurchaseDetailList(bookStatus, member.getId());
