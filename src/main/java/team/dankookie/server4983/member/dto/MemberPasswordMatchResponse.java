@@ -5,7 +5,7 @@ public record MemberPasswordMatchResponse(
         boolean isPasswordMatch
 ){
 
-    public static MemberPasswordMatchResponse of(boolean currentPassword) {
-        return new MemberPasswordMatchResponse(currentPassword);
+    public static MemberPasswordMatchResponse of(boolean isPasswordMatch) {
+        return new MemberPasswordMatchResponse(isPasswordMatch);
     }
 }
