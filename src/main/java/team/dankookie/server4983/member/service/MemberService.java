@@ -107,6 +107,7 @@ public class MemberService {
     return memberRepository.existsMemberByNickname(nickname);
   }
 
+  @Transactional
   public boolean isMemberPasswordMatch(String password, String studentId) {
     Member findMember = memberRepository.findByStudentId(studentId)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
