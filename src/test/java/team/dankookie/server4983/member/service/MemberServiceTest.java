@@ -29,10 +29,7 @@ import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.constant.AccountBank;
 import team.dankookie.server4983.member.domain.Member;
-import team.dankookie.server4983.member.dto.LoginRequest;
-import team.dankookie.server4983.member.dto.MemberPasswordChangeRequest;
-import team.dankookie.server4983.member.dto.MemberProfileSaveRequest;
-import team.dankookie.server4983.member.dto.MemberProfileSaveResponse;
+import team.dankookie.server4983.member.dto.*;
 import team.dankookie.server4983.member.repository.MemberRepository;
 import team.dankookie.server4983.member.repository.memberImage.MemberImageRepository;
 import team.dankookie.server4983.s3.dto.S3Response;
@@ -266,13 +263,14 @@ class MemberServiceTest extends BaseServiceTest {
     //given
     String password = "mockedPassword";
     String studentId = "mockedStudentId";
+    MemberPasswordRequest request = MemberPasswordRequest.of(password);
 
     when(memberRepository.findByStudentId(studentId))
         .thenThrow(new IllegalArgumentException("존재하지 않는 사용자입니다."));
     //when
     //then
     assertThatThrownBy(() ->
-        memberService.isMemberPasswordMatch(password, studentId))
+        memberService.isMemberPasswordMatch(request, studentId))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("존재하지 않는 사용자입니다.");
   }
@@ -282,6 +280,7 @@ class MemberServiceTest extends BaseServiceTest {
     //given
     String password = "mockedPassword";
     String studentId = "mockedStudentId";
+    MemberPasswordRequest request = MemberPasswordRequest.of(password);
 
     Member findMember = Member.builder().studentId("studentId").build();
     when(memberRepository.findByStudentId(studentId))
@@ -289,7 +288,7 @@ class MemberServiceTest extends BaseServiceTest {
     when(passwordEncoder.matches(password, findMember.getPassword()))
         .thenReturn(true);
     //when
-    boolean result = memberService.isMemberPasswordMatch(password, studentId);
+    boolean result = memberService.isMemberPasswordMatch(MemberPasswordRequest.of(request.password()), studentId);
     //then
     assertThat(result).isTrue();
   }
@@ -300,14 +299,15 @@ class MemberServiceTest extends BaseServiceTest {
     String password = "mockedPassword";
     String studentId = "mockedStudentId";
 
+    MemberPasswordRequest request = MemberPasswordRequest.of(password);
     Member findMember = Member.builder().studentId("studentId").build();
     when(memberRepository.findByStudentId(studentId))
         .thenReturn(Optional.of(findMember));
-    when(passwordEncoder.matches(password, findMember.getPassword()))
+    when(passwordEncoder.matches(request.password(), findMember.getPassword()))
         .thenReturn(false);
 
     //when
-    boolean result = memberService.isMemberPasswordMatch(password, studentId);
+    boolean result = memberService.isMemberPasswordMatch(MemberPasswordRequest.of(request.password()), studentId);
 
     //then
     assertThat(result).isFalse();
@@ -415,6 +415,5 @@ class SpringBootTestExample {
 
     assertThat(matches).isTrue();
   }
-
 }
 

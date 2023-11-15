@@ -108,9 +108,9 @@ public class MemberService {
   }
 
   @Transactional
-  public boolean isMemberPasswordMatch(String password, String studentId) {
+  public boolean isMemberPasswordMatch(MemberPasswordRequest request, String studentId) {
     Member findMember = findMemberByStudentId(studentId);
-    return passwordEncoder.matches(password, findMember.getPassword());
+    return passwordEncoder.matches(request.password(), findMember.getPassword());
   }
 
   public MemberCollegeAndDepartment findMemberCollegeAndDepartment(AccessToken accessToken) {
