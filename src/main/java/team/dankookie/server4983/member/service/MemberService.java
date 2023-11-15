@@ -1,5 +1,6 @@
 package team.dankookie.server4983.member.service;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class MemberService {
   private final MemberImageRepository memberImageRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenUtils jwtTokenUtils;
+  private final EntityManager entityManager;
 
   public Member findMemberById(Long id) {
     return memberRepository.findById(id)
@@ -70,8 +72,9 @@ public class MemberService {
   }
 
   @Transactional
-  public boolean changeMemberPassword(MemberPasswordChangeRequest request) {
-    Member member = memberRepository.findByStudentId(request.studentId())
+  public boolean changeMemberPassword(MemberPasswordChangeRequest request, AccessToken accessToken) {
+    entityManager.clear();
+    Member member = memberRepository.findByStudentId(accessToken.studentId())
         .orElseThrow(
             () -> new IllegalArgumentException("존재하지 않는 학번입니다.")
         );
@@ -120,8 +123,9 @@ public class MemberService {
 
   @Transactional
   public boolean checkMemberAndWithdraw(AccessToken accessToken) {
-    String nickname = jwtTokenUtils.getStudentId(accessToken.value());
-    Member member = findMemberByStudentId(nickname);
+    entityManager.clear();
+
+    Member member = findMemberByStudentId(accessToken.studentId());
     if (!member.getIsWithdraw()) {
       member.withdraw();
     }

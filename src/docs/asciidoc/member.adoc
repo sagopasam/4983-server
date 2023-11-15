@@ -94,6 +94,9 @@ include::{snippets}/member/password/certification-number/fail/phoneNumber/respon
 include::{snippets}/member/password/change/success/http-request.adoc[]
 include::{snippets}/member/password/change/success/request-fields.adoc[]
 
+==== RequestHeader
+include::{snippets}/member/password/change/success/request-headers.adoc[]
+
 ==== Response
 
 include::{snippets}/member/password/change/success/http-response.adoc[]
@@ -104,6 +107,9 @@ include::{snippets}/member/password/change/success/http-response.adoc[]
 
 include::{snippets}/member/password/change/fail/studentId/http-request.adoc[]
 include::{snippets}/member/password/change/fail/studentId/request-fields.adoc[]
+
+==== RequestHeader
+include::{snippets}/member/password/change/fail/studentId/request-headers.adoc[]
 
 ==== Response
 
@@ -116,6 +122,9 @@ include::{snippets}/member/password/change/fail/studentId/response-fields.adoc[]
 
 include::{snippets}/member/password/change/fail/phonenumber/http-request.adoc[]
 include::{snippets}/member/password/change/fail/phonenumber/request-fields.adoc[]
+
+==== RequestHeader
+include::{snippets}/member/password/change/fail/phonenumber/request-headers.adoc[]
 
 ==== Response
 

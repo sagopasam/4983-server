@@ -529,8 +529,8 @@ Host: localhost:8080
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE2OTk5OTIwMjAsImV4cCI6MTY5OTk5MzgyMH0.5TnW3rraohgmyMESH_iY5WPKAd-0DcgHVfNOuuwdglA
-Set-Cookie: refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE2OTk5OTIwMjAsImV4cCI6MTcwMTIwMTYyMH0.9fohoBLI-X5QUs0Mk81SrHTxeR7vCUFVL44aMoKEGAE; Path=/; Max-Age=1209600; Expires=Tue, 28 Nov 2023 20:00:20 GMT; HttpOnly</code></pre>
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE3MDAwNDQ0NTAsImV4cCI6MTcwMDA0NjI1MH0.LoZH9vypKzRk-HJb4x0xJhAB-T8SyAqUawmMfrJyj2s
+Set-Cookie: refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE3MDAwNDQ0NTAsImV4cCI6MTcwMTI1NDA1MH0.R8hKvW4Z6xTCVz9GKXvSraEYf1k0MKo4CBe-zgeVrYo; Path=/; Max-Age=1209600; Expires=Wed, 29 Nov 2023 10:34:10 GMT; HttpOnly</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -896,6 +896,7 @@ Content-Length: 63
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/v1/members/password HTTP/1.1
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE3MDAwNDQ0NTMsImV4cCI6MTcwMDA0NjI1M30.vO-PjNItcf7JsAp6HhskR6dDbb4dp6diJWn9SYJrEqE
 Content-Length: 75
 Host: localhost:8080
 
@@ -935,6 +936,27 @@ Host: localhost:8080
 </table>
 </div>
 <div class="sect3">
+<h4 id="_requestheader">RequestHeader</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">accessToken</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
 <h4 id="_response_7">Response</h4>
 <div class="listingblock">
 <div class="content">
@@ -951,6 +973,7 @@ Host: localhost:8080
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/v1/members/password HTTP/1.1
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE3MDAwNDQ0NTMsImV4cCI6MTcwMDA0NjI1M30.vO-PjNItcf7JsAp6HhskR6dDbb4dp6diJWn9SYJrEqE
 Content-Length: 75
 Host: localhost:8080
 
@@ -985,6 +1008,27 @@ Host: localhost:8080
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>password</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">비밀번호</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_requestheader_2">RequestHeader</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">accessToken</p></td>
 </tr>
 </tbody>
 </table>
@@ -1031,6 +1075,7 @@ Content-Length: 50
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/v1/members/password HTTP/1.1
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE3MDAwNDQ0NTMsImV4cCI6MTcwMDA0NjI1M30.vO-PjNItcf7JsAp6HhskR6dDbb4dp6diJWn9SYJrEqE
 Content-Length: 75
 Host: localhost:8080
 
@@ -1065,6 +1110,27 @@ Host: localhost:8080
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>password</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">비밀번호</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_requestheader_3">RequestHeader</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">accessToken</p></td>
 </tr>
 </tbody>
 </table>
@@ -1242,7 +1308,7 @@ Content-Length: 32
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/v1/my-pages/change-password/verify-current-password HTTP/1.1
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE2OTk5OTIwMjAsImV4cCI6MTY5OTk5MzgyMH0.5TnW3rraohgmyMESH_iY5WPKAd-0DcgHVfNOuuwdglA
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE3MDAwNDQ0NDgsImV4cCI6MTcwMDA0NjI0OH0.MaOgELDAxAATfh0g0DN9B0GIQ78SGHT4K9VlMxYMpT0
 Content-Length: 23
 Host: localhost:8080
 
@@ -1334,7 +1400,7 @@ Content-Length: 24
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/v1/my-pages/change-password/verify-current-password HTTP/1.1
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE2OTk5OTIwMjAsImV4cCI6MTY5OTk5MzgyMH0.5TnW3rraohgmyMESH_iY5WPKAd-0DcgHVfNOuuwdglA
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE3MDAwNDQ0NDgsImV4cCI6MTcwMDA0NjI0OH0.MaOgELDAxAATfh0g0DN9B0GIQ78SGHT4K9VlMxYMpT0
 Content-Length: 23
 Host: localhost:8080
 
@@ -1717,12 +1783,12 @@ Host: localhost:8080
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/college-department HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE2OTk5OTIwMjIsImV4cCI6MTY5OTk5MzgyMn0.SukdrVgpxT-Jedo_qELjW42rihp_l772RaKJ8y9hvVM
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE3MDAwNDQ0NTMsImV4cCI6MTcwMDA0NjI1M30.vO-PjNItcf7JsAp6HhskR6dDbb4dp6diJWn9SYJrEqE
 Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_requestheader">RequestHeader</h5>
+<h5 id="_requestheader_4">RequestHeader</h5>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -1823,14 +1889,14 @@ Cookie: refreshToken=example_refresh_token</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/v1/withdraw HTTP/1.1
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE2OTk5OTIwMjMsImV4cCI6MTY5OTk5MzgyM30.85c6xvcgjZJdTBYIV7xRsJKN1vVow_98vJ-4HqeEvV8
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE3MDAwNDQ0NTUsImV4cCI6MTcwMDA0NjI1NX0.Boan0OwFwes7zQucbZeuMdU5ZPeBNU30oaYpj_5ZN34
 Host: localhost:8080
 Cookie: refreshToken=example_refresh_token</code></pre>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_requestheader_2">requestHeader</h4>
+<h4 id="_requestheader_5">requestHeader</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -1893,7 +1959,7 @@ Content-Length: 39
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/v1/my-pages/update HTTP/1.1
 Content-Type: multipart/form-data; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE2OTk5OTIwMjIsImV4cCI6MTY5OTk5MzgyMn0.SukdrVgpxT-Jedo_qELjW42rihp_l772RaKJ8y9hvVM
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE3MDAwNDQ0NTMsImV4cCI6MTcwMDA0NjI1M30.vO-PjNItcf7JsAp6HhskR6dDbb4dp6diJWn9SYJrEqE
 Host: localhost:8080
 
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
@@ -1911,7 +1977,7 @@ Content-Type: application/json
 </div>
 </div>
 <div class="sect3">
-<h4 id="_requestheader_3">RequestHeader</h4>
+<h4 id="_requestheader_6">RequestHeader</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -2004,7 +2070,7 @@ Content-Type: application/json
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/v1/my-pages/delete/image HTTP/1.1
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE2OTk5OTIwMjIsImV4cCI6MTY5OTk5MzgyMn0.SukdrVgpxT-Jedo_qELjW42rihp_l772RaKJ8y9hvVM
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE3MDAwNDQ0NTMsImV4cCI6MTcwMDA0NjI1M30.vO-PjNItcf7JsAp6HhskR6dDbb4dp6diJWn9SYJrEqE
 Content-Length: 47
 Host: localhost:8080
 
@@ -2070,7 +2136,7 @@ Host: localhost:8080
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/my-pages/member/modify HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE2OTk5OTIwMjEsImV4cCI6MTY5OTk5MzgyMX0.5UTqzRsyq1vazjpxdSDw9oAalxtOmltaMjMun1GwvwM
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE3MDAwNDQ0NTEsImV4cCI6MTcwMDA0NjI1MX0.ZhZow_NAQ_KkaAuCX0IVZNbvtoCd8F9ZyjdnLvGzbIY
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2157,7 +2223,7 @@ Content-Length: 133
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/my-pages/phoneNumber/duplicate?phoneNumber=010-1234-1234 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE2OTk5OTIwMjIsImV4cCI6MTY5OTk5MzgyMn0.SukdrVgpxT-Jedo_qELjW42rihp_l772RaKJ8y9hvVM
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE3MDAwNDQ0NTMsImV4cCI6MTcwMDA0NjI1M30.vO-PjNItcf7JsAp6HhskR6dDbb4dp6diJWn9SYJrEqE
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2246,7 +2312,7 @@ Content-Length: 29
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/v1/my-pages/member/password HTTP/1.1
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE2OTk5OTIwMjEsImV4cCI6MTY5OTk5MzgyMX0.5UTqzRsyq1vazjpxdSDw9oAalxtOmltaMjMun1GwvwM
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdHVkZW50SWQiOiJzdHVkZW50SWQiLCJpYXQiOjE3MDAwNDQ0NTEsImV4cCI6MTcwMDA0NjI1MX0.ZhZow_NAQ_KkaAuCX0IVZNbvtoCd8F9ZyjdnLvGzbIY
 Content-Length: 23
 Host: localhost:8080
 
@@ -2336,7 +2402,7 @@ Content-Length: 24
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-11-15 02:36:21 +0900
+Last updated 2023-11-15 19:33:19 +0900
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>

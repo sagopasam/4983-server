@@ -4,9 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -59,6 +62,9 @@ class MemberServiceTest extends BaseServiceTest {
 
   @Mock
   MemberImageRepository memberImageRepository;
+
+  @Mock
+  EntityManager em;
 
 
   @Test
@@ -187,8 +193,10 @@ class MemberServiceTest extends BaseServiceTest {
     //given
     String studentId = "studentId";
     String phoneNumber = "phoneNumber";
+    AccessToken accessToken = new AccessToken("dummy_access_token", "studentId");
 
-    when(memberRepository.findByStudentId(studentId))
+
+    when(memberRepository.findByStudentId(accessToken.studentId()))
         .thenReturn(Optional.of(Member.builder().phoneNumber("wrongPhoneNumber").build()));
     //when
     //then
@@ -203,15 +211,16 @@ class MemberServiceTest extends BaseServiceTest {
     //given
     MemberPasswordChangeRequest request = MemberPasswordChangeRequest.of("studentId", "phoneNumber",
         "password");
+    AccessToken accessToken = new AccessToken("dummy_access_token", "studentId");
 
     Member member = Member.builder().nickname("studentId").studentId("studentId")
         .phoneNumber("phoneNumber").password("password").build();
 
-    when(memberRepository.findByStudentId(request.studentId()))
+    when(memberRepository.findByStudentId(accessToken.studentId()))
         .thenReturn(Optional.of(member));
 
     //when
-    boolean isChanged = memberService.changeMemberPassword(request);
+    boolean isChanged = memberService.changeMemberPassword(request, accessToken);
 
     //then
     assertThat(isChanged).isTrue();
@@ -224,8 +233,9 @@ class MemberServiceTest extends BaseServiceTest {
     //given
     String studentId = "studentId";
     String phoneNumber = "phoneNumber";
+    AccessToken accessToken = new AccessToken("dummy_access_token", "studentId");
 
-    when(memberRepository.findByStudentId(studentId))
+    when(memberRepository.findByStudentId(accessToken.studentId()))
         .thenThrow(new IllegalArgumentException("존재하지 않는 학번입니다."));
     //when
     //then
@@ -307,19 +317,16 @@ class MemberServiceTest extends BaseServiceTest {
   void 회원이_탈퇴되었으면_isWithdraw를_true로_반환한다() {
     //given
     AccessToken accessToken = new AccessToken("dummy_access_token", "testNickname");
-    String nickname = "testNickname";
 
-    when(jwtTokenUtils.getStudentId(Mockito.any())).thenReturn(nickname);
-
-    Member findMember = Member.builder().nickname("studentId").isWithdraw(false).build();
-    when(memberRepository.findByStudentId("testNickname"))
+    Member findMember = Member.builder().studentId("studentId").isWithdraw(false).build();
+    when(memberRepository.findByStudentId(accessToken.studentId()))
         .thenReturn(Optional.of(findMember));
 
     //when
     boolean isWithdraw = memberService.checkMemberAndWithdraw(accessToken);
     //then
-    assertTrue(isWithdraw);
-    assertTrue(findMember.getIsWithdraw());
+    assertThat(isWithdraw).isTrue();
+    assertThat(findMember.getIsWithdraw()).isTrue();
   }
 
   @Test
