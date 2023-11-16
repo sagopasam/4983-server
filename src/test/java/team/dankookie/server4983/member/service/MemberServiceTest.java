@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -206,7 +205,7 @@ class MemberServiceTest extends BaseServiceTest {
   @Test
   void 학번과_비밀번호_변경할_비밀번호를_받으면_비밀번호를_변경한다() {
     //given
-    MemberPasswordChangeRequest request = MemberPasswordChangeRequest.of("studentId", "phoneNumber",
+    MemberTemporaryPasswordChangeRequest request = MemberTemporaryPasswordChangeRequest.of("studentId", "phoneNumber",
         "password");
     AccessToken accessToken = new AccessToken("dummy_access_token", "studentId");
 
@@ -217,7 +216,7 @@ class MemberServiceTest extends BaseServiceTest {
         .thenReturn(Optional.of(member));
 
     //when
-    boolean isChanged = memberService.changeMemberPassword(request, accessToken);
+    boolean isChanged = memberService.changeMemberTemporaryPassword(request, accessToken);
 
     //then
     assertThat(isChanged).isTrue();
@@ -395,6 +394,25 @@ class MemberServiceTest extends BaseServiceTest {
         memberProfileSaveRequest, accessToken);
     //then
     assertEquals(findMember.getId(), response.memberId());
+  }
+
+  @Test
+  void 변경할_비밀번호를_받으면_비밀번호를_변경한다() {
+    //given
+    String initialPassword = "password";
+    String newPassword = "changePassword";
+    AccessToken accessToken = new AccessToken("dummy_access_token", "studentId");
+
+    Member findmember = Member.builder().studentId("studentId").password(initialPassword).build();
+    MemberPasswordChangeRequest request = MemberPasswordChangeRequest.of(newPassword);
+
+    when(memberRepository.findByStudentId(accessToken.studentId()))
+            .thenReturn(Optional.of(findmember));
+    //when
+    boolean isChanged = memberService.changeMemberPassword(request, accessToken);
+    //then
+    assertThat(isChanged).isTrue();
+    assertThat(passwordEncoder.matches(newPassword, findmember.getPassword()));
   }
 
 }

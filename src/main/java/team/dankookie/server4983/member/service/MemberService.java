@@ -72,8 +72,7 @@ public class MemberService {
   }
 
   @Transactional
-  public boolean changeMemberPassword(MemberPasswordChangeRequest request, AccessToken accessToken) {
-    entityManager.clear();
+  public boolean changeMemberTemporaryPassword(MemberTemporaryPasswordChangeRequest request, AccessToken accessToken) {
     Member member = memberRepository.findByStudentId(accessToken.studentId())
         .orElseThrow(
             () -> new IllegalArgumentException("존재하지 않는 학번입니다.")
@@ -185,6 +184,17 @@ public class MemberService {
     Member findMember = findMemberByStudentId(studentId);
     return findMember.getPhoneNumber().equals(phoneNumber)
            || memberRepository.existsMemberByPhoneNumber(phoneNumber);
+  }
+
+  @Transactional
+  public boolean changeMemberPassword(MemberPasswordChangeRequest request, AccessToken accessToken) {
+    entityManager.clear();
+    Member findMember = memberRepository.findByStudentId(accessToken.studentId())
+            .orElseThrow(
+                    () -> new IllegalArgumentException("존재하지 않는 학번입니다.")
+            );
+    findMember.changePassword(passwordEncoder.encode(request.password()));
+    return true;
   }
 }
 

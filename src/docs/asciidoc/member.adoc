@@ -340,3 +340,16 @@ include::{snippets}/my-pages/member/password/success/request-headers.adoc[]
 ==== Response
 include::{snippets}/my-pages/member/password/success/http-response.adoc[]
 include::{snippets}/my-pages/member/password/success/response-fields.adoc[]
+
+
+=== 비밀번호를 변경한다
+
+==== Request
+include::{snippets}/my-pages/change-password/success/http-request.adoc[]
+include::{snippets}/my-pages/change-password/success/request-fields.adoc[]
+
+==== RequestHeader
+include::{snippets}/my-pages/change-password/success/request-headers.adoc[]
+
+==== Response
+include::{snippets}/my-pages/change-password/success/http-response.adoc[]

@@ -7,11 +7,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import team.dankookie.server4983.common.BaseControllerTest;
 import team.dankookie.server4983.common.exception.ErrorResponse;
 import team.dankookie.server4983.jwt.constants.TokenDuration;
-import team.dankookie.server4983.member.dto.MemberPasswordChangeRequest;
+import team.dankookie.server4983.member.dto.MemberTemporaryPasswordChangeRequest;
 import team.dankookie.server4983.member.service.MemberService;
 import team.dankookie.server4983.sms.dto.SmsCertificationNumber;
 import team.dankookie.server4983.sms.service.CoolSmsService;
-import team.dankookie.server4983.sms.service.SmsService;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -151,9 +150,9 @@ class MemberPasswordControllerTest extends BaseControllerTest {
     @Test
     void 사용자의_비밀번호를_변경한다() throws Exception {
         //given
-        final MemberPasswordChangeRequest request = MemberPasswordChangeRequest.of("studentId", "phoneNumber", "password");
+        final MemberTemporaryPasswordChangeRequest request = MemberTemporaryPasswordChangeRequest.of("studentId", "phoneNumber", "password");
         String accessToken = jwtTokenUtils.generateJwtToken("studentId", TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
-        when(memberService.changeMemberPassword(any(), any()))
+        when(memberService.changeMemberTemporaryPassword(any(), any()))
                 .thenReturn(true);
 
         //when
@@ -180,11 +179,11 @@ class MemberPasswordControllerTest extends BaseControllerTest {
     @Test
     void 비밀번호_변경시_학번이_존재하지않으면_에러를_던진다() throws Exception {
         //given
-        final MemberPasswordChangeRequest request = MemberPasswordChangeRequest.of("studentId", "phoneNumber", "password");
+        final MemberTemporaryPasswordChangeRequest request = MemberTemporaryPasswordChangeRequest.of("studentId", "phoneNumber", "password");
         String accessToken = jwtTokenUtils.generateJwtToken("studentId",
                 TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
-        when(memberService.changeMemberPassword(any(), any()))
+        when(memberService.changeMemberTemporaryPassword(any(), any()))
                 .thenThrow(new IllegalArgumentException("존재하지 않는 학번입니다."));
 
         //when
@@ -218,10 +217,10 @@ class MemberPasswordControllerTest extends BaseControllerTest {
     @Test
     void 비밀번호_변경시_학번과_휴대폰번호가_일치하지_않으면_에러를_던진다() throws Exception {
         //given
-        final MemberPasswordChangeRequest request = MemberPasswordChangeRequest.of("studentId", "phoneNumber", "password");
+        final MemberTemporaryPasswordChangeRequest request = MemberTemporaryPasswordChangeRequest.of("studentId", "phoneNumber", "password");
         String accessToken = jwtTokenUtils.generateJwtToken("studentId",
                 TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
-        when(memberService.changeMemberPassword(any(MemberPasswordChangeRequest.class), any()))
+        when(memberService.changeMemberTemporaryPassword(any(MemberTemporaryPasswordChangeRequest.class), any()))
                 .thenThrow(new IllegalArgumentException("학번과 맞지 않는 휴대폰번호입니다."));
 
         //when
