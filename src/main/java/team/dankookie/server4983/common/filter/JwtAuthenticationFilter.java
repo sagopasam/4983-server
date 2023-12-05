@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -30,6 +31,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private final JwtTokenUtils jwtTokenUtils;
   private final MemberDetailsService memberDetailsService;
 
+  private final List<String> EXCLUDE_URI = List.of(
+      "/docs/**",
+      "/api/v1/token/valid",
+      "/api/v1/token/update",
+      "/api/v1/login",
+      "/api/v1/members/password/certification-number",
+      "/api/v1/members/password",
+      "/api/v1/register/duplicate/studentId",
+      "/api/v1/register/duplicate/nickname",
+      "/api/v1/my-pages/certification-number",
+      "/api/v1/register",
+      "/api/v1/admin/login"
+  );
+
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
@@ -37,6 +52,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     String requestURI = request.getRequestURI();
 
     log.info("requestURI: {}", requestURI);
+
+    if (EXCLUDE_URI.stream().anyMatch(requestURI::startsWith)) {
+      filterChain.doFilter(request, response);
+      return;
+    }
 
     if (request.getHeader(AUTHORIZATION) == null || request.getHeader(AUTHORIZATION).isEmpty()) {
       filterChain.doFilter(request, response);

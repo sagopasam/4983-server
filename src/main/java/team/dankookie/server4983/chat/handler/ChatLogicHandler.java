@@ -42,8 +42,6 @@ import team.dankookie.server4983.chat.repository.SellerChatRepository;
 import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
 import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.member.domain.Member;
-import team.dankookie.server4983.scheduler.repository.SchedulerRepository;
-import team.dankookie.server4983.scheduler.service.SchedulerService;
 import team.dankookie.server4983.sms.service.CoolSmsService;
 
 @Component
@@ -53,8 +51,6 @@ public class ChatLogicHandler {
   private final ChatRoomRepository chatRoomRepository;
   private final FcmService fcmService;
   private final LockerRepository lockerRepository;
-  private final SchedulerService schedulerService;
-  private final SchedulerRepository schedulerRepository;
   private final BuyerChatRepository buyerChatRepository;
   private final SellerChatRepository sellerChatRepository;
   private final CoolSmsService smsService;
@@ -79,8 +75,8 @@ public class ChatLogicHandler {
         if (chatRoom.getInteractStep() >= 1) {
           throw new ChatException("이미 거래 요청을 보냈습니다.");
         }
-        String sellerMessage = getMessage(BOOK_PURCHASE_START, UserRole.SELLER, chatRoom );
-        String buyerMessage = getMessage(BOOK_PURCHASE_START, UserRole.BUYER, chatRoom );
+        String sellerMessage = getMessage(BOOK_PURCHASE_START, UserRole.SELLER, chatRoom);
+        String buyerMessage = getMessage(BOOK_PURCHASE_START, UserRole.BUYER, chatRoom);
 
         saveSellerChat(chatRoom, BOOK_PURCHASE_START_SELLER, sellerMessage);
         BuyerChat buyerChat = saveBuyerChat(chatRoom, BOOK_PURCHASE_START_BUYER,
@@ -125,9 +121,6 @@ public class ChatLogicHandler {
         smsService.sendAdminToSms(
             "관리자님 입금을 확인해주세요! \n판매글 ID는 " + chatRoom.getUsedBook().getId() + " 입니다.");
 
-//                schedulerService.setSchedulerAboutSetPlacement(chatRoom);
-//                schedulerService.setSchedulerAboutNotDeposit(chatRoom,
-
         return List.of(sellerChat.toChatMessageResponse());
       }
 
@@ -150,9 +143,6 @@ public class ChatLogicHandler {
         sendNotification(buyer, buyerMessage);
 
         chatRoom.setInteractStep(999);
-//        schedulerService.setSchedulerAboutSetPlacement(chatRoom);
-//        schedulerService.setSchedulerAboutNotDeposit(chatRoom);
-
 
         return List.of(sellerChat.toChatMessageResponse());
       }
@@ -172,8 +162,6 @@ public class ChatLogicHandler {
         sendNotification(buyer, buyerMessage);
 
         chatRoom.setInteractStep(3);
-//        schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom, BUYER_CASE_1);
-//        schedulerService.setSchedulerAboutNotReply(chatRoom);
         return List.of();
       }
       case BOOK_PLACEMENT_SET -> { // 서적 배치할 사물함 선택
@@ -189,9 +177,6 @@ public class ChatLogicHandler {
         sendNotification(seller, sellerMessage);
 
         chatRoom.setInteractStep(4);
-//        schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom, SELLER_CASE_2);
-//        schedulerService.setSchedulerAboutNotComplete(chatRoom,
-//            chatRoom.getUsedBook().getTradeAvailableDatetime(), locker);
 
         return List.of();
       }
@@ -211,9 +196,6 @@ public class ChatLogicHandler {
         chatRoom.setInteractStep(5);
 
         return List.of();
-//        schedulerService.setSchedulerAboutDontPressDone(chatRoom,
-//            chatRoom.getUsedBook().getTradeAvailableDatetime());
-//        schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom, SELLER_CASE_3);
       }
       case TRADE_COMPLETE -> { // SELLCHAT_6 거래 완료
         if (chatRoom.getInteractStep() >= 6) {
@@ -234,8 +216,6 @@ public class ChatLogicHandler {
         chatRoom.setInteractStep(6);
 
         return List.of(buyerChat.toChatMessageResponse());
-//        schedulerRepository.deleteByChatRoomAndScheduleType(chatRoom, BUYER_CASE_2);
-//        sendNotification(seller, tradeCompleteSellerMessage);
       }
 
     }
@@ -244,7 +224,8 @@ public class ChatLogicHandler {
   }
 
   private static void ifChattingAlreadyFinishedThrowError(ChatRoom chatRoom) {
-    if (chatRoom.getInteractStep() == 999 || chatRoom.getInteractStep() == 1000 || chatRoom.getInteractStep() == 1001) {
+    if (chatRoom.getInteractStep() == 999 || chatRoom.getInteractStep() == 1000
+        || chatRoom.getInteractStep() == 1001) {
       throw new ChatException("이미 종료된 거래입니다.");
     }
   }
