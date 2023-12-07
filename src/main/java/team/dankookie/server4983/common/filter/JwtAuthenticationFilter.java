@@ -54,6 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     log.info("requestURI: {}", requestURI);
 
     if (EXCLUDE_URI.stream().anyMatch(requestURI::startsWith)) {
+      log.info("exclude uri: {}", requestURI);
       filterChain.doFilter(request, response);
       return;
     }

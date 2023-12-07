@@ -2,6 +2,7 @@ package team.dankookie.server4983.member.service;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import team.dankookie.server4983.member.repository.memberImage.MemberImageReposi
 import team.dankookie.server4983.s3.dto.S3Response;
 import team.dankookie.server4983.s3.service.S3UploadService;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class MemberService {
@@ -39,6 +41,8 @@ public class MemberService {
   }
 
   public boolean login(LoginRequest loginRequest) {
+
+    log.info("loginRequest: {}", loginRequest);
 
     Member member = memberRepository.findByStudentId(loginRequest.studentId())
         .orElseThrow(() -> new LoginFailedException("존재하지 않는 학번입니다."));
