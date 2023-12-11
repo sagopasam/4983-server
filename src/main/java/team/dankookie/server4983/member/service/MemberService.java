@@ -76,8 +76,8 @@ public class MemberService {
   }
 
   @Transactional
-  public boolean changeMemberTemporaryPassword(MemberTemporaryPasswordChangeRequest request, AccessToken accessToken) {
-    Member member = memberRepository.findByStudentId(accessToken.studentId())
+  public boolean changeMemberTemporaryPassword(MemberTemporaryPasswordChangeRequest request) {
+    Member member = memberRepository.findByStudentId(request.studentId())
         .orElseThrow(
             () -> new IllegalArgumentException("존재하지 않는 학번입니다.")
         );

@@ -216,7 +216,7 @@ class MemberServiceTest extends BaseServiceTest {
         .thenReturn(Optional.of(member));
 
     //when
-    boolean isChanged = memberService.changeMemberTemporaryPassword(request, accessToken);
+    boolean isChanged = memberService.changeMemberTemporaryPassword(request);
 
     //then
     assertThat(isChanged).isTrue();

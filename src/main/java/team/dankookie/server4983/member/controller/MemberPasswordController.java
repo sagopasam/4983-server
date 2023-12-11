@@ -29,8 +29,8 @@ public class MemberPasswordController {
     }
 
     @PatchMapping("/password")
-    public ResponseEntity<Void> changePassword(@RequestBody MemberTemporaryPasswordChangeRequest request, AccessToken accessToken) {
-        boolean isChanged = memberService.changeMemberTemporaryPassword(request, accessToken);
+    public ResponseEntity<Void> changePassword(@RequestBody MemberTemporaryPasswordChangeRequest request) {
+        boolean isChanged = memberService.changeMemberTemporaryPassword(request);
         return ResponseEntity.ok().build();
     }
 
