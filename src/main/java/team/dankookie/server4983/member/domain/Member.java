@@ -122,6 +122,7 @@ public class Member extends BaseEntity implements UserDetails {
         this.nickname = member.nickname();
         this.accountBank = member.accountBank();
         this.accountNumber = member.accountNumber();
+        this.phoneNumber = member.phoneNumber();
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
