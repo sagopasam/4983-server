@@ -166,12 +166,14 @@ public class MemberService {
 
   @Transactional
   public void deleteMyPageProfileImage(MemberImageRequest memberImageRequest, String studentId) {
+    final String BASE_IMAGE = "https://4983-s3.s3.ap-northeast-2.amazonaws.com/baseImage.png";
+
     String imageUrl = memberImageRequest.imageUrl();
     String imageKey = imageUrl.split(uploadService.getS3BucketUrl())[1];
 
-    uploadService.deleteFile(imageKey);
-
-    final String BASE_IMAGE = "https://4983-s3.s3.ap-northeast-2.amazonaws.com/baseImage.png";
+    if (!imageUrl.equals(BASE_IMAGE)) {
+      uploadService.deleteFile(imageKey);
+    }
 
     Member member = findMemberByStudentId(studentId);
     member.setImageUrl(BASE_IMAGE);
@@ -191,12 +193,13 @@ public class MemberService {
   }
 
   @Transactional
-  public boolean changeMemberPassword(MemberPasswordChangeRequest request, AccessToken accessToken) {
+  public boolean changeMemberPassword(MemberPasswordChangeRequest request,
+      AccessToken accessToken) {
     entityManager.clear();
     Member findMember = memberRepository.findByStudentId(accessToken.studentId())
-            .orElseThrow(
-                    () -> new IllegalArgumentException("존재하지 않는 학번입니다.")
-            );
+        .orElseThrow(
+            () -> new IllegalArgumentException("존재하지 않는 학번입니다.")
+        );
     findMember.changePassword(passwordEncoder.encode(request.password()));
     return true;
   }
