@@ -6,7 +6,7 @@ spring:
       - submodule/application-db-dev.yaml
 
   jpa:
-    show-sql: true
+#    show-sql: true
     hibernate:
       ddl-auto: create
     defer-datasource-initialization: true

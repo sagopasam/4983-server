@@ -14,7 +14,7 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
-#    properties:
-#      hibernate:
-#        format_sql: true
+    properties:
+      hibernate:
+        format_sql: true
   sql.init.mode: always
