@@ -315,7 +315,7 @@ public class ChatLogicHandler {
           }
           case BUYER -> {
             return
-                String.format("아쉽게도 '%s' 님과의 서적 거래가 \n" +
+                String.format("아쉽게도 '%s' 님과의 서적 거래가 " +
                               "이루어지지 못했습니다. \n", chatRoom.getSeller().getNickname());
           }
         }
