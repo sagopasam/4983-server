@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,7 @@ import team.dankookie.server4983.chat.dto.QChatMessageResponse;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.domain.QMember;
 
+@Slf4j
 @RequiredArgsConstructor
 public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
 
@@ -218,6 +220,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
     chatListResponseList.sort(Comparator.comparing(ChatListResponse::createdAt,
         Comparator.nullsLast(Comparator.reverseOrder())));
 
+    log.info("chatListResponseList: {}", chatListResponseList);
     return chatListResponseList;
   }
 
