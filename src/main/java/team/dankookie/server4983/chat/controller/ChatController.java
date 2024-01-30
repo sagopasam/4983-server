@@ -5,6 +5,7 @@ import javax.security.auth.login.AccountException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,6 +71,14 @@ public class ChatController {
       @RequestBody ChatStopRequest chatStopRequest, AccessToken accessToken) {
 
     return ResponseEntity.ok(chatService.stopTrade(chatStopRequest, accessToken));
+  }
+
+  @DeleteMapping("/api/v1/chat-room/{chatRoomId}")
+  public ResponseEntity<Void> deleteUsedBookByChatRoomId(@PathVariable Long chatRoomId,
+      AccessToken accessToken) {
+    chatService.deleteUsedBookByChatRoomIdWhenSellerCanceledChat(chatRoomId, accessToken);
+
+    return ResponseEntity.noContent().build();
   }
 
 //  @GetMapping("/chat-room/{chatRoom}")

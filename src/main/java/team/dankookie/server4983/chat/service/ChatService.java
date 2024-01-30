@@ -234,4 +234,24 @@ public class ChatService {
       throw new ChatException("잘못된 타입입니다.");
     }
   }
+
+  @Transactional
+  public void deleteUsedBookByChatRoomIdWhenSellerCanceledChat(Long chatRoomId,
+      AccessToken accessToken) {
+    String studentId = accessToken.studentId();
+
+    ChatRoom findChatRoom = findByChatRoomId(chatRoomId);
+
+    if (findChatRoom.getInteractStep() < 999) {
+      throw new ChatException("거래가 진행중인 채팅방은 삭제할 수 없습니다.");
+    }
+
+    if (findChatRoom.getBuyer().getStudentId().equals(studentId)) {
+      throw new ChatException("판매자만 책을 삭제할 수 있습니다.");
+    }
+
+    findChatRoom.getUsedBook().setIsDeletedTrue();
+  }
+
+
 }
