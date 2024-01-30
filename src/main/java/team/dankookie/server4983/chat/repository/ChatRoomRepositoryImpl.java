@@ -160,7 +160,8 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                                 .from(bookImage)
                                 .where(bookImage.usedBook.id.eq(usedBook.id))
                         ))
-                    ))
+                    ),
+                usedBook.id)
         ).from(sellerChat)
         .innerJoin(chatRoom).on(sellerChat.chatRoom.eq(chatRoom))
         .innerJoin(usedBook).on(chatRoom.usedBook.eq(usedBook))
@@ -196,7 +197,8 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                                 .from(bookImage)
                                 .where(bookImage.usedBook.id.eq(usedBook.id))
                         ))
-                    ))
+                    ),
+                usedBook.id)
         ).from(buyerChat)
         .innerJoin(chatRoom).on(buyerChat.chatRoom.eq(chatRoom))
         .innerJoin(usedBook).on(chatRoom.usedBook.eq(usedBook))

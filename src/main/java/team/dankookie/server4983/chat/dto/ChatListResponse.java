@@ -9,7 +9,8 @@ public record ChatListResponse(
     String message,
     LocalDateTime createdAt,
     boolean isRead,
-    String imageUrl
+    String imageUrl,
+    long usedBookId
 ) {
     public static ChatListResponse of(
         long chatRoomId,
@@ -17,7 +18,8 @@ public record ChatListResponse(
         String message,
         LocalDateTime createdAt,
         boolean isRead,
-        String imageUrl
+        String imageUrl,
+        long usedBookId
     ) {
         return new ChatListResponse(
             chatRoomId,
@@ -25,18 +27,20 @@ public record ChatListResponse(
             message,
             createdAt,
             isRead,
-            imageUrl
+            imageUrl,
+            usedBookId
         );
     }
 
     @QueryProjection
     public ChatListResponse(long chatRoomId, String usedBookName, String message,
-        LocalDateTime createdAt, boolean isRead, String imageUrl) {
+        LocalDateTime createdAt, boolean isRead, String imageUrl, long usedBookId) {
         this.chatRoomId = chatRoomId;
         this.usedBookName = usedBookName;
         this.message = message;
         this.createdAt = createdAt;
         this.isRead = isRead;
         this.imageUrl = imageUrl;
+        this.usedBookId = usedBookId;
     }
 }

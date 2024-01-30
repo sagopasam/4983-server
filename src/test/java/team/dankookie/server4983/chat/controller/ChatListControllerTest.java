@@ -30,8 +30,8 @@ class ChatListControllerTest extends BaseControllerTest {
     @Test
     void accessToken으로_유저의_채팅_리스트를_리턴한다() throws Exception {
         //given
-        ChatListResponse chatListResponse1 = ChatListResponse.of(1L, "사회과학통계방법", "안녕하세요", LocalDateTime.of(2023,9,22,12,30,12), false, "imageUrl");
-        ChatListResponse chatListResponse2 = ChatListResponse.of(2L, "컴퓨터공학개론", "테스트입니다.", LocalDateTime.of(2023,5,10,12,30,12), true, "imageUrl");
+        ChatListResponse chatListResponse1 = ChatListResponse.of(1L, "사회과학통계방법", "안녕하세요", LocalDateTime.of(2023,9,22,12,30,12), false, "imageUrl", 1L);
+        ChatListResponse chatListResponse2 = ChatListResponse.of(2L, "컴퓨터공학개론", "테스트입니다.", LocalDateTime.of(2023,5,10,12,30,12), true, "imageUrl", 1L);
 
         String accessToken = jwtTokenUtils.generateJwtToken("studentId", TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
@@ -55,7 +55,9 @@ class ChatListControllerTest extends BaseControllerTest {
                                         fieldWithPath("[].message").description("채팅방의 마지막 메시지"),
                                         fieldWithPath("[].createdAt").description("채팅방의 마지막 메시지 시간"),
                                         fieldWithPath("[].isRead").description("채팅방의 읽음 여부"),
-                                        fieldWithPath("[].imageUrl").description("채팅방의 이미지 url")
+                                        fieldWithPath("[].imageUrl").description("채팅방의 이미지 url"),
+                                    fieldWithPath("[].usedBookId").description("책의 id")
+
                                 )
                         )
                 );
