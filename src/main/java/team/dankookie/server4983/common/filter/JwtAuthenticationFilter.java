@@ -51,7 +51,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     String requestURI = request.getRequestURI();
 
-    log.info("requestURI: {}", requestURI);
+    if (!requestURI.contains("/docs/index.html")) {
+      log.info("requestURI: {}", requestURI);
+    }
 
     if (EXCLUDE_URI.stream().anyMatch(requestURI::startsWith)) {
       log.info("exclude uri: {}", requestURI);
