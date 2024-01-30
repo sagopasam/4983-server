@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team.dankookie.server4983.chat.dto.ChatMessageResponse;
+import team.dankookie.server4983.chat.dto.ChatMessageResponseWithUsedBookId;
 import team.dankookie.server4983.chat.dto.ChatRequest;
 import team.dankookie.server4983.chat.dto.ChatRoomRequest;
 import team.dankookie.server4983.chat.dto.ChatRoomResponse;
@@ -65,10 +66,10 @@ public class ChatController {
   }
 
   @PostMapping("/stop")
-  public ResponseEntity<Void> stopTrade(@RequestBody ChatStopRequest chatStopRequest, AccessToken accessToken) {
-    chatService.stopTrade(chatStopRequest, accessToken);
+  public ResponseEntity<List<ChatMessageResponseWithUsedBookId>> stopTrade(
+      @RequestBody ChatStopRequest chatStopRequest, AccessToken accessToken) {
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok(chatService.stopTrade(chatStopRequest, accessToken));
   }
 
 //  @GetMapping("/chat-room/{chatRoom}")

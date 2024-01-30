@@ -27,6 +27,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
 import team.dankookie.server4983.chat.constant.ContentType;
 import team.dankookie.server4983.chat.dto.ChatMessageResponse;
+import team.dankookie.server4983.chat.dto.ChatMessageResponseWithUsedBookId;
 import team.dankookie.server4983.chat.dto.ChatRequest;
 import team.dankookie.server4983.chat.dto.ChatRoomRequest;
 import team.dankookie.server4983.chat.dto.ChatRoomResponse;
@@ -46,7 +47,7 @@ class ChatControllerTest extends BaseControllerTest {
     //given
     final long usedBookId = 1L;
     final String accessToken = jwtTokenUtils.generateJwtToken("studentId",
-         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     final ChatRoomRequest chatRoomRequest = ChatRoomRequest.of(usedBookId);
 
@@ -81,7 +82,7 @@ class ChatControllerTest extends BaseControllerTest {
     //given
     final long chatRoomId = 1L;
     final String accessToken = jwtTokenUtils.generateJwtToken("studentId",
-         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     ChatMessageResponse response1 = ChatMessageResponse.of(
         chatRoomId,
@@ -131,7 +132,7 @@ class ChatControllerTest extends BaseControllerTest {
     final ChatRequest chatRequest = ChatRequest.of(1L, BOOK_PURCHASE_REQUEST);
 
     final String accessToken = jwtTokenUtils.generateJwtToken("studentId",
-         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     ChatMessageResponse response = ChatMessageResponse.of(
         1L,
@@ -177,7 +178,7 @@ class ChatControllerTest extends BaseControllerTest {
     //given
     final long chatRoomId = 1L;
     final String accessToken = jwtTokenUtils.generateJwtToken("studentId",
-         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
 
     ChatMessageResponse response = ChatMessageResponse.of(
         1L,
@@ -224,7 +225,14 @@ class ChatControllerTest extends BaseControllerTest {
     ChatStopRequest request = ChatStopRequest.builder().chatRoomId(1L).build();
 
     final String accessToken = jwtTokenUtils.generateJwtToken("studentId",
-         TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+        TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+
+    when(chatService.stopTrade(any(ChatStopRequest.class), any(AccessToken.class)))
+        .thenReturn(
+            List.of(ChatMessageResponseWithUsedBookId.of(1L, "test",
+                ContentType.BOOK_PURCHASE_REQUEST_SELLER,
+                LocalDateTime.now(), 1L))
+        );
 
     //when
     ResultActions resultActions = mockMvc.perform(post(API + "/chat-room/stop")
@@ -242,6 +250,13 @@ class ChatControllerTest extends BaseControllerTest {
                 ),
                 requestFields(
                     fieldWithPath("chatRoomId").description("채팅방 id")
+                ),
+                responseFields(
+                    fieldWithPath("[].chatRoomId").description("채팅방 id"),
+                    fieldWithPath("[].message").description("메시지"),
+                    fieldWithPath("[].contentType").description("채팅 타입"),
+                    fieldWithPath("[].createdAt").description("채팅을 보낸 시간"),
+                    fieldWithPath("[].usedBookId").description("중고서적 id")
                 )
             ));
 

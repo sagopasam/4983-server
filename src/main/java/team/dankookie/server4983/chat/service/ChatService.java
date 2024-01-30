@@ -1,6 +1,14 @@
 package team.dankookie.server4983.chat.service;
 
+import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PURCHASE_START;
+import static team.dankookie.server4983.chat.constant.ContentType.CUSTOM_BUYER;
+import static team.dankookie.server4983.chat.constant.ContentType.CUSTOM_SELLER;
+import static team.dankookie.server4983.chat.domain.ChatRoom.buildChatRoom;
+
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Optional;
+import javax.security.auth.login.AccountException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +19,14 @@ import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.domain.SellerChat;
-import team.dankookie.server4983.chat.dto.*;
+import team.dankookie.server4983.chat.dto.ChatListResponse;
+import team.dankookie.server4983.chat.dto.ChatMessageRequest;
+import team.dankookie.server4983.chat.dto.ChatMessageResponse;
+import team.dankookie.server4983.chat.dto.ChatMessageResponseWithUsedBookId;
+import team.dankookie.server4983.chat.dto.ChatRequest;
+import team.dankookie.server4983.chat.dto.ChatRoomRequest;
+import team.dankookie.server4983.chat.dto.ChatRoomResponse;
+import team.dankookie.server4983.chat.dto.ChatStopRequest;
 import team.dankookie.server4983.chat.exception.ChatException;
 import team.dankookie.server4983.chat.handler.ChatBotAdmin;
 import team.dankookie.server4983.chat.handler.ChatLogicHandler;
@@ -23,13 +38,6 @@ import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.repository.MemberRepository;
 import team.dankookie.server4983.member.service.MemberService;
-
-import javax.security.auth.login.AccountException;
-import java.util.List;
-import java.util.Optional;
-
-import static team.dankookie.server4983.chat.constant.ContentType.*;
-import static team.dankookie.server4983.chat.domain.ChatRoom.buildChatRoom;
 
 @Service
 @RequiredArgsConstructor
@@ -137,7 +145,8 @@ public class ChatService {
       }
     } else {
       chatRoomRepository.updateBuyerChattingToRead(chatRoomId);
-      return chatRoomRepository.findChatMessageByChatroomIdWithBuyerStudentId(chatRoomId, studentId);
+      return chatRoomRepository.findChatMessageByChatroomIdWithBuyerStudentId(chatRoomId,
+          studentId);
     }
   }
 
@@ -170,21 +179,14 @@ public class ChatService {
   }
 
   @Transactional
-  public void stopTrade(ChatStopRequest chatStopRequest, AccessToken accessToken) {
+  public List<ChatMessageResponseWithUsedBookId> stopTrade(ChatStopRequest chatStopRequest,
+      AccessToken accessToken) {
     String studentId = accessToken.studentId();
 
     ChatRoom chatRoom = findByChatRoomId(chatStopRequest.getChatRoomId());
 
     Member seller = chatRoomRepository.getSeller(chatStopRequest.getChatRoomId());
     Member buyer = chatRoomRepository.getBuyer(chatStopRequest.getChatRoomId());
-
-    if (seller.getStudentId().equals(studentId)) {
-      chatBotAdmin.tradeStopBySeller(chatRoom, seller, buyer);
-    } else if (buyer.getStudentId().equals(studentId)) {
-      chatBotAdmin.tradeStopByBuyer(chatRoom, seller, buyer);
-    } else {
-      throw new ChatException("해당 채팅방에 존재하지 않는 회원입니다.");
-    }
 
     if (chatRoom.getInteractStep() > 100 || chatRoom.getInteractStep() == 6) {
       throw new ChatException("이미 거래가 종료되었습니다.");
@@ -194,6 +196,14 @@ public class ChatService {
     }
 
     chatRoom.setInteractStep(999);
+
+    if (seller.getStudentId().equals(studentId)) {
+      return chatBotAdmin.tradeStopBySeller(chatRoom, seller, buyer);
+    } else if (buyer.getStudentId().equals(studentId)) {
+      return chatBotAdmin.tradeStopByBuyer(chatRoom, seller, buyer);
+    } else {
+      throw new ChatException("해당 채팅방에 존재하지 않는 회원입니다.");
+    }
   }
 
   public void releaseLocker(ChatRoom chatRoom) {

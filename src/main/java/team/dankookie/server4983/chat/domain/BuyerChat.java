@@ -22,6 +22,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import team.dankookie.server4983.chat.constant.ContentType;
 import team.dankookie.server4983.chat.dto.ChatMessageResponse;
+import team.dankookie.server4983.chat.dto.ChatMessageResponseWithUsedBookId;
 
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -75,6 +76,16 @@ public class BuyerChat {
             message,
             contentType,
             createdAt
+        );
+    }
+
+    public ChatMessageResponseWithUsedBookId toChatMessageResponseWithUsedBookId(Long usedBookId) {
+        return ChatMessageResponseWithUsedBookId.of(
+            chatRoom.getChatRoomId(),
+            message,
+            contentType,
+            createdAt,
+            usedBookId
         );
     }
 

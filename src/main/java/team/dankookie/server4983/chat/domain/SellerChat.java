@@ -22,6 +22,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import team.dankookie.server4983.chat.constant.ContentType;
 import team.dankookie.server4983.chat.dto.ChatMessageResponse;
+import team.dankookie.server4983.chat.dto.ChatMessageResponseWithUsedBookId;
 
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,55 +32,67 @@ import team.dankookie.server4983.chat.dto.ChatMessageResponse;
 @Entity
 public class SellerChat {
 
-    @Id @GeneratedValue
-    private Long id;
+  @Id
+  @GeneratedValue
+  private Long id;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private ContentType contentType;
+  @NotNull
+  @Enumerated(EnumType.STRING)
+  private ContentType contentType;
 
-    @ColumnDefault("false")
-    @Builder.Default
-    private Boolean isRead = false;
+  @ColumnDefault("false")
+  @Builder.Default
+  private Boolean isRead = false;
 
-    @Column(nullable = false)
-    private String message;
+  @Column(nullable = false)
+  private String message;
 
-    @Column(updatable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+  @Column(updatable = false)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+  @CreationTimestamp
+  private LocalDateTime createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_room_id")
-    private ChatRoom chatRoom;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "chat_room_id")
+  private ChatRoom chatRoom;
 
-    public static SellerChat buildSellerChat(String message , ContentType contentType) {
-        return SellerChat.builder()
-                .message(message)
-                .contentType(contentType)
-                .build();
-    }
+  public static SellerChat buildSellerChat(String message, ContentType contentType) {
+    return SellerChat.builder()
+        .message(message)
+        .contentType(contentType)
+        .build();
+  }
 
-    public static SellerChat buildSellerChat(String message , ContentType contentType, ChatRoom chatRoom) {
-        return SellerChat.builder()
-                .message(message)
-                .contentType(contentType)
-                .chatRoom(chatRoom)
-                .build();
-    }
+  public static SellerChat buildSellerChat(String message, ContentType contentType,
+      ChatRoom chatRoom) {
+    return SellerChat.builder()
+        .message(message)
+        .contentType(contentType)
+        .chatRoom(chatRoom)
+        .build();
+  }
 
-    public ChatMessageResponse toChatMessageResponse() {
-        return ChatMessageResponse.of(
-            chatRoom.getChatRoomId(),
-            message,
-            contentType,
-            createdAt
-        );
-    }
+  public ChatMessageResponse toChatMessageResponse() {
+    return ChatMessageResponse.of(
+        chatRoom.getChatRoomId(),
+        message,
+        contentType,
+        createdAt
+    );
+  }
 
-    public void updateIsReadTrue() {
-        this.isRead = true;
-    }
+  public ChatMessageResponseWithUsedBookId toChatMessageResponseWithUsedBookId(long usedBookId) {
+    return ChatMessageResponseWithUsedBookId.of(
+        chatRoom.getChatRoomId(),
+        message,
+        contentType,
+        createdAt,
+        usedBookId
+    );
+  }
+
+  public void updateIsReadTrue() {
+    this.isRead = true;
+  }
 
 }
