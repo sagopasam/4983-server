@@ -44,7 +44,7 @@ public class NoticeService {
   }
 
   public Page<Notice> getNoticeList(String searchKeyword, int page) {
-    PageRequest pageRequest = PageRequest.of(page, 20);
+    PageRequest pageRequest = PageRequest.of(page, 12);
 
     return noticeRepository.findAllNoticeByTitleContains(searchKeyword, pageRequest);
 
