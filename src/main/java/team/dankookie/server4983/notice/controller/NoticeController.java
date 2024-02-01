@@ -18,7 +18,7 @@ import team.dankookie.server4983.notice.service.NoticeService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/notice")
+@RequestMapping("/api/v1/admin/notice")
 public class NoticeController {
 
   private final NoticeService noticeService;
