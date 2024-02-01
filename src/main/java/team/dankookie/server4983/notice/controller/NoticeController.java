@@ -54,9 +54,9 @@ public class NoticeController {
   @PatchMapping("/{id}")
   public ResponseEntity<Void> updateNotice(
       @PathVariable("id") Long id,
-      @RequestPart("mainFile") MultipartFile mainFile,
-      @RequestPart("noticeFile") MultipartFile noticeFile,
-      @RequestPart("noticeWindowFile") MultipartFile noticeWindowFile,
+      @RequestPart(value = "mainFile", required = false) MultipartFile mainFile,
+      @RequestPart(value = "noticeFile", required = false) MultipartFile noticeFile,
+      @RequestPart(value = "noticeWindowFile", required = false) MultipartFile noticeWindowFile,
       @RequestPart("title") String title,
       @RequestPart("startDate") LocalDate startDate,
       @RequestPart("endDate") LocalDate endDate
