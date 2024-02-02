@@ -17,7 +17,7 @@ public class NoticeRepositoryImpl implements NoticeRepositoryCustom {
   public List<Notice> findAllByNoticeStartDateBeforeAndNoticeEndDateAfter(LocalDate date) {
     return jpaQueryFactory
         .selectFrom(notice)
-        .where(notice.startDate.goe(date).and(notice.endDate.loe(date)))
+        .where(notice.startDate.loe(date).and(notice.endDate.goe(date)))
         .fetch();
   }
 }
