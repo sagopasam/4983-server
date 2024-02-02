@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import team.dankookie.server4983.notice.domain.Notice;
+import team.dankookie.server4983.notice.dto.NoticeDetailResponse;
 import team.dankookie.server4983.notice.dto.NoticeResponse;
 import team.dankookie.server4983.notice.repository.NoticeRepository;
 import team.dankookie.server4983.s3.service.S3UploadService;
@@ -83,18 +84,25 @@ public class NoticeService {
   }
 
   public List<NoticeResponse> getMainNotice() {
-    return noticeRepository.findAll().stream().map(NoticeResponse::ofMainBanner).toList();
+    LocalDate now = LocalDate.now();
+
+    return noticeRepository.findAllByNoticeStartDateBeforeAndNoticeEndDateAfter(now).stream()
+        .map(NoticeResponse::ofMainBanner).toList();
 
   }
 
   public List<NoticeResponse> getNoticeList() {
-    return noticeRepository.findAll().stream().map(NoticeResponse::ofNoticeBanner).toList();
+    LocalDate now = LocalDate.now();
+
+    return noticeRepository.findAllByNoticeStartDateBeforeAndNoticeEndDateAfter(now).stream()
+        .map(NoticeResponse::ofNoticeBanner).toList();
   }
 
-  public String getDetailNoticeImageList(Long id) {
-    return noticeRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("해당 공지사항이 존재하지 않습니다."))
-        .getNoticeWindowImageUrl();
+  public NoticeDetailResponse getDetailNoticeImageList(Long id) {
+    Notice notice = noticeRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("해당 공지사항이 존재하지 않습니다."));
+
+    return NoticeDetailResponse.of(notice.getTitle(), notice.getMainBannerImageUrl());
   }
 
 }

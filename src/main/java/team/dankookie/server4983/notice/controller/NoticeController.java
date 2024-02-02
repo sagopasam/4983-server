@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import team.dankookie.server4983.notice.dto.NoticeDetailResponse;
 import team.dankookie.server4983.notice.dto.NoticeResponse;
 import team.dankookie.server4983.notice.service.NoticeService;
 
@@ -28,7 +29,7 @@ public class NoticeController {
   }
 
   @GetMapping("/detail/{id}")
-  public ResponseEntity<String> getNoticeDetail(
+  public ResponseEntity<NoticeDetailResponse> getNoticeDetail(
       @PathVariable("id") Long id
   ) {
     return ResponseEntity.ok(noticeService.getDetailNoticeImageList(id));

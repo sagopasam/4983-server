@@ -5,8 +5,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import team.dankookie.server4983.notice.domain.Notice;
 
-public interface NoticeRepository extends JpaRepository<Notice, Long> {
+public interface NoticeRepository extends JpaRepository<Notice, Long>, NoticeRepositoryCustom {
 
   Page<Notice> findAllNoticeByTitleContains(String title, PageRequest pageRequest);
+
 
 }
