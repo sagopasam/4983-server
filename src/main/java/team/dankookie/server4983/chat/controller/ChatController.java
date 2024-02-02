@@ -73,7 +73,7 @@ public class ChatController {
     return ResponseEntity.ok(chatService.stopTrade(chatStopRequest, accessToken));
   }
 
-  @DeleteMapping("/api/v1/chat-room/{chatRoomId}")
+  @DeleteMapping("/{chatRoomId}")
   public ResponseEntity<Void> deleteUsedBookByChatRoomId(@PathVariable Long chatRoomId,
       AccessToken accessToken) {
     chatService.deleteUsedBookByChatRoomIdWhenSellerCanceledChat(chatRoomId, accessToken);
