@@ -344,8 +344,6 @@ class MemberServiceTest extends BaseServiceTest {
         .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/test.png")
         .build();
 
-    when(uploadService.getS3BucketUrl())
-        .thenReturn("https://4983-s3.s3.ap-northeast-2.amazonaws.com/");
 
     when(memberRepository.findByStudentId("studentId"))
         .thenReturn(Optional.of(findMember));
