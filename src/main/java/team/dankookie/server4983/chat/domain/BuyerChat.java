@@ -70,6 +70,14 @@ public class BuyerChat {
                 .build();
     }
 
+    public static BuyerChat buildBuyerChatAndIsReadTrue(String message , ContentType contentType, ChatRoom chatRoom) {
+        return BuyerChat.builder()
+            .message(message)
+            .contentType(contentType)
+            .chatRoom(chatRoom)
+            .isRead(true)
+            .build();
+    }
     public ChatMessageResponse toChatMessageResponse() {
         return ChatMessageResponse.of(
             chatRoom.getChatRoomId(),

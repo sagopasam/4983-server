@@ -41,9 +41,9 @@ public class ChatBotAdmin {
         String messageCase1_buyer = String.format("'%s'님의 불가피한 사정으로 거래를 중단하셨습니다. \n" +
                                                   "거래가 이루어지지 못하였다는 점 양해 부탁드리며, 앞으로 원활한 거래를 위해 더욱 노력하겠습니다."
             , seller.getNickname());
-        SellerChat sellerChatCase1 = SellerChat.buildSellerChat(messageCase1_seller,
+        SellerChat sellerChatCase1 = SellerChat.buildSellerChatAndIsReadTrue(messageCase1_seller,
             TRADE_STOP_REQUEST_BEFORE_DEPOSIT_SELLER, chatRoom);
-        BuyerChat buyerChatCase1 = BuyerChat.buildBuyerChat(messageCase1_buyer,
+        BuyerChat buyerChatCase1 = BuyerChat.buildBuyerChatAndIsReadTrue(messageCase1_buyer,
             TRADE_STOP_REQUEST_BEFORE_DEPOSIT_BUYER, chatRoom);
         chatRoom.addSellerChat(sellerChatCase1);
         chatRoom.addBuyerChat(buyerChatCase1);
@@ -69,9 +69,9 @@ public class ChatBotAdmin {
                                                   +
                                                   "입금해주신 판매 금액은 해당 계좌로 2~3일내 환불 조치가 이루어집니다.",
             seller.getNickname());
-        SellerChat sellerChatCase2 = SellerChat.buildSellerChat(messageCase2_seller,
+        SellerChat sellerChatCase2 = SellerChat.buildSellerChatAndIsReadTrue(messageCase2_seller,
             TRADE_STOP_REQUEST_AFTER_DEPOSIT_SELLER, chatRoom);
-        BuyerChat buyerChatCase2 = BuyerChat.buildBuyerChat(messageCase2_buyer,
+        BuyerChat buyerChatCase2 = BuyerChat.buildBuyerChatAndIsReadTrue(messageCase2_buyer,
             TRADE_STOP_REQUEST_AFTER_DEPOSIT_BUYER, chatRoom);
         chatRoom.addSellerChat(sellerChatCase2);
         chatRoom.addBuyerChat(buyerChatCase2);
@@ -105,9 +105,9 @@ public class ChatBotAdmin {
         String messageCase1_buyer = "거래 중지 완료되었습니다.\n" +
                                     "판매자분께 거래 중지 안내 드렸습니다.\n" +
                                     "앞으로의 원활한 거래를 위해 더욱 노력하겠습니다.";
-        SellerChat sellerChatCase1 = SellerChat.buildSellerChat(messageCase1_seller,
+        SellerChat sellerChatCase1 = SellerChat.buildSellerChatAndIsReadTrue(messageCase1_seller,
             TRADE_STOP_REQUEST_BEFORE_DEPOSIT_SELLER, chatRoom);
-        BuyerChat buyerChatCase1 = BuyerChat.buildBuyerChat(messageCase1_buyer,
+        BuyerChat buyerChatCase1 = BuyerChat.buildBuyerChatAndIsReadTrue(messageCase1_buyer,
             TRADE_STOP_REQUEST_BEFORE_DEPOSIT_BUYER, chatRoom);
         chatRoom.addSellerChat(sellerChatCase1);
         chatRoom.addBuyerChat(buyerChatCase1);
@@ -133,9 +133,9 @@ public class ChatBotAdmin {
             "아래 환불 정책에 따라 환불금액을 확인해주세요!\n" +
             "서적배치전: 100% 환불\n" +
             "서적배치후: 70% 환불\n";
-        SellerChat sellerChatCase2 = SellerChat.buildSellerChat(messageCase2_seller,
+        SellerChat sellerChatCase2 = SellerChat.buildSellerChatAndIsReadTrue(messageCase2_seller,
             TRADE_STOP_REQUEST_AFTER_DEPOSIT_SELLER, chatRoom);
-        BuyerChat buyerChatCase2 = BuyerChat.buildBuyerChat(messageCase2_buyer,
+        BuyerChat buyerChatCase2 = BuyerChat.buildBuyerChatAndIsReadTrue(messageCase2_buyer,
             TRADE_STOP_REQUEST_AFTER_DEPOSIT_BUYER, chatRoom);
         chatRoom.addSellerChat(sellerChatCase2);
         chatRoom.addBuyerChat(buyerChatCase2);
@@ -164,9 +164,9 @@ public class ChatBotAdmin {
             "\n" +
             "서적배치전: 100% 환불\n" +
             "서적배치후: 70% 환불\n";
-        SellerChat sellerChatCase3 = SellerChat.buildSellerChat(messageCase3_seller,
+        SellerChat sellerChatCase3 = SellerChat.buildSellerChatAndIsReadTrue(messageCase3_seller,
             TRADE_STOP_REQUEST_AFTER_BOOK_PLACEMENT_SELLER, chatRoom);
-        BuyerChat buyerChatCase3 = BuyerChat.buildBuyerChat(messageCase3_buyer,
+        BuyerChat buyerChatCase3 = BuyerChat.buildBuyerChatAndIsReadTrue(messageCase3_buyer,
             TRADE_STOP_REQUEST_AFTER_BOOK_PLACEMENT_BUYER, chatRoom);
         chatRoom.addSellerChat(sellerChatCase3);
         chatRoom.addBuyerChat(buyerChatCase3);

@@ -41,13 +41,18 @@ public class SchedulerService {
     chatRoomListByTradeStep.forEach(chatRoom -> {
       long notCompleteMinutes = Duration.between(chatRoom.getUpdatedAt(), LocalDateTime.now())
           .toMinutes();
-      if (notCompleteMinutes > 120) {
+      if (notCompleteMinutes > 120 &&
+          sellerChatRepository.findAllByChatRoom(chatRoom).stream().noneMatch(
+              sellerChat -> sellerChat.getContentType().equals(TRADE_WARNING_SELLER)
+          )
+      ) {
         sellerChatRepository.save(
             SellerChat.buildSellerChat("아직 사물함 설정이 완료되지 않았어요!\n"
                                        + "\"거래하러 가기\" 버튼을 클릭하여\n "
                                        + "사물함 번호와 비밀번호를 꼭 선택해 주세요!",
                 TRADE_WARNING_SELLER, chatRoom)
         );
+
         smsService.sendAdminToSms(
             "사물함 설정이 완료되지 않은 주문이 있습니다. 판매글 ID는 " + chatRoom.getUsedBook().getId() + "입니다.");
       }
@@ -128,7 +133,9 @@ public class SchedulerService {
     chatRoomListByTradeStep.forEach(chatRoom -> {
       LocalDateTime tradeAvailableDatetime = chatRoom.getUsedBook().getTradeAvailableDatetime();
       long hours = Duration.between(LocalDateTime.now(), tradeAvailableDatetime).toHours();
-      if (hours < 24) {
+      if (hours < 24 && buyerChatRepository.findAllByChatRoom(chatRoom).stream().noneMatch(
+          buyerChat -> buyerChat.getContentType().equals(TRADE_WARNING_BUYER))) {
+
         buyerChatRepository.save(
             BuyerChat.buildBuyerChat("아직 입금 확인이 안되었어요! \n"
                                      + "입금이 완료되어야, 판매자가 사물함에 서적을 배치할 수 있어요! ",

@@ -72,6 +72,16 @@ public class SellerChat {
         .build();
   }
 
+  public static SellerChat buildSellerChatAndIsReadTrue(String message, ContentType contentType,
+      ChatRoom chatRoom) {
+    return SellerChat.builder()
+        .message(message)
+        .contentType(contentType)
+        .chatRoom(chatRoom)
+        .isRead(true)
+        .build();
+  }
+
   public ChatMessageResponse toChatMessageResponse() {
     return ChatMessageResponse.of(
         chatRoom.getChatRoomId(),
