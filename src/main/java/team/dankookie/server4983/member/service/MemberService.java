@@ -42,8 +42,6 @@ public class MemberService {
 
   public boolean login(LoginRequest loginRequest) {
 
-    log.info("loginRequest: {}", loginRequest);
-
     Member member = memberRepository.findByStudentId(loginRequest.studentId())
         .orElseThrow(() -> new LoginFailedException("존재하지 않는 학번입니다."));
 
@@ -58,9 +56,8 @@ public class MemberService {
   }
 
   public Member findMemberNicknameByStudentId(String studentId) {
-    Member member = memberRepository.findByStudentId(studentId)
+    return memberRepository.findByStudentId(studentId)
         .orElseThrow(() -> new LoginFailedException("존재하지 않는 학번입니다."));
-    return member;
   }
 
   public boolean isMemberExistsByMemberPasswordRequest(String studentId, String phoneNumber) {
@@ -145,11 +142,6 @@ public class MemberService {
     member.updateMemberProfile(memberProfileSaveRequest);
 
     if (multipartFile != null) {
-      String imageUrl = member.getImageUrl();
-      String s3BucketUrl = uploadService.getS3BucketUrl();
-      String imageKey = imageUrl.split(s3BucketUrl)[1];
-
-      uploadService.deleteFile(imageKey);
 
       S3Response s3Response = uploadService.saveFileWithUUID(multipartFile);
       member.setImageUrl(s3Response.s3ImageUrl());
