@@ -87,6 +87,14 @@ public class ChatService {
       throw new ChatException("자신의 판매글에 거래요청을 할 수 없습니다.");
     }
 
+    chatRoomRepository.findByBuyer_StudentId(buyerStudentId).ifPresent(chatRoom -> {
+      if (chatRoom.getInteractStep() < 6) {
+        throw new ChatException("거래 진행중입니다.");
+      } else if (chatRoom.getInteractStep() == 6) {
+        throw new ChatException("거래가 완료된 책입니다.");
+      }
+    });
+
     ChatRoomResponse result = isChatRoomAlreadyExistsBySellerBuyerUsedBook(usedBook, seller,
         buyer);
     if (result != null) {

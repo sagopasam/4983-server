@@ -198,7 +198,7 @@ public class ChatLogicHandler {
         return List.of();
       }
       case TRADE_COMPLETE -> { // SELLCHAT_6 거래 완료
-        if (chatRoom.getInteractStep() >= 6) {
+        if (chatRoom.getInteractStep() == 6) {
           throw new ChatException("이미 거래를 완료했습니다.");
         }
         releaseLocker(chatRoom);
