@@ -102,7 +102,7 @@ public class NoticeService {
     Notice notice = noticeRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("해당 공지사항이 존재하지 않습니다."));
 
-    return NoticeDetailResponse.of(notice.getTitle(), notice.getMainBannerImageUrl());
+    return NoticeDetailResponse.of(notice.getTitle(), notice.getNoticeWindowImageUrl());
   }
 
 }
