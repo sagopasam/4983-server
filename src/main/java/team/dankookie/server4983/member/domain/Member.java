@@ -67,6 +67,7 @@ public class Member extends BaseEntity implements UserDetails {
     @ColumnDefault("false")
     private Boolean marketingAgree;
 
+    @Setter
     private String firebaseToken;
 
     @Enumerated(EnumType.STRING)

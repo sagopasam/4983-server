@@ -37,6 +37,7 @@ public class SpringSecurityConfiguration {
         .formLogin(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests((req) -> req
             .requestMatchers(antMatcher("/docs/**")).permitAll()
+            .requestMatchers(antMatcher("/api/v1/fcm")).permitAll()
             .requestMatchers(antMatcher("/api/v1/token/valid")).permitAll()
             .requestMatchers(antMatcher("/api/v1/token/update")).permitAll()
             .requestMatchers(antMatcher("/api/v1/login")).permitAll()
@@ -47,8 +48,8 @@ public class SpringSecurityConfiguration {
             .requestMatchers(antMatcher("/api/v1/my-pages/certification-number")).permitAll()
             .requestMatchers(antMatcher("/api/v1/register")).permitAll()
             .requestMatchers(antMatcher("/api/v1/admin/login")).permitAll()
+            .requestMatchers(antMatcher("/api/v1/**")).hasAnyAuthority()
             .requestMatchers(antMatcher("/api/v1/admin/**")).hasAuthority("ADMIN")
-            .requestMatchers(antMatcher("/api/v1/**")).hasAuthority("USER")
             .anyRequest().denyAll()
         )
         .sessionManagement((session) -> session
