@@ -8,10 +8,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import team.dankookie.server4983.common.exception.LoginFailedException;
+import team.dankookie.server4983.common.exception.WithdrawException;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
 import team.dankookie.server4983.member.domain.Member;
-import team.dankookie.server4983.member.dto.*;
+import team.dankookie.server4983.member.dto.LoginRequest;
+import team.dankookie.server4983.member.dto.MemberCollegeAndDepartment;
+import team.dankookie.server4983.member.dto.MemberImageRequest;
+import team.dankookie.server4983.member.dto.MemberMyPageModifyResponse;
+import team.dankookie.server4983.member.dto.MemberMyPageResponse;
+import team.dankookie.server4983.member.dto.MemberPasswordChangeRequest;
+import team.dankookie.server4983.member.dto.MemberPasswordRequest;
+import team.dankookie.server4983.member.dto.MemberProfileSaveRequest;
+import team.dankookie.server4983.member.dto.MemberProfileSaveResponse;
+import team.dankookie.server4983.member.dto.MemberRegisterRequest;
+import team.dankookie.server4983.member.dto.MemberTemporaryPasswordChangeRequest;
 import team.dankookie.server4983.member.repository.MemberRepository;
 import team.dankookie.server4983.member.repository.memberImage.MemberImageRepository;
 import team.dankookie.server4983.s3.dto.S3Response;
@@ -46,7 +57,7 @@ public class MemberService {
         .orElseThrow(() -> new LoginFailedException("존재하지 않는 학번입니다."));
 
     if (member.getIsWithdraw()) {
-      throw new LoginFailedException("탈퇴한 회원입니다.");
+      throw new WithdrawException();
     }
 
     if (!passwordEncoder.matches(loginRequest.password(), member.getPassword())) {

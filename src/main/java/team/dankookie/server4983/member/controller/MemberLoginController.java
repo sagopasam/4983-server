@@ -38,6 +38,9 @@ public class MemberLoginController {
         boolean isMemberExists = memberService.login(loginRequest);
 
         if (isMemberExists) {
+
+
+
             Member member =  memberService.findMemberNicknameByStudentId(loginRequest.studentId());
 
             setAccessTokenToHeader(response, member);

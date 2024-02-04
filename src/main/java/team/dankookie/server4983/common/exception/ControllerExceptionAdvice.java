@@ -17,6 +17,11 @@ public class ControllerExceptionAdvice {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.of(e.getMessage()));
     }
 
+    @ExceptionHandler(WithdrawException.class)
+    public ResponseEntity<ErrorResponse> withdrawException(WithdrawException e) {
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(ErrorResponse.of(e.getMessage()));
+    }
+
     @ExceptionHandler(ChatException.class)
     public ResponseEntity<ErrorResponse> chatFailedException(ChatException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponse.of(e.getMessage()));
