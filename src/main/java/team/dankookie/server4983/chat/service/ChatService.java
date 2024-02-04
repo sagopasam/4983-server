@@ -84,14 +84,14 @@ public class ChatService {
         .orElseThrow(() -> new ChatException("사용자를 찾을 수 없습니다."));
 
     if (seller.getStudentId().equals(buyerStudentId)) {
-      throw new ChatException("자신의 판매글에 거래요청을 할 수 없습니다.");
+      throw new ChatException("본인이 판매하는 전공서적은\n구매할 수 없어요!");
     }
 
     chatRoomRepository.findByBuyer_StudentId(buyerStudentId).ifPresent(chatRoom -> {
       if (chatRoom.getInteractStep() < 6) {
-        throw new ChatException("거래 진행중입니다.");
+        throw new ChatException("거래가 진행중인\n전공서적입니다!");
       } else if (chatRoom.getInteractStep() == 6) {
-        throw new ChatException("거래가 완료된 책입니다.");
+        throw new ChatException("거래가 완료된\n전공서적입니다!");
       }
     });
 
