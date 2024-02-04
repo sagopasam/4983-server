@@ -38,7 +38,7 @@ public class AdminMemberService {
     Member member = memberRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
-    return member.updateBlocked();
+     return member.updateBlocked();
   }
 
   public void login(AdminLoginRequest request) {

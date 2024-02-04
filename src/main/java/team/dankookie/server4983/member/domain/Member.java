@@ -115,8 +115,8 @@ public class Member extends BaseEntity implements UserDetails {
     }
 
     public boolean updateBlocked() {
-        this.isBlocked = !this.isBlocked;
-        return this.isBlocked;
+        this.isWithdraw = !isWithdraw;
+        return isWithdraw;
     }
 
     public void updateMemberProfile(MemberProfileSaveRequest member){

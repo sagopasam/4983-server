@@ -75,7 +75,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
             )
         ).from(member)
         .where(
-            member.isBlocked.eq(true),
+            member.isWithdraw.eq(true),
             studentIdOrNicknameAndPhoneNumberLike(searchKeyword)
         )
         .orderBy(member.id.desc())
