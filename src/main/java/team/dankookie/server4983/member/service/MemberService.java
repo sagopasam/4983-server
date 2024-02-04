@@ -56,10 +56,6 @@ public class MemberService {
     Member member = memberRepository.findByStudentId(loginRequest.studentId())
         .orElseThrow(() -> new LoginFailedException("존재하지 않는 학번입니다."));
 
-    if (member.getIsWithdraw()) {
-      throw new WithdrawException();
-    }
-
     if (!passwordEncoder.matches(loginRequest.password(), member.getPassword())) {
       throw new LoginFailedException("잘못된 비밀번호입니다!");
     }
