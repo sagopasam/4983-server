@@ -17,11 +17,11 @@ public class AdminMemberListResponse {
   private final String accountBank;
   private final String accountNumber;
   private final String accountHolder;
-  private final Boolean isBlocked;
+  private final Boolean isWithdraw;
 
 
   @QueryProjection
-  public AdminMemberListResponse(Long id, String studentId, Department department, String nickname, String phoneNumber, AccountBank accountBank, String accountNumber, String accountHolder, boolean isBlocked) {
+  public AdminMemberListResponse(Long id, String studentId, Department department, String nickname, String phoneNumber, AccountBank accountBank, String accountNumber, String accountHolder, boolean isWithdraw) {
     this.id = id;
     this.studentId = studentId;
     this.department = department.getKoName();
@@ -30,6 +30,6 @@ public class AdminMemberListResponse {
     this.accountBank = accountBank.getKoBankName();
     this.accountNumber = accountNumber;
     this.accountHolder = accountHolder;
-    this.isBlocked = isBlocked;
+    this.isWithdraw = isWithdraw;
   }
 }

@@ -33,7 +33,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 member.accountBank,
                 member.accountNumber,
                 member.accountHolder,
-                member.isBlocked
+                member.isWithdraw
             )
         ).from(member)
         .where(studentIdOrNicknameAndPhoneNumberLike(searchKeyword).or(isSearchKeywordDepartment(department))
@@ -71,7 +71,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 member.accountBank,
                 member.accountNumber,
                 member.accountHolder,
-                member.isBlocked
+                member.isWithdraw
             )
         ).from(member)
         .where(
@@ -87,7 +87,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         .select(member.count())
         .from(member)
         .where(
-            member.isBlocked.eq(true),
+            member.isWithdraw.eq(true),
             studentIdOrNicknameAndPhoneNumberLike(searchKeyword)
         ).fetchOne();
 
