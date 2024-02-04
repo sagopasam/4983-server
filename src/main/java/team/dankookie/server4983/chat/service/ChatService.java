@@ -87,18 +87,20 @@ public class ChatService {
       throw new ChatException("본인이 판매하는 전공서적은\n구매할 수 없어요!");
     }
 
-    chatRoomRepository.findByBuyer_StudentId(buyerStudentId).ifPresent(chatRoom -> {
-      if (chatRoom.getInteractStep() < 6) {
-        throw new ChatException("거래가 진행중인\n전공서적입니다!");
-      } else if (chatRoom.getInteractStep() == 6) {
-        throw new ChatException("거래가 완료된\n전공서적입니다!");
-      }
-    });
-
-    ChatRoomResponse result = isChatRoomAlreadyExistsBySellerBuyerUsedBook(usedBook, seller,
+    Optional<ChatRoom> result = isChatRoomAlreadyExistsBySellerBuyerUsedBook(usedBook, seller,
         buyer);
-    if (result != null) {
-      return result;
+    if (result.isPresent()) {
+
+      if (!result.get().getBuyer().equals(buyer)) {
+        result.ifPresent(chatRoom -> {
+          if (chatRoom.getInteractStep() < 6) {
+            throw new ChatException("거래가 진행중인\n전공서적입니다!");
+          } else if (chatRoom.getInteractStep() == 6) {
+            throw new ChatException("거래가 완료된\n전공서적입니다!");
+          }
+        });
+      }
+      return result.map(chatRoom -> ChatRoomResponse.of(chatRoom.getChatRoomId())).orElse(null);
     }
 
     ChatRoom savedChatroom = buildAndSaveChatRoom(usedBook, seller, buyer);
@@ -109,11 +111,12 @@ public class ChatService {
     return ChatRoomResponse.of(savedChatroom.getChatRoomId());
   }
 
-  private ChatRoomResponse isChatRoomAlreadyExistsBySellerBuyerUsedBook(UsedBook usedBook,
+  private Optional<ChatRoom> isChatRoomAlreadyExistsBySellerBuyerUsedBook(UsedBook usedBook,
       Member seller, Member buyer) {
     Optional<ChatRoom> result = chatRoomRepository.findBookBySellerAndBuyerAndBook(seller,
         buyer, usedBook);
-    return result.map(chatRoom -> ChatRoomResponse.of(chatRoom.getChatRoomId())).orElse(null);
+
+    return result;
   }
 
   private ChatRoom buildAndSaveChatRoom(UsedBook usedBook, Member seller, Member buyer) {
