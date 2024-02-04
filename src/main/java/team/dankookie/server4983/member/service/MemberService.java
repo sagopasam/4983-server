@@ -202,5 +202,10 @@ public class MemberService {
     findMember.changePassword(passwordEncoder.encode(request.password()));
     return true;
   }
+
+  public Boolean checkIsWithdraw(String studentId) {
+    Member member = findMemberByStudentId(studentId);
+    return member.getIsWithdraw();
+  }
 }
 
