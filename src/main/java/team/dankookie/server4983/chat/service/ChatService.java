@@ -102,6 +102,7 @@ public class ChatService {
       }
       return result.map(chatRoom -> ChatRoomResponse.of(chatRoom.getChatRoomId())).orElse(null);
     }
+    usedBook.setBuyerMember(buyer);
 
     ChatRoom savedChatroom = buildAndSaveChatRoom(usedBook, seller, buyer);
 

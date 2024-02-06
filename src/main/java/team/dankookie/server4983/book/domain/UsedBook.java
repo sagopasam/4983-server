@@ -55,6 +55,7 @@ public class UsedBook extends BaseEntity {
     @ColumnDefault("false")
     private Boolean isCoverDamaged;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     private Member buyerMember;
 
