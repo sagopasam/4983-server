@@ -175,7 +175,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                     .from(sellerChat)
                     .innerJoin(chatRoom).on(sellerChat.chatRoom.eq(chatRoom))
                     .innerJoin(usedBook).on(chatRoom.usedBook.eq(usedBook))
-                    .innerJoin(member).on(usedBook.sellerMember.eq(member))
+                    .innerJoin(member).on(chatRoom.seller.eq(member))
                     .where(member.studentId.eq(studentId))
                     .groupBy(sellerChat.chatRoom.chatRoomId)
             ))
@@ -212,7 +212,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                     .from(buyerChat)
                     .innerJoin(chatRoom).on(buyerChat.chatRoom.eq(chatRoom))
                     .innerJoin(usedBook).on(chatRoom.usedBook.eq(usedBook))
-                    .innerJoin(member).on(usedBook.buyerMember.eq(member))
+                    .innerJoin(member).on(chatRoom.buyer.eq(member))
                     .where(member.studentId.eq(studentId))
                     .groupBy(buyerChat.chatRoom.chatRoomId)
             )).fetch());
