@@ -116,20 +116,6 @@ public class PostConstructService {
         .sellerMember(testMember1)
         .build();
 
-    UsedBook usedBook2 = UsedBook.builder()
-        .bookStatus(BookStatus.SALE)
-        .name("생명과학 길라잡이")
-        .tradeAvailableDatetime(LocalDateTime.of(2023, 8, 9, 12,30,30))
-        .price(9000)
-        .isUnderlinedOrWrite(true)
-        .isCoverDamaged(true)
-        .isDiscolorationAndDamage(true)
-        .department(Department.COMMUNICATION_DESIGN)
-        .college(College.MUSIC_AND_ARTS)
-        .publisher("한국도서출판")
-        .sellerMember(testMember1)
-        .build();
-
     UsedBook usedBook3 = UsedBook.builder()
         .bookStatus(BookStatus.SALE)
         .name("경영학 원론")
@@ -239,7 +225,6 @@ public class PostConstructService {
         .build();
 
     usedBookRepository.save(usedBook1);
-    usedBookRepository.save(usedBook2);
     usedBookRepository.save(usedBook3);
     usedBookRepository.save(usedBook4);
     usedBookRepository.save(usedBook5);
@@ -263,10 +248,6 @@ public class PostConstructService {
         .build());
     bookImageRepository.save(BookImage.builder()
         .usedBook(usedBook1)
-        .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
-        .build());
-    bookImageRepository.save(BookImage.builder()
-        .usedBook(usedBook2)
         .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
         .build());
     bookImageRepository.save(BookImage.builder()
@@ -301,14 +282,6 @@ public class PostConstructService {
         .usedBook(usedBook10)
         .imageUrl("https://4983-s3.s3.ap-northeast-2.amazonaws.com/0ef2f95b-65b5-4345-bee4-cd9339108302")
         .build());
-
-
-
-    ChatRoom chatRoom_1 = buildChatRoom(testMember1 , testMember2 , usedBook1);
-    ChatRoom chatRoom_2 = buildChatRoom(testMember2 , testMember1 , usedBook2);
-    chatRoomRepository.save(chatRoom_1);
-    chatRoomRepository.save(chatRoom_2);
-
   }
 
 }
