@@ -21,27 +21,28 @@ public class BookSalesDetailRepositoryImpl implements BookSalesDetailRepositoryC
 
     @Override
     public List<UsedBookListResponse> getMyPageBookSalesDetailList(boolean canBuy, Long memberId) {
-        JPAQuery<UsedBookListResponse> query = queryFactory.select(
-                new QUsedBookListResponse(
-                        usedBook.id,
-                    JPAExpressions
-                        .select(bookImage.imageUrl)
-                        .from(bookImage)
-                        .where(bookImage.usedBook.eq(usedBook)
-                            .and(bookImage.id.eq(
-                                JPAExpressions
-                                    .select(bookImage.id.min())
-                                    .from(bookImage)
-                                    .where(bookImage.usedBook.eq(usedBook))
-                            ))
-                        ),
-                        usedBook.bookStatus,
-                        usedBook.name,
-                        usedBook.tradeAvailableDatetime,
-                        usedBook.createdAt,
-                        usedBook.price
-                )
-        ).from(usedBook);
+      JPAQuery<UsedBookListResponse> query = queryFactory.select(
+              new QUsedBookListResponse(
+                  usedBook.id,
+                  JPAExpressions
+                      .select(bookImage.imageUrl)
+                      .from(bookImage)
+                      .where(bookImage.usedBook.eq(usedBook)
+                          .and(bookImage.id.eq(
+                              JPAExpressions
+                                  .select(bookImage.id.min())
+                                  .from(bookImage)
+                                  .where(bookImage.usedBook.eq(usedBook))
+                          ))
+                      ),
+                  usedBook.bookStatus,
+                  usedBook.name,
+                  usedBook.tradeAvailableDatetime,
+                  usedBook.createdAt,
+                  usedBook.price
+              )
+          ).from(usedBook)
+          .where(usedBook.isDeleted.eq(false));
         return getMyPageBooksCanBuy(canBuy, memberId,query);
     }
 

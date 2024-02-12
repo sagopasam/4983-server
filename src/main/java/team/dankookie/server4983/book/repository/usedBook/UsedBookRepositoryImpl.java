@@ -24,7 +24,7 @@ import team.dankookie.server4983.book.dto.UsedBookListResponse;
 @RequiredArgsConstructor
 public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
 
-    private final JPAQueryFactory jpaQueryFactory;
+  private final JPAQueryFactory jpaQueryFactory;
 
   @Override
   public Page<AdminUsedBookListResponse> getAdminUsedBookList(Pageable pageable,
@@ -87,7 +87,6 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
       return new PageImpl<>(content, pageable, count);
     }
 
-
     List<AdminUsedBookListResponse> content = jpaQueryFactory
         .select(
             new QAdminUsedBookListResponse(
@@ -117,125 +116,136 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
   }
 
   @Override
-    public List<UsedBookListResponse> getUsedBookList(boolean isOrderByTradeAvailableDatetime) {
-      JPAQuery<UsedBookListResponse> query = jpaQueryFactory
-          .select(
-              new QUsedBookListResponse(
-                  usedBook.id,
-                  JPAExpressions
-                      .select(bookImage.imageUrl)
-                      .from(bookImage)
-                      .where(bookImage.usedBook.eq(usedBook)
-                          .and(bookImage.id.eq(
-                              JPAExpressions
-                                  .select(bookImage.id.min())
-                                  .from(bookImage)
-                                  .where(bookImage.usedBook.eq(usedBook))
-                          ))
-                      ),
-                  usedBook.bookStatus,
-                  usedBook.name,
-                  usedBook.tradeAvailableDatetime,
-                  usedBook.createdAt,
-                  usedBook.price
-              ))
-          .from(usedBook);
-
-      return getUsedBooksIsOrderByTradeAvailableDatetime(isOrderByTradeAvailableDatetime, query);
-    }
-
-    @Override
-    public List<UsedBookListResponse> getUsedBookListInCollegeAndDepartment(List<College> college, List<Department> department, boolean isOrderByTradeAvailableDatetime) {
-        JPAQuery<UsedBookListResponse> query = jpaQueryFactory.select(
-                        new QUsedBookListResponse(
-                                usedBook.id,
+  public List<UsedBookListResponse> getUsedBookList(boolean isOrderByTradeAvailableDatetime) {
+    JPAQuery<UsedBookListResponse> query = jpaQueryFactory
+        .select(
+            new QUsedBookListResponse(
+                usedBook.id,
+                JPAExpressions
+                    .select(bookImage.imageUrl)
+                    .from(bookImage)
+                    .where(bookImage.usedBook.eq(usedBook)
+                        .and(bookImage.id.eq(
                             JPAExpressions
-                                .select(bookImage.imageUrl)
+                                .select(bookImage.id.min())
                                 .from(bookImage)
-                                .where(bookImage.usedBook.eq(usedBook)
-                                    .and(bookImage.id.eq(
-                                        JPAExpressions
-                                            .select(bookImage.id.min())
-                                            .from(bookImage)
-                                            .where(bookImage.usedBook.eq(usedBook))
-                                    ))
-                                ),
-                                usedBook.bookStatus,
-                                usedBook.name,
-                                usedBook.tradeAvailableDatetime,
-                                usedBook.createdAt,
-                                usedBook.price
-                        )
-                ).from(usedBook)
-                .where(
-                        usedBook.college.in(college).or(usedBook.department.in(department))
-                );
+                                .where(bookImage.usedBook.eq(usedBook))
+                        ))
+                    ),
+                usedBook.bookStatus,
+                usedBook.name,
+                usedBook.tradeAvailableDatetime,
+                usedBook.createdAt,
+                usedBook.price
+            ))
+        .from(usedBook)
+        .where(
+            usedBook.isDeleted.eq(false),
+            usedBook.sellerMember.isWithdraw.eq(false)
+        );
 
-        return getUsedBooksIsOrderByTradeAvailableDatetime(isOrderByTradeAvailableDatetime, query);
-    }
+    return getUsedBooksIsOrderByTradeAvailableDatetime(isOrderByTradeAvailableDatetime, query);
+  }
 
-    @Override
-    public List<UsedBookListResponse> getUsedBookListBySearchKeyword(String searchKeyword, boolean isOrderByTradeAvailableDatetime) {
-        JPAQuery<UsedBookListResponse> query = jpaQueryFactory.select(
-                        new QUsedBookListResponse(
-                                usedBook.id,
+  @Override
+  public List<UsedBookListResponse> getUsedBookListInCollegeAndDepartment(List<College> college,
+      List<Department> department, boolean isOrderByTradeAvailableDatetime) {
+    JPAQuery<UsedBookListResponse> query = jpaQueryFactory.select(
+            new QUsedBookListResponse(
+                usedBook.id,
+                JPAExpressions
+                    .select(bookImage.imageUrl)
+                    .from(bookImage)
+                    .where(bookImage.usedBook.eq(usedBook)
+                        .and(bookImage.id.eq(
                             JPAExpressions
-                                .select(bookImage.imageUrl)
+                                .select(bookImage.id.min())
                                 .from(bookImage)
-                                .where(bookImage.usedBook.eq(usedBook)
-                                    .and(bookImage.id.eq(
-                                        JPAExpressions
-                                            .select(bookImage.id.min())
-                                            .from(bookImage)
-                                            .where(bookImage.usedBook.eq(usedBook))
-                                    ))
-                                ),
-                                usedBook.bookStatus,
-                                usedBook.name,
-                                usedBook.tradeAvailableDatetime,
-                                usedBook.createdAt,
-                                usedBook.price
-                        )
-                ).from(usedBook)
-                .where(
-                        usedBook.name.contains(searchKeyword)
-                );
-        return getUsedBooksIsOrderByTradeAvailableDatetime(isOrderByTradeAvailableDatetime, query);
-    }
+                                .where(bookImage.usedBook.eq(usedBook))
+                        ))
+                    ),
+                usedBook.bookStatus,
+                usedBook.name,
+                usedBook.tradeAvailableDatetime,
+                usedBook.createdAt,
+                usedBook.price
+            )
+        ).from(usedBook)
+        .where(
+            usedBook.college.in(college).or(usedBook.department.in(department)),
+            usedBook.isDeleted.eq(false),
+            usedBook.sellerMember.isWithdraw.eq(false)
+        );
 
-    private List<UsedBookListResponse> getUsedBooksIsOrderByTradeAvailableDatetime(boolean isOrderByTradeAvailableDatetime, JPAQuery<UsedBookListResponse> query) {
-        if (isOrderByTradeAvailableDatetime) {
-            return query
-                    .where(usedBook.isDeleted.eq(false),
-                            usedBook.sellerMember.isWithdraw.eq(false)
-                    )
-                    .orderBy(
-                            new CaseBuilder()
-                                    .when(usedBook.bookStatus.eq(BookStatus.SALE)).then(1)
-                                    .when(usedBook.bookStatus.eq(BookStatus.TRADE)).then(2)
-                                    .when(usedBook.bookStatus.eq(BookStatus.SOLD)).then(3)
-                                    .otherwise(4)
-                                    .asc(),
-                            usedBook.tradeAvailableDatetime.desc()
-                    ).fetch();
-        }else {
+    return getUsedBooksIsOrderByTradeAvailableDatetime(isOrderByTradeAvailableDatetime, query);
+  }
 
-            return query
-                    .where(usedBook.isDeleted.eq(false),
-                            usedBook.sellerMember.isWithdraw.eq(false)
-                    )
-                    .orderBy(
-                            new CaseBuilder()
-                                    .when(usedBook.bookStatus.eq(BookStatus.SALE)).then(1)
-                                    .when(usedBook.bookStatus.eq(BookStatus.TRADE)).then(2)
-                                    .when(usedBook.bookStatus.eq(BookStatus.SOLD)).then(3)
-                                    .otherwise(4)
-                                    .asc(),
-                            usedBook.id.desc()
-                    )
-                    .fetch();
-        }
+  @Override
+  public List<UsedBookListResponse> getUsedBookListBySearchKeyword(String searchKeyword,
+      boolean isOrderByTradeAvailableDatetime) {
+    JPAQuery<UsedBookListResponse> query = jpaQueryFactory.select(
+            new QUsedBookListResponse(
+                usedBook.id,
+                JPAExpressions
+                    .select(bookImage.imageUrl)
+                    .from(bookImage)
+                    .where(bookImage.usedBook.eq(usedBook)
+                        .and(bookImage.id.eq(
+                            JPAExpressions
+                                .select(bookImage.id.min())
+                                .from(bookImage)
+                                .where(bookImage.usedBook.eq(usedBook))
+                        ))
+                    ),
+                usedBook.bookStatus,
+                usedBook.name,
+                usedBook.tradeAvailableDatetime,
+                usedBook.createdAt,
+                usedBook.price
+            )
+        ).from(usedBook)
+        .where(
+            usedBook.name.contains(searchKeyword),
+            usedBook.isDeleted.eq(false),
+            usedBook.sellerMember.isWithdraw.eq(false)
+        );
+    return getUsedBooksIsOrderByTradeAvailableDatetime(isOrderByTradeAvailableDatetime, query);
+  }
+
+  private List<UsedBookListResponse> getUsedBooksIsOrderByTradeAvailableDatetime(
+      boolean isOrderByTradeAvailableDatetime, JPAQuery<UsedBookListResponse> query) {
+    if (isOrderByTradeAvailableDatetime) {
+      return query
+          .where(usedBook.isDeleted.eq(false),
+              usedBook.sellerMember.isWithdraw.eq(false)
+          )
+          .orderBy(
+              new CaseBuilder()
+                  .when(usedBook.bookStatus.eq(BookStatus.SALE)).then(1)
+                  .when(usedBook.bookStatus.eq(BookStatus.TRADE)).then(2)
+                  .when(usedBook.bookStatus.eq(BookStatus.SOLD)).then(3)
+                  .otherwise(4)
+                  .asc(),
+              usedBook.tradeAvailableDatetime.desc()
+          ).fetch();
+    } else {
+
+      return query
+          .where(usedBook.isDeleted.eq(false),
+              usedBook.sellerMember.isWithdraw.eq(false)
+          )
+          .orderBy(
+              new CaseBuilder()
+                  .when(usedBook.bookStatus.eq(BookStatus.SALE)).then(1)
+                  .when(usedBook.bookStatus.eq(BookStatus.TRADE)).then(2)
+                  .when(usedBook.bookStatus.eq(BookStatus.SOLD)).then(3)
+                  .otherwise(4)
+                  .asc(),
+              usedBook.id.desc()
+          )
+          .fetch();
     }
+  }
 
   private BooleanExpression boolNameOrPublisherContains(String searchKeyword) {
     return usedBook.name.contains(searchKeyword).or(usedBook.publisher.contains(searchKeyword));
