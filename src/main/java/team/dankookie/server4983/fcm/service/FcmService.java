@@ -4,11 +4,11 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import team.dankookie.server4983.fcm.dto.FcmBaseRequest;
 import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
 import team.dankookie.server4983.member.domain.Member;
@@ -26,8 +26,13 @@ public class FcmService {
 
   @Transactional
   public void updateFcmToken(String studentId, String token) {
-    memberRepository.findByStudentId(studentId)
-        .ifPresent(findMember -> findMember.updateToken(token));
+    Member findMember = memberRepository.findByStudentId(studentId)
+        .orElseThrow(
+            () -> new IllegalArgumentException("해당하는 학번의 유저가 존재하지 않습니다.")
+        );
+
+    findMember.updateToken(token);
+    memberRepository.save(findMember);
   }
 
   @Async("messagingTaskExecutor")
