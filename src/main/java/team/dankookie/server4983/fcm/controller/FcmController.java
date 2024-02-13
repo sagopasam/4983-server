@@ -3,6 +3,7 @@ package team.dankookie.server4983.fcm.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import team.dankookie.server4983.fcm.dto.FcmTokenRequest;
@@ -18,9 +19,7 @@ public class FcmController {
   private final FcmService fcmService;
 
   @PostMapping
-  public void updateFcmToken(AccessToken accessToken, FcmTokenRequest request) {
-
-    log.info("updateFcmToken accessToken={}, request={}", accessToken, request);
+  public void updateFcmToken(AccessToken accessToken, @RequestBody FcmTokenRequest request) {
     fcmService.updateFcmToken(accessToken.studentId(), request.token());
   }
 
