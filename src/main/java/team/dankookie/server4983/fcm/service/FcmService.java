@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import team.dankookie.server4983.fcm.dto.FcmBaseRequest;
 import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
 import team.dankookie.server4983.member.domain.Member;
+import team.dankookie.server4983.member.repository.MemberRepository;
 import team.dankookie.server4983.member.service.MemberService;
 
 @Slf4j
@@ -21,13 +22,12 @@ public class FcmService {
 
   private final FirebaseMessaging firebaseMessaging;
   private final MemberService memberService;
+  private final MemberRepository memberRepository;
 
   @Transactional
   public void updateFcmToken(String studentId, String token) {
-    Member findMember = memberService.findMemberByStudentId(studentId);
-    log.info("findMember : {}", findMember);
-
-    findMember.setFirebaseToken(token);
+    memberRepository.findByStudentId(studentId)
+        .ifPresent(findMember -> findMember.updateToken(token));
   }
 
   @Async("messagingTaskExecutor")

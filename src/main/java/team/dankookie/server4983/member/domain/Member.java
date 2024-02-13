@@ -67,7 +67,6 @@ public class Member extends BaseEntity implements UserDetails {
     @ColumnDefault("false")
     private Boolean marketingAgree;
 
-    @Setter
     private String firebaseToken;
 
     @Enumerated(EnumType.STRING)
@@ -155,4 +154,7 @@ public class Member extends BaseEntity implements UserDetails {
         return !getDelYn();
     }
 
+    public void updateToken( String token) {
+        this.firebaseToken = token;
+    }
 }
