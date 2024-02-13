@@ -18,7 +18,7 @@ import java.util.List;
 public class FCMConfig {
     @Bean
     FirebaseMessaging firebaseMessaging() throws IOException {
-        ClassPathResource resource = new ClassPathResource("/submodule/project-3715319499955560031-firebase-adminsdk-ko2lm-e41582d75a.json");
+        ClassPathResource resource = new ClassPathResource("/submodule/sagopaas-f66fd-firebase-adminsdk-3er9t-32c6f53530.json");
 
         InputStream refreshToken = resource.getInputStream();
 
