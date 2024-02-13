@@ -25,6 +25,7 @@ public class FcmService {
   @Transactional
   public void updateFcmToken(String studentId, String token) {
     Member findMember = memberService.findMemberByStudentId(studentId);
+    log.info("findMember : {}", findMember);
 
     findMember.setFirebaseToken(token);
   }
