@@ -239,7 +239,7 @@ public class ChatLogicHandler {
                 String.format(
                     "'%s' 님이 거래 요청을 보냈어요! \n" +
                     "오늘 거래하러 갈래요?",
-                    chatRoom.getSeller().getNickname());
+                    chatRoom.getBuyer().getNickname());
 
           }
           case BUYER -> {
