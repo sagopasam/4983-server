@@ -95,6 +95,7 @@ public class ChatLogicHandler {
         sendNotification(buyer, buyerWarningMessage);
 
         chatRoom.setInteractStep(1);
+        chatRoom.getUsedBook().startTrade();
 
         return List.of();
       }
@@ -143,6 +144,7 @@ public class ChatLogicHandler {
         sendNotification(buyer, buyerMessage);
 
         chatRoom.setInteractStep(999);
+        chatRoom.getUsedBook().stopTrade();
 
         return List.of(sellerChat.toChatMessageResponse());
       }
@@ -214,6 +216,8 @@ public class ChatLogicHandler {
         sendNotification(buyer, message);
 
         chatRoom.setInteractStep(6);
+
+        chatRoom.getUsedBook().completeTrade();
 
         return List.of(buyerChat.toChatMessageResponse());
       }

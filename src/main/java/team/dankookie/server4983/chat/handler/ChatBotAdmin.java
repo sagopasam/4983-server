@@ -31,6 +31,7 @@ public class ChatBotAdmin {
   public List<ChatMessageResponseWithUsedBookId> tradeStopBySeller(ChatRoom chatRoom, Member seller,
       Member buyer) {
     int step = chatRoom.getInteractStep();
+    chatRoom.getUsedBook().stopTrade();
 
     switch (step) { // case1 거래하기 전
       case 1, 2 -> {
@@ -94,6 +95,7 @@ public class ChatBotAdmin {
   public List<ChatMessageResponseWithUsedBookId> tradeStopByBuyer(ChatRoom chatRoom, Member seller,
       Member buyer) {
     int step = chatRoom.getInteractStep();
+    chatRoom.getUsedBook().stopTrade();
 
     switch (step) { // case1 거래하기 전
       case 1, 2 -> {
