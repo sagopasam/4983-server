@@ -365,13 +365,18 @@ public class ChatLogicHandler {
                           "\n" +
                           "구매자가 배치된 서적을 수령한 후, “거래 완료” 버튼을 클릭하면 판매금액이 자동으로 입금됩니다.\n \n" +
                           "사물함은 상경관 2층 GS25 편의점 옆 초록색 사물함을 찾아주세요:) \n \n" +
-                          "사물함 번호 : %s번 \n 거래 날짜 및 시간: %d월 %d일 %d:%d" +
+                          "사물함 번호 : %s번 \n 거래 날짜 및 시간: %d월 %d일 %s:%s" +
                           "\n",
                 locker.getLockerNumber(),
                 chatRoom.getUsedBook().getTradeAvailableDatetime().getMonthValue(),
                 chatRoom.getUsedBook().getTradeAvailableDatetime().getDayOfMonth(),
-                chatRoom.getUsedBook().getTradeAvailableDatetime().getHour(),
-                chatRoom.getUsedBook().getTradeAvailableDatetime().getMinute());
+                addZeroWhenLessThenTen(
+                    chatRoom.getUsedBook().getTradeAvailableDatetime().getHour()
+                ),
+                addZeroWhenLessThenTen(
+                    chatRoom.getUsedBook().getTradeAvailableDatetime().getMinute()
+                )
+            );
       }
 
       case BOOK_PLACEMENT_COMPLETE -> {
@@ -389,6 +394,10 @@ public class ChatLogicHandler {
     }
 
     throw new RuntimeException("잘못된 타입입니다. seller , buyer 중 하나만 선택해주세요.");
+  }
+
+  private String addZeroWhenLessThenTen(int number) {
+    return number < 10 ? "0" + number : String.valueOf(number);
   }
 
   private void sendNotification(Member buyer, String buyerMessage) {
