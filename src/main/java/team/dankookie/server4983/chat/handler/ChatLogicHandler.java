@@ -268,7 +268,7 @@ public class ChatLogicHandler {
                 "\n" +
                 "불가피하게 책을 배치 못할 경우, 아래의 번호/메일로 문의해 주세요!\n" +
                 "\n" +
-                "휴대폰) 010-4487-3122\n" +
+                "휴대폰) 050-6933-3122\n" +
                 "메일) 4983service@gmail.com";
           }
           case BUYER -> {
@@ -280,7 +280,7 @@ public class ChatLogicHandler {
                 "\n" +
                 "불가피하게 책을 수령하지 못할 경우, 아래의 번호/메일로 문의해주세요!\n" +
                 "\n" +
-                "휴대폰) 010-4487-3122\n" +
+                "휴대폰) 050-6933-3122\n" +
                 "메일) 4983service@gmail.com";
           }
         }
