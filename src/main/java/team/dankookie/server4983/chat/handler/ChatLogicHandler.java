@@ -23,6 +23,7 @@ import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE
 import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE_BUYER;
 import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE_SELLER;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -296,12 +297,13 @@ public class ChatLogicHandler {
 
           case BUYER -> {
             return
-                String.format("'%s' 님께 '%s' 서적 거래 요청을 수락했습니다. \n" +
+                String.format("'%s' 님께서 '%s' 서적 거래 요청을 수락했습니다. \n" +
                               "아래 계좌정보로 결제금액을 송금하여 주십시오. 입금 현황은 한 시간 이내 확인됩니다.\n" +
                               "\n계좌번호: " +
                               "카카오 7979-86-67501 (사고파삼) \n" +
-                              "결제 금액 : %d원", chatRoom.getSeller().getNickname(),
-                    chatRoom.getUsedBook().getName(), chatRoom.getUsedBook().getPrice());
+                              "결제 금액 : %s원", chatRoom.getSeller().getNickname(),
+                    chatRoom.getUsedBook().getName(),
+                    formatToKoreanPrice(chatRoom.getUsedBook().getPrice()));
 
           }
         }
@@ -402,6 +404,12 @@ public class ChatLogicHandler {
 
   private String addZeroWhenLessThenTen(int number) {
     return number < 10 ? "0" + number : String.valueOf(number);
+  }
+
+  public String formatToKoreanPrice(int number) {
+    DecimalFormat koreanFormat = new DecimalFormat("###,###");
+
+    return koreanFormat.format(number);
   }
 
   private void sendChattingNotification(Member member, String message, String screenName,
