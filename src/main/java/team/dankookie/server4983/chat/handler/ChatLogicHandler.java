@@ -249,7 +249,7 @@ public class ChatLogicHandler {
           case BUYER -> {
             return
                 String.format(
-                    "'%s' 님께 '%s' 서적 거래를 요청했습니다. \n\n" +
+                    "'%s' 님께 '%s' 서적 거래 요청을 수락했습니다. \n\n" +
                     "판매자의 응답을 기다려주세요. :)",
                     chatRoom.getSeller().getNickname(), chatRoom.getUsedBook().getName());
           }
@@ -296,9 +296,9 @@ public class ChatLogicHandler {
 
           case BUYER -> {
             return
-                String.format("'%s' 님께 '%s' 서적 거래를 요청을 수락했습니다. \n" +
-                              "아래 계좌정보로 결제금액을 송금하여 주십시오. \n" +
-                              "\n계좌번호:\n" +
+                String.format("'%s' 님께 '%s' 서적 거래 요청을 수락했습니다. \n" +
+                              "아래 계좌정보로 결제금액을 송금하여 주십시오. 입금 현황은 한 시간 이내 확인됩니다.\n" +
+                              "\n계좌번호: " +
                               "카카오 7979-86-67501 (사고파삼) \n" +
                               "결제 금액 : %d원", chatRoom.getSeller().getNickname(),
                     chatRoom.getUsedBook().getName(), chatRoom.getUsedBook().getPrice());
