@@ -101,4 +101,17 @@ public class UsedBook extends BaseEntity {
         this.isDiscolorationAndDamage = usedBook.isDiscolorationAndDamage();
         this.isCoverDamaged = usedBook.isCoverDamaged();
     }
+
+    public void startTrade() {
+        this.bookStatus = BookStatus.TRADE;
+    }
+
+    public void stopTrade() {
+        this.bookStatus = BookStatus.SALE;
+    }
+
+    public void completeTrade() {
+        this.bookStatus = BookStatus.SOLD;
+    }
+
 }

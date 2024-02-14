@@ -58,7 +58,7 @@ public class CoolSmsService {
       Message message = new Message();
 
       int randomNumber = ThreadLocalRandom.current().nextInt(100000, 1000000);
-      String content = "안녕하세요! 4983 입니다. \n인증번호는 " + randomNumber + " 입니다.";
+      String content = "안녕하세요! 사고파삼 입니다. \n인증번호는 " + randomNumber + " 입니다.";
 
       message.setFrom(senderPhone);
       message.setTo(phoneNumber);
