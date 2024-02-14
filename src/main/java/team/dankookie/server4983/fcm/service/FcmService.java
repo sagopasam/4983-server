@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.dankookie.server4983.fcm.dto.FcmBaseRequest;
-import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
+import team.dankookie.server4983.fcm.dto.FcmChatRequest;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.repository.MemberRepository;
 import team.dankookie.server4983.member.service.MemberService;
@@ -64,13 +64,31 @@ public class FcmService {
   }
 
   @Async("messagingTaskExecutor")
-  public void sendChattingNotificationByToken(FcmTargetUserIdRequest request) {
-    FcmBaseRequest fcmBaseRequest = FcmBaseRequest.of(
-        request.targetUserId(),
-        "사고파삼",
-        request.message()
-    );
+  public void sendChattingNotificationByToken(FcmChatRequest request) {
+    Member member = memberService.findMemberById(request.targetUserId());
 
-    sendNotificationByToken(fcmBaseRequest);
+    if (member.getFirebaseToken() != null) {
+      Notification notification = Notification.builder()
+          .setTitle("사고파삼")
+          .setBody(request.message())
+          .setImage("https://4983-s3.s3.ap-northeast-2.amazonaws.com/appIcon.png")
+          .build();
+
+      Message message = Message.builder()
+          .setToken(member.getFirebaseToken())
+          .setNotification(notification)
+          .putData("screenName", request.screenName())
+          .putData("chatRoomId", request.chatRoomId().toString())
+          .build();
+
+      try {
+        firebaseMessaging.send(message);
+      } catch (FirebaseMessagingException e) {
+        log.warn("알림 보내기를 실패하였습니다. targetUserId={}", request.targetUserId());
+      }
+    } else {
+      log.warn("서버에 저장된 해당 유저의 FirebaseToken이 존재하지 않습니다. targetUserId={}"
+          , request.targetUserId());
+    }
   }
 }

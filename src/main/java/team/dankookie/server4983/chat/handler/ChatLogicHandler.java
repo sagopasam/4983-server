@@ -39,7 +39,7 @@ import team.dankookie.server4983.chat.exception.ChatException;
 import team.dankookie.server4983.chat.repository.BuyerChatRepository;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
 import team.dankookie.server4983.chat.repository.SellerChatRepository;
-import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
+import team.dankookie.server4983.fcm.dto.FcmChatRequest;
 import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.sms.service.CoolSmsService;
@@ -82,8 +82,8 @@ public class ChatLogicHandler {
         BuyerChat buyerChat = saveBuyerChat(chatRoom, BOOK_PURCHASE_START_BUYER,
             buyerMessage);
 
-        sendNotification(seller, sellerMessage);
-        sendNotification(buyer, buyerMessage);
+        sendChattingNotification(seller, sellerMessage, "Chatbot", chatRoom.getChatRoomId());
+        sendChattingNotification(buyer, buyerMessage, "Chatbot", chatRoom.getChatRoomId());
 
         String sellerWarningMessage = getMessage(BOOK_PURCHASE_WARNING, UserRole.SELLER, chatRoom);
         String buyerWarningMessage = getMessage(BOOK_PURCHASE_WARNING, UserRole.BUYER, chatRoom);
@@ -91,8 +91,8 @@ public class ChatLogicHandler {
         saveSellerChat(chatRoom, BOOK_PURCHASE_START_NOTIFY_SELLER, sellerWarningMessage);
         saveBuyerChat(chatRoom, BOOK_PURCHASE_START_NOTIFY_BUYER, buyerWarningMessage);
 
-        sendNotification(seller, sellerWarningMessage);
-        sendNotification(buyer, buyerWarningMessage);
+        sendChattingNotification(seller, sellerWarningMessage, "Chatbot", chatRoom.getChatRoomId());
+        sendChattingNotification(buyer, buyerWarningMessage, "Chatbot", chatRoom.getChatRoomId());
 
         chatRoom.setInteractStep(1);
         chatRoom.getUsedBook().startTrade();
@@ -114,8 +114,8 @@ public class ChatLogicHandler {
 
         sellerChat.updateIsReadTrue();
 
-        sendNotification(seller, sellerMessage);
-        sendNotification(buyer, buyerMessage);
+        sendChattingNotification(seller, sellerMessage, "Chatbot", chatRoom.getChatRoomId());
+        sendChattingNotification(buyer, buyerMessage, "Chatbot", chatRoom.getChatRoomId());
 
         chatRoom.setInteractStep(2);
 
@@ -140,8 +140,8 @@ public class ChatLogicHandler {
 
         sellerChat.updateIsReadTrue();
 
-        sendNotification(seller, sellerMessage);
-        sendNotification(buyer, buyerMessage);
+        sendChattingNotification(seller, sellerMessage, "Chatbot", chatRoom.getChatRoomId());
+        sendChattingNotification(buyer, buyerMessage, "Chatbot", chatRoom.getChatRoomId());
 
         chatRoom.setInteractStep(999);
         chatRoom.getUsedBook().stopTrade();
@@ -160,8 +160,8 @@ public class ChatLogicHandler {
         saveSellerChat(chatRoom, PAYMENT_CONFIRMATION_COMPLETE_SELLER, sellerMessage);
         saveBuyerChat(chatRoom, PAYMENT_CONFIRMATION_COMPLETE_BUYER, buyerMessage);
 
-        sendNotification(seller, sellerMessage);
-        sendNotification(buyer, buyerMessage);
+        sendChattingNotification(seller, sellerMessage, "Chatbot", chatRoom.getChatRoomId());
+        sendChattingNotification(buyer, buyerMessage, "Chatbot", chatRoom.getChatRoomId());
 
         chatRoom.setInteractStep(3);
         return List.of();
@@ -176,7 +176,7 @@ public class ChatLogicHandler {
 
         String sellerMessage = getMessage(BOOK_PLACEMENT_SET, chatRoom, locker);
         saveSellerChat(chatRoom, BOOK_PLACEMENT_SET_SELLER, sellerMessage);
-        sendNotification(seller, sellerMessage);
+        sendChattingNotification(seller, sellerMessage, "Chatbot", chatRoom.getChatRoomId());
 
         chatRoom.setInteractStep(4);
 
@@ -193,7 +193,7 @@ public class ChatLogicHandler {
         String buyerMessage = getMessage(BOOK_PLACEMENT_COMPLETE, chatRoom, locker);
         saveBuyerChat(chatRoom, BOOK_PLACEMENT_COMPLETE_BUYER, buyerMessage);
 
-        sendNotification(buyer, buyerMessage);
+        sendChattingNotification(buyer, buyerMessage, "Chatbot", chatRoom.getChatRoomId());
 
         chatRoom.setInteractStep(5);
 
@@ -212,8 +212,8 @@ public class ChatLogicHandler {
 
         buyerChat.updateIsReadTrue();
 
-        sendNotification(seller, message);
-        sendNotification(buyer, message);
+        sendChattingNotification(seller, message, "Chatbot", chatRoom.getChatRoomId());
+        sendChattingNotification(buyer, message, "Chatbot", chatRoom.getChatRoomId());
 
         chatRoom.setInteractStep(6);
 
@@ -404,9 +404,10 @@ public class ChatLogicHandler {
     return number < 10 ? "0" + number : String.valueOf(number);
   }
 
-  private void sendNotification(Member buyer, String buyerMessage) {
+  private void sendChattingNotification(Member member, String message, String screenName,
+      Long chatRoomId) {
     fcmService.sendChattingNotificationByToken(
-        FcmTargetUserIdRequest.of(buyer.getId(), buyerMessage)
+        FcmChatRequest.of(member.getId(), message, screenName, chatRoomId)
     );
   }
 

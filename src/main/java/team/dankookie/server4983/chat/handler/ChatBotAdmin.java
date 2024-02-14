@@ -16,7 +16,7 @@ import team.dankookie.server4983.chat.domain.SellerChat;
 import team.dankookie.server4983.chat.dto.ChatMessageResponseWithUsedBookId;
 import team.dankookie.server4983.chat.repository.BuyerChatRepository;
 import team.dankookie.server4983.chat.repository.SellerChatRepository;
-import team.dankookie.server4983.fcm.dto.FcmTargetUserIdRequest;
+import team.dankookie.server4983.fcm.dto.FcmChatRequest;
 import team.dankookie.server4983.fcm.service.FcmService;
 import team.dankookie.server4983.member.domain.Member;
 
@@ -52,9 +52,11 @@ public class ChatBotAdmin {
         buyerChatRepository.save(buyerChatCase1);
         sellerChatRepository.save(sellerChatCase1);
         fcmService.sendChattingNotificationByToken(
-            FcmTargetUserIdRequest.of(seller.getId(), messageCase1_seller));
+            FcmChatRequest.of(seller.getId(), messageCase1_seller, "Chatbot",
+                chatRoom.getChatRoomId()));
         fcmService.sendChattingNotificationByToken(
-            FcmTargetUserIdRequest.of(buyer.getId(), messageCase1_buyer));
+            FcmChatRequest.of(buyer.getId(), messageCase1_buyer, "Chatbot",
+                chatRoom.getChatRoomId()));
 
         return List.of(
             sellerChatCase1.toChatMessageResponseWithUsedBookId(chatRoom.getUsedBook().getId()));
@@ -80,9 +82,11 @@ public class ChatBotAdmin {
         buyerChatRepository.save(buyerChatCase2);
         sellerChatRepository.save(sellerChatCase2);
         fcmService.sendChattingNotificationByToken(
-            FcmTargetUserIdRequest.of(seller.getId(), messageCase2_seller));
+            FcmChatRequest.of(seller.getId(), messageCase2_seller, "Chatbot",
+                chatRoom.getChatRoomId()));
         fcmService.sendChattingNotificationByToken(
-            FcmTargetUserIdRequest.of(buyer.getId(), messageCase2_buyer));
+            FcmChatRequest.of(buyer.getId(), messageCase2_buyer, "Chatbot",
+                chatRoom.getChatRoomId()));
 
         return List.of(
             sellerChatCase2.toChatMessageResponseWithUsedBookId(chatRoom.getUsedBook().getId()));
@@ -117,9 +121,11 @@ public class ChatBotAdmin {
         buyerChatRepository.save(buyerChatCase1);
         sellerChatRepository.save(sellerChatCase1);
         fcmService.sendChattingNotificationByToken(
-            FcmTargetUserIdRequest.of(seller.getId(), messageCase1_seller));
+            FcmChatRequest.of(seller.getId(), messageCase1_seller, "Chatbot",
+                chatRoom.getChatRoomId()));
         fcmService.sendChattingNotificationByToken(
-            FcmTargetUserIdRequest.of(buyer.getId(), messageCase1_buyer));
+            FcmChatRequest.of(buyer.getId(), messageCase1_buyer, "Chatbot",
+                chatRoom.getChatRoomId()));
 
         return List.of(
             buyerChatCase1.toChatMessageResponseWithUsedBookId(chatRoom.getUsedBook().getId()));
@@ -145,9 +151,11 @@ public class ChatBotAdmin {
         buyerChatRepository.save(buyerChatCase2);
         sellerChatRepository.save(sellerChatCase2);
         fcmService.sendChattingNotificationByToken(
-            FcmTargetUserIdRequest.of(seller.getId(), messageCase2_seller));
+            FcmChatRequest.of(seller.getId(), messageCase2_seller, "Chatbot",
+                chatRoom.getChatRoomId()));
         fcmService.sendChattingNotificationByToken(
-            FcmTargetUserIdRequest.of(buyer.getId(), messageCase2_buyer));
+            FcmChatRequest.of(buyer.getId(), messageCase2_buyer, "Chatbot",
+                chatRoom.getChatRoomId()));
 
         return List.of(
             buyerChatCase2.toChatMessageResponseWithUsedBookId(chatRoom.getUsedBook().getId()));
@@ -176,9 +184,11 @@ public class ChatBotAdmin {
         buyerChatRepository.save(buyerChatCase3);
         sellerChatRepository.save(sellerChatCase3);
         fcmService.sendChattingNotificationByToken(
-            FcmTargetUserIdRequest.of(seller.getId(), messageCase3_seller));
+            FcmChatRequest.of(seller.getId(), messageCase3_seller, "Chatbot",
+                chatRoom.getChatRoomId()));
         fcmService.sendChattingNotificationByToken(
-            FcmTargetUserIdRequest.of(buyer.getId(), messageCase3_buyer));
+            FcmChatRequest.of(buyer.getId(), messageCase3_buyer, "Chatbot",
+                chatRoom.getChatRoomId()));
 
         return List.of(
             buyerChatCase3.toChatMessageResponseWithUsedBookId(chatRoom.getUsedBook().getId()));
