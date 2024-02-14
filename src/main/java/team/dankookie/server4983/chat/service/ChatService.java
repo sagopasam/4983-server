@@ -12,6 +12,7 @@ import javax.security.auth.login.AccountException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.domain.Locker;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.book.repository.locker.LockerRepository;
@@ -87,19 +88,15 @@ public class ChatService {
       throw new ChatException("본인이 판매하는 전공서적은\n구매할 수 없어요!");
     }
 
+    if (usedBook.getBookStatus().equals(BookStatus.TRADE)) {
+      throw new ChatException("거래가 진행중인\n전공서적입니다!");
+    }else if (usedBook.getBookStatus().equals(BookStatus.SOLD)) {
+      throw new ChatException("거래가 완료된\n전공서적입니다!");
+    }
+
     Optional<ChatRoom> result = isChatRoomAlreadyExistsBySellerBuyerUsedBook(usedBook, seller,
         buyer);
     if (result.isPresent()) {
-
-      if (!result.get().getBuyer().equals(buyer)) {
-        result.ifPresent(chatRoom -> {
-          if (chatRoom.getInteractStep() < 6) {
-            throw new ChatException("거래가 진행중인\n전공서적입니다!");
-          } else if (chatRoom.getInteractStep() == 6) {
-            throw new ChatException("거래가 완료된\n전공서적입니다!");
-          }
-        });
-      }
       return result.map(chatRoom -> ChatRoomResponse.of(chatRoom.getChatRoomId())).orElse(null);
     }
     usedBook.setBuyerMember(buyer);
