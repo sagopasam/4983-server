@@ -371,8 +371,8 @@ public class ChatLogicHandler {
                           "\n" +
                           "구매자가 배치된 서적을 수령한 후, \"거래 완료\" 버튼을 클릭하면 판매금액이 한 시간 이내 자동으로 입금됩니다.\n \n" +
                           "사물함은 상경관 2층 GS25 편의점 옆 초록색 사물함을 찾아주세요:) \n \n" +
-                          "사물함 번호 : %s번 \n 거래 날짜 및 시간: %d월 %d일 %s:%s" +
-                          "\n",
+                          "사물함 번호 : %s번 \n 거래 날짜 및 시간: %d월 %d일 %s:%s \n\n" +
+                          "책 배치 방법\n1. 사물함에 책 배치\n2. 키패드 *버튼을  누르고, 비밀번호 4자리 입력 후 # 버튼 클릭\n",
                 locker.getLockerNumber(),
                 chatRoom.getUsedBook().getTradeAvailableDatetime().getMonthValue(),
                 chatRoom.getUsedBook().getTradeAvailableDatetime().getDayOfMonth(),
@@ -393,7 +393,7 @@ public class ChatLogicHandler {
                           "“거래 완료\" 버튼을 눌러야, 판매자에게 판매금액이 입금되오니, 수령 후 버튼을 꼭 눌러주세요 \n" +
                           "\n" +
                           "사물함 번호: %s번\n" +
-                          "사물함 비밀번호: %s\n"
+                          "사물함 비밀번호: *%s#\n"
                 , locker.getLockerNumber()
                 , locker.getPassword());
       }
