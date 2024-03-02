@@ -1,5 +1,6 @@
 package team.dankookie.server4983.member.domain;
 
+import com.google.firebase.auth.FirebaseToken;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -152,6 +153,10 @@ public class Member extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return !getDelYn();
+    }
+
+    public boolean existFirebaseToken() {
+        return firebaseToken != null;
     }
 
     public void updateToken( String token) {

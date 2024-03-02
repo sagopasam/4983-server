@@ -20,75 +20,74 @@ import team.dankookie.server4983.member.service.MemberService;
 @Service
 public class FcmService {
 
-  private final FirebaseMessaging firebaseMessaging;
-  private final MemberService memberService;
-  private final MemberRepository memberRepository;
+    private final FirebaseMessaging firebaseMessaging;
+    private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
-  @Transactional
-  public void updateFcmToken(String studentId, String token) {
-    Member findMember = memberRepository.findByStudentId(studentId)
-        .orElseThrow(
-            () -> new IllegalArgumentException("해당하는 학번의 유저가 존재하지 않습니다.")
-        );
+    @Transactional
+    public void updateFcmToken(String studentId, String token) {
+        Member findMember = memberRepository.findByStudentId(studentId)
+                .orElseThrow(
+                        () -> new IllegalArgumentException("해당하는 학번의 유저가 존재하지 않습니다.")
+                );
 
-    findMember.updateToken(token);
-    memberRepository.save(findMember);
-  }
-
-  @Async("messagingTaskExecutor")
-  public void sendNotificationByToken(FcmBaseRequest request) {
-
-    Member member = memberService.findMemberById(request.targetUserId());
-
-    if (member.getFirebaseToken() != null) {
-      Notification notification = Notification.builder()
-          .setTitle(request.title())
-          .setBody(request.body())
-          .setImage("https://4983-s3.s3.ap-northeast-2.amazonaws.com/appIcon.png")
-          .build();
-
-      Message message = Message.builder()
-          .setToken(member.getFirebaseToken())
-          .setNotification(notification)
-          .build();
-
-      try {
-        firebaseMessaging.send(message);
-      } catch (FirebaseMessagingException e) {
-        log.warn("알림 보내기를 실패하였습니다. targetUserId={}", request.targetUserId());
-      }
-    } else {
-      log.warn("서버에 저장된 해당 유저의 FirebaseToken이 존재하지 않습니다. targetUserId={}"
-          , request.targetUserId());
+        findMember.updateToken(token);
+        memberRepository.save(findMember);
     }
-  }
 
-  @Async("messagingTaskExecutor")
-  public void sendChattingNotificationByToken(FcmChatRequest request) {
-    Member member = memberService.findMemberById(request.targetUserId());
+    @Async("messagingTaskExecutor")
+    public void sendNotificationByToken(FcmBaseRequest request) {
 
-    if (member.getFirebaseToken() != null) {
-      Notification notification = Notification.builder()
-          .setTitle("사고파삼")
-          .setBody(request.message())
-          .setImage("https://4983-s3.s3.ap-northeast-2.amazonaws.com/appIcon.png")
-          .build();
+        Member member = memberService.findMemberById(request.targetUserId());
 
-      Message message = Message.builder()
-          .setToken(member.getFirebaseToken())
-          .setNotification(notification)
-          .putData("screenName", request.screenName())
-          .putData("chatRoomId", request.chatRoomId().toString())
-          .build();
+        if (member.getFirebaseToken() != null) {
+            Notification notification = Notification.builder()
+                    .setTitle(request.title())
+                    .setBody(request.body())
+                    .setImage("https://4983-s3.s3.ap-northeast-2.amazonaws.com/appIcon.png")
+                    .build();
 
-      try {
-        firebaseMessaging.send(message);
-      } catch (FirebaseMessagingException e) {
-        log.warn("알림 보내기를 실패하였습니다. targetUserId={}", request.targetUserId());
-      }
-    } else {
-      log.warn("서버에 저장된 해당 유저의 FirebaseToken이 존재하지 않습니다. targetUserId={}"
-          , request.targetUserId());
+            Message message = Message.builder()
+                    .setToken(member.getFirebaseToken())
+                    .setNotification(notification)
+                    .build();
+
+            try {
+                firebaseMessaging.send(message);
+            } catch (FirebaseMessagingException e) {
+                log.warn("알림 보내기를 실패하였습니다. targetUserId={}", request.targetUserId());
+            }
+        } else {
+            log.warn("서버에 저장된 해당 유저의 FirebaseToken이 존재하지 않습니다. targetUserId={}"
+                    , request.targetUserId());
+        }
     }
-  }
+
+    @Async("messagingTaskExecutor")
+    public void sendChattingNotificationByToken(FcmChatRequest request) {
+        final Member member = memberService.findMemberById(request.targetUserId());
+
+        if (member.existFirebaseToken()) {
+            Notification notification = Notification.builder()
+                    .setTitle("사고파삼")
+                    .setBody(request.message())
+                    .setImage("https://4983-s3.s3.ap-northeast-2.amazonaws.com/appIcon.png")
+                    .build();
+
+            Message message = Message.builder()
+                    .setToken(member.getFirebaseToken())
+                    .setNotification(notification)
+                    .putData("screenName", request.screenName())
+                    .putData("chatRoomId", request.chatRoomId().toString())
+                    .build();
+
+            try {
+                firebaseMessaging.send(message);
+            } catch (FirebaseMessagingException e) {
+                log.error("알림 보내기를 실패하였습니다. targetUserId={}", request.targetUserId());
+            }
+            return;
+        }
+        log.error("서버에 저장된 해당 유저의 FirebaseToken이 존재하지 않습니다. targetUserId={}", request.targetUserId());
+    }
 }
