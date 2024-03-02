@@ -22,5 +22,4 @@ public class AppConfig {
     executor.setMaxPoolSize(100);
     return executor;
   }
-
 }
