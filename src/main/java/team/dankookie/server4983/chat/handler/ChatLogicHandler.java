@@ -193,15 +193,14 @@ public class ChatLogicHandler {
                 Locker locker = lockerRepository.findByChatRoom(chatRoom)
                         .orElseThrow(() -> new ChatException("서적을 배치할 사물함을 찾을 수 없습니다."));
 
-                String buyerMessage = getMessage(UserRole.BUYER,BOOK_PLACEMENT_COMPLETE, chatRoom, locker);
-                String sellerMessage = getMessage(UserRole.SELLER,BOOK_PLACEMENT_COMPLETE, chatRoom,locker);
+                String buyerMessage = getMessage(UserRole.BUYER, BOOK_PLACEMENT_COMPLETE, locker);
+                String sellerMessage = getMessage(UserRole.SELLER, BOOK_PLACEMENT_COMPLETE, locker);
 
                 saveBuyerChat(chatRoom, BOOK_PLACEMENT_COMPLETE_BUYER, buyerMessage);
                 saveSellerChat(chatRoom, BOOK_PLACEMENT_COMPLETE_SELLER, sellerMessage);
-                // 판매자 메시지 전송 필요
-                sendChattingNotification(buyer, buyerMessage, "Chatbot", chatRoom.getChatRoomId());
-                sendChattingNotification(seller, "", "Chatbot", chatRoom.getChatRoomId());
 
+                sendChattingNotification(buyer, buyerMessage, "Chatbot", chatRoom.getChatRoomId());
+                sendChattingNotification(seller, sellerMessage, "Chatbot", chatRoom.getChatRoomId());
 
                 chatRoom.setInteractStep(5);
 
@@ -235,13 +234,13 @@ public class ChatLogicHandler {
         throw new ChatException("잘못된 데이터 요청입니다.");
     }
 
-    private String getMessage(UserRole userRole, ContentType contentType, ChatRoom chatRoom, Locker locker) {
+    private String getMessage(UserRole userRole, ContentType contentType, Locker locker) {
         switch (contentType) {
             case BOOK_PLACEMENT_COMPLETE -> {
-                if (userRole == UserRole.SELLER){
-                    return String.format("구매자에게 사물함 정보가 전송되었습니다.\n\n"
+                if (userRole == UserRole.SELLER) {
+                    return "구매자에게 사물함 정보가 전송되었습니다.\n\n"
                             + "구매자가 사물함에서 서적을 수령한 후,\n"
-                            + "판매금액이 2일 내로 자동 입금될 예정입니다:)\n");
+                            + "판매금액이 2일 내로 자동 입금될 예정입니다:)\n";
                 }
                 return
                         String.format("서적 배치가 완료되었습니다.\n" +
