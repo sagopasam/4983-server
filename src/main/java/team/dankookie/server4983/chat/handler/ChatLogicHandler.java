@@ -2,6 +2,7 @@ package team.dankookie.server4983.chat.handler;
 
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PLACEMENT_COMPLETE;
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PLACEMENT_COMPLETE_BUYER;
+import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PLACEMENT_COMPLETE_SELLER;
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PLACEMENT_SET;
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PLACEMENT_SET_SELLER;
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PURCHASE_REQUEST;
@@ -22,6 +23,8 @@ import static team.dankookie.server4983.chat.constant.ContentType.PAYMENT_CONFIR
 import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE;
 import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE_BUYER;
 import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE_SELLER;
+import static team.dankookie.server4983.chat.handler.ChatLogicHandler.UserRole.BUYER;
+import static team.dankookie.server4983.chat.handler.ChatLogicHandler.UserRole.SELLER;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -76,7 +79,7 @@ public class ChatLogicHandler {
                 if (chatRoom.getInteractStep() >= 1) {
                     throw new ChatException("이미 거래 요청을 보냈습니다.");
                 }
-                String sellerMessage = getMessage(BOOK_PURCHASE_START, UserRole.SELLER, chatRoom);
+                String sellerMessage = getMessage(BOOK_PURCHASE_START, SELLER, chatRoom);
                 String buyerMessage = getMessage(BOOK_PURCHASE_START, UserRole.BUYER, chatRoom);
 
                 saveSellerChat(chatRoom, BOOK_PURCHASE_START_SELLER, sellerMessage);
@@ -86,7 +89,7 @@ public class ChatLogicHandler {
                 sendChattingNotification(seller, sellerMessage, "Chatbot", chatRoom.getChatRoomId());
                 sendChattingNotification(buyer, buyerMessage, "Chatbot", chatRoom.getChatRoomId());
 
-                String sellerWarningMessage = getMessage(BOOK_PURCHASE_WARNING, UserRole.SELLER, chatRoom);
+                String sellerWarningMessage = getMessage(BOOK_PURCHASE_WARNING, SELLER, chatRoom);
                 String buyerWarningMessage = getMessage(BOOK_PURCHASE_WARNING, UserRole.BUYER, chatRoom);
 
                 saveSellerChat(chatRoom, BOOK_PURCHASE_START_NOTIFY_SELLER, sellerWarningMessage);
@@ -105,7 +108,7 @@ public class ChatLogicHandler {
                 if (chatRoom.getInteractStep() >= 2) {
                     throw new ChatException("이미 거래 요청을 수락했습니다.");
                 }
-                String sellerMessage = getMessage(BOOK_PURCHASE_REQUEST, UserRole.SELLER, chatRoom);
+                String sellerMessage = getMessage(BOOK_PURCHASE_REQUEST, SELLER, chatRoom);
                 String buyerMessage = getMessage(BOOK_PURCHASE_REQUEST, UserRole.BUYER, chatRoom);
 
                 SellerChat sellerChat = saveSellerChat(chatRoom, BOOK_PURCHASE_REQUEST_SELLER,
@@ -131,7 +134,7 @@ public class ChatLogicHandler {
                     throw new ChatException("이미 거래를 거절했습니다.");
                 }
 
-                String sellerMessage = getMessage(BOOK_SALE_REJECTION, UserRole.SELLER, chatRoom);
+                String sellerMessage = getMessage(BOOK_SALE_REJECTION, SELLER, chatRoom);
                 String buyerMessage = getMessage(BOOK_SALE_REJECTION, UserRole.BUYER, chatRoom);
 
                 SellerChat sellerChat = saveSellerChat(chatRoom, BOOK_SALE_REJECTION_SELLER,
@@ -155,7 +158,7 @@ public class ChatLogicHandler {
                     throw new ChatException("이미 입금 확인을 했습니다.");
                 }
 
-                String sellerMessage = getMessage(PAYMENT_CONFIRMATION_COMPLETE, UserRole.SELLER, chatRoom);
+                String sellerMessage = getMessage(PAYMENT_CONFIRMATION_COMPLETE, SELLER, chatRoom);
                 String buyerMessage = getMessage(PAYMENT_CONFIRMATION_COMPLETE, UserRole.BUYER, chatRoom);
 
                 saveSellerChat(chatRoom, PAYMENT_CONFIRMATION_COMPLETE_SELLER, sellerMessage);
@@ -191,11 +194,15 @@ public class ChatLogicHandler {
                 Locker locker = lockerRepository.findByChatRoom(chatRoom)
                         .orElseThrow(() -> new ChatException("서적을 배치할 사물함을 찾을 수 없습니다."));
 
-                String buyerMessage = getMessage(BOOK_PLACEMENT_COMPLETE, chatRoom, locker);
-                saveBuyerChat(chatRoom, BOOK_PLACEMENT_COMPLETE_BUYER, buyerMessage);
+                String buyerMessage = getMessage(BUYER,BOOK_PLACEMENT_COMPLETE, chatRoom, locker);
+                String sellerMessage = getMessage(SELLER,BOOK_PLACEMENT_COMPLETE, chatRoom,locker);
 
+                saveBuyerChat(chatRoom, BOOK_PLACEMENT_COMPLETE_BUYER, buyerMessage);
+                saveSellerChat(chatRoom, BOOK_PLACEMENT_COMPLETE_SELLER, sellerMessage);
                 // 판매자 메시지 전송 필요
                 sendChattingNotification(buyer, buyerMessage, "Chatbot", chatRoom.getChatRoomId());
+                sendChattingNotification(seller, "", "Chatbot", chatRoom.getChatRoomId());
+
 
                 chatRoom.setInteractStep(5);
 
@@ -227,6 +234,29 @@ public class ChatLogicHandler {
         }
 
         throw new ChatException("잘못된 데이터 요청입니다.");
+    }
+
+    private String getMessage(UserRole userRole, ContentType contentType, ChatRoom chatRoom, Locker locker) {
+        switch (contentType) {
+            case BOOK_PLACEMENT_COMPLETE -> {
+                if (userRole == SELLER){
+                    return String.format("구매자에게 사물함 정보가 전송되었습니다.\n\n"
+                            + "구매자가 사물함에서 서적을 수령한 후,\n"
+                            + "판매금액이 2일 내로 자동 입금될 예정입니다:)\n");
+                }
+                return
+                        String.format("서적 배치가 완료되었습니다.\n" +
+                                        "금일 내 수령해주시길 바랍니다.\n" +
+                                        "\n" +
+                                        "“거래 완료\" 버튼을 눌러야, 판매자에게 판매금액이 입금되오니, 수령 후 버튼을 꼭 눌러주세요 \n" +
+                                        "\n" +
+                                        "사물함 번호: %s번\n" +
+                                        "사물함 비밀번호: *%s#\n"
+                                , locker.getLockerNumber()
+                                , locker.getPassword());
+            }
+        }
+        throw new RuntimeException("잘못된 타입입니다. seller , buyer 중 하나만 선택해주세요.");
     }
 
     private static void ifChattingAlreadyFinishedThrowError(ChatRoom chatRoom) {
