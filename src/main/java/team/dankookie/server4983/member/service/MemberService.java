@@ -35,11 +35,11 @@ public class MemberService {
 
   private final S3UploadService uploadService;
   private final MemberRepository memberRepository;
-  private final MemberImageRepository memberImageRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenUtils jwtTokenUtils;
   private final EntityManager entityManager;
 
+  @Transactional(readOnly = true)
   public Member findMemberById(Long id) {
     return memberRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));

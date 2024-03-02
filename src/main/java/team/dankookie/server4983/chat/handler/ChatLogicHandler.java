@@ -194,6 +194,7 @@ public class ChatLogicHandler {
                 String buyerMessage = getMessage(BOOK_PLACEMENT_COMPLETE, chatRoom, locker);
                 saveBuyerChat(chatRoom, BOOK_PLACEMENT_COMPLETE_BUYER, buyerMessage);
 
+                // 판매자 메시지 전송 필요
                 sendChattingNotification(buyer, buyerMessage, "Chatbot", chatRoom.getChatRoomId());
 
                 chatRoom.setInteractStep(5);
@@ -412,16 +413,12 @@ public class ChatLogicHandler {
         return koreanFormat.format(number);
     }
 
-    private void sendChattingNotification(Member member, String message, String screenName,
-                                          Long chatRoomId) {
-        fcmService.sendChattingNotificationByToken(
-                FcmChatRequest.of(member.getId(), message, screenName, chatRoomId)
-        );
+    private void sendChattingNotification(Member member, String message, String screenName, Long chatRoomId) {
+        fcmService.sendChattingNotificationByToken(FcmChatRequest.of(member.getId(), message, screenName, chatRoomId));
     }
 
     private BuyerChat saveBuyerChat(ChatRoom chatRoom, ContentType contentType, String buyerMessage) {
-        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, contentType,
-                chatRoom);
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(buyerMessage, contentType, chatRoom);
         buyerChatRepository.save(buyerChat);
         chatRoom.addBuyerChat(buyerChat);
         return buyerChat;
@@ -429,8 +426,7 @@ public class ChatLogicHandler {
 
     private SellerChat saveSellerChat(ChatRoom chatRoom, ContentType contentType,
                                       String sellerMessage) {
-        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, contentType,
-                chatRoom);
+        SellerChat sellerChat = SellerChat.buildSellerChat(sellerMessage, contentType, chatRoom);
         sellerChatRepository.save(sellerChat);
         chatRoom.addSellerChat(sellerChat);
         return sellerChat;
