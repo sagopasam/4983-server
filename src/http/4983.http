@@ -1,0 +1,8 @@
+### 시나리오 배치 생성
+POST {{4983-api}}/
+Content-Type: application/json
+Cookie:
+
+{
+
+}
