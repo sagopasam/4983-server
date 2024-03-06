@@ -2,6 +2,7 @@ package team.dankookie.server4983.book.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import team.dankookie.server4983.book.constant.College;
 import team.dankookie.server4983.book.constant.Department;
 import team.dankookie.server4983.book.domain.UsedBook;
@@ -13,10 +14,10 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class UsedBookListService {
 
     private final UsedBookRepository usedBookRepository;
-    private final BookImageRepository bookImageRepository;
 
     public List<UsedBookListResponse> getUsedBookList(boolean isOrderByTradeAvailableDatetime) {
         return usedBookRepository.getUsedBookList(isOrderByTradeAvailableDatetime);

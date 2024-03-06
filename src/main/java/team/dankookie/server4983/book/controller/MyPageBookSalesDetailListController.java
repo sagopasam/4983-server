@@ -21,7 +21,6 @@ public class MyPageBookSalesDetailListController {
 
     @GetMapping
     public ResponseEntity<List<UsedBookListResponse>> getMyPageBookSalesDetailList(@RequestParam boolean canBuy, AccessToken accessToken) {
-
         return ResponseEntity.ok(myPageBookSalesDetailListService.getMyPageBookSalesDetailList(canBuy, accessToken));
     }
 }

@@ -20,3 +20,5 @@ spring:
       - submodule/application-jwt.yml
       - submodule/application-sms.yaml
       - submodule/application-s3.yml
+  jpa:
+    open-in-view: false
