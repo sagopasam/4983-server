@@ -1,5 +1,6 @@
 package team.dankookie.server4983.member.repository;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import team.dankookie.server4983.member.domain.Member;
 

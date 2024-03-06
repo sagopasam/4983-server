@@ -4,6 +4,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -37,29 +38,29 @@ public class FcmService {
 
     @Async("messagingTaskExecutor")
     public void sendNotificationByToken(FcmBaseRequest request) {
+        final List<Member> members = request.members();
 
-        Member member = memberService.findMemberById(request.targetUserId());
+        for (Member member : members) {
+            if (member.getFirebaseToken() != null) {
+                Notification notification = Notification.builder()
+                        .setTitle(request.title())
+                        .setBody(request.body())
+                        .setImage("https://4983-s3.s3.ap-northeast-2.amazonaws.com/appIcon.png")
+                        .build();
 
-        if (member.getFirebaseToken() != null) {
-            Notification notification = Notification.builder()
-                    .setTitle(request.title())
-                    .setBody(request.body())
-                    .setImage("https://4983-s3.s3.ap-northeast-2.amazonaws.com/appIcon.png")
-                    .build();
+                Message message = Message.builder()
+                        .setToken(member.getFirebaseToken())
+                        .setNotification(notification)
+                        .build();
 
-            Message message = Message.builder()
-                    .setToken(member.getFirebaseToken())
-                    .setNotification(notification)
-                    .build();
-
-            try {
-                firebaseMessaging.send(message);
-            } catch (FirebaseMessagingException e) {
-                log.warn("알림 보내기를 실패하였습니다. targetUserId={}", request.targetUserId());
+                try {
+                    firebaseMessaging.send(message);
+                } catch (FirebaseMessagingException e) {
+                    log.warn("알림 보내기를 실패하였습니다. targetUserId={}", member.getId());
+                }
+            } else {
+                log.warn("서버에 저장된 해당 유저의 FirebaseToken이 존재하지 않습니다. targetUserId={}", member.getId());
             }
-        } else {
-            log.warn("서버에 저장된 해당 유저의 FirebaseToken이 존재하지 않습니다. targetUserId={}"
-                    , request.targetUserId());
         }
     }
 
