@@ -11,6 +11,7 @@ import team.dankookie.server4983.book.dto.AdminUsedBookListResponse;
 import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class AdminUsedBookService {
 

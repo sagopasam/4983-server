@@ -22,6 +22,7 @@ import team.dankookie.server4983.s3.service.S3UploadService;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class UsedBookService {
 

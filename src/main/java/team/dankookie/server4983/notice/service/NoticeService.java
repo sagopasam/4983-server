@@ -15,6 +15,7 @@ import team.dankookie.server4983.notice.repository.NoticeRepository;
 import team.dankookie.server4983.s3.service.S3UploadService;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class NoticeService {
 

@@ -26,9 +26,6 @@ import team.dankookie.server4983.sms.service.CoolSmsService;
 @RequiredArgsConstructor
 public class SchedulerService {
 
-  private final SchedulerRepository schedulerRepository;
-  private final FcmService fcmService;
-  private final LockerRepository lockerRepository;
   private final BuyerChatRepository buyerChatRepository;
   private final SellerChatRepository sellerChatRepository;
   private final ChatRoomRepository chatRoomRepository;

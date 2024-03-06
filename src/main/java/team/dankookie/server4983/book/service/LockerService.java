@@ -15,6 +15,7 @@ import team.dankookie.server4983.chat.repository.ChatRoomRepository;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class LockerService {
 

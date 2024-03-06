@@ -26,6 +26,7 @@ import team.dankookie.server4983.chat.handler.ChatLogicHandler;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class AdminChatService {
 

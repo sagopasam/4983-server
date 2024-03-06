@@ -11,6 +11,7 @@ import team.dankookie.server4983.book.dto.AdminLockerListResponse;
 import team.dankookie.server4983.book.repository.locker.LockerRepository;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class AdminLockerService {
 
