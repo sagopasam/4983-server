@@ -40,7 +40,7 @@ public class MemberRegisterController {
 
     @PostMapping
     public ResponseEntity<Void> register(@RequestBody MemberRegisterRequest request) {
-        Member member = memberService.register(request);
+        memberService.register(request);
         return ResponseEntity.ok().build();
     }
 }

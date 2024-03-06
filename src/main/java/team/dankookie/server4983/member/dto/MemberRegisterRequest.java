@@ -47,21 +47,6 @@ public record MemberRegisterRequest(
         );
     }
 
-    public Member toEntity() {
-        return Member.builder()
-                .studentId(studentId)
-                .department(department)
-                .yearOfAdmission(yearOfAdmission)
-                .nickname(nickname)
-                .password(password)
-                .phoneNumber(phoneNumber)
-                .marketingAgree(marketingAgree)
-                .accountHolder(accountHolder)
-                .accountBank(accountBank)
-                .accountNumber(accountNumber)
-                .build();
-    }
-
     public Member toEntity(String password) {
         return Member.builder()
                 .studentId(studentId)

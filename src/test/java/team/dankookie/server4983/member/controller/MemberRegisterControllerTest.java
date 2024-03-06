@@ -10,6 +10,7 @@ import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.dto.MemberRegisterRequest;
 import team.dankookie.server4983.member.service.MemberService;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -135,8 +136,7 @@ class MemberRegisterControllerTest extends BaseControllerTest {
                 "firebaseToken"
         );
 
-        when(memberService.register(request))
-                .thenReturn(Member.builder().build());
+        doNothing().when(memberService).register(request);
 
         //when
         ResultActions resultActions = mockMvc.perform(post(API + "/register")
