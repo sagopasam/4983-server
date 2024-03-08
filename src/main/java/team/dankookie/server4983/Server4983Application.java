@@ -10,9 +10,7 @@ import team.dankookie.server4983.jwt.constants.TokenSecretKey;
 @SpringBootApplication
 @EnableScheduling
 public class Server4983Application {
-
     public static void main(String[] args) {
         SpringApplication.run(Server4983Application.class, args);
     }
-
 }
