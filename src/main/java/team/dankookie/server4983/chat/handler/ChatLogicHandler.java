@@ -47,6 +47,7 @@ import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.sms.service.CoolSmsService;
 
 @Component
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ChatLogicHandler {
 
