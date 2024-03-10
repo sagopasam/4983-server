@@ -287,7 +287,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
     @Override
     public Page<AdminChatRoomListResponse> getAdminChatList(Pageable pageable, String searchKeyword,
                                                             int interact) {
-
+        //interact가 0이면 전체 조회.
         List<AdminChatRoomListResponse> content = jpaQueryFactory
                 .select(
                         new QAdminChatRoomListResponse(
@@ -306,7 +306,9 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                         chatRoom.usedBook.name.contains(searchKeyword)
                                 .or(chatRoom.seller.studentId.contains(searchKeyword))
                                 .or(chatRoom.buyer.studentId.contains(searchKeyword))
-                        , chatRoom.interactStep.eq(interact)
+                                .and(
+                                        interact == 0 ? Expressions.asNumber(1).eq(1) : chatRoom.interactStep.eq(interact)
+                                )
                 ).limit(12)
                 .fetch();
 
@@ -318,7 +320,9 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                         chatRoom.usedBook.name.contains(searchKeyword)
                                 .or(chatRoom.seller.studentId.contains(searchKeyword))
                                 .or(chatRoom.buyer.studentId.contains(searchKeyword))
-                        , chatRoom.interactStep.eq(interact)
+                                .and(
+                                        interact == 0 ? Expressions.asNumber(1).eq(1) : chatRoom.interactStep.eq(interact)
+                                )
                 ).fetchOne();
 
         return new PageImpl<>(content, pageable, count);
