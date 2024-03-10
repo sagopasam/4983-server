@@ -8,6 +8,7 @@ import static team.dankookie.server4983.chat.domain.QChatRoom.chatRoom;
 import static team.dankookie.server4983.chat.domain.QSellerChat.sellerChat;
 import static team.dankookie.server4983.member.domain.QMember.member;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
@@ -288,6 +289,15 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
     public Page<AdminChatRoomListResponse> getAdminChatList(Pageable pageable, String searchKeyword,
                                                             int interact) {
         //interact가 0이면 전체 조회.
+        BooleanBuilder whereConditions = new BooleanBuilder()
+                .and(chatRoom.usedBook.name.contains(searchKeyword)
+                        .or(chatRoom.seller.studentId.contains(searchKeyword))
+                        .or(chatRoom.buyer.studentId.contains(searchKeyword)));
+
+        if (interact != 0) {
+            whereConditions.and(chatRoom.interactStep.eq(interact));
+        }
+
         List<AdminChatRoomListResponse> content = jpaQueryFactory
                 .select(
                         new QAdminChatRoomListResponse(
@@ -302,28 +312,16 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                         )
                 ).from(chatRoom)
                 .leftJoin(locker).on(locker.chatRoom.eq(chatRoom))
-                .where(
-                        chatRoom.usedBook.name.contains(searchKeyword)
-                                .or(chatRoom.seller.studentId.contains(searchKeyword))
-                                .or(chatRoom.buyer.studentId.contains(searchKeyword))
-                                .and(
-                                        interact == 0 ? Expressions.asNumber(1).eq(1) : chatRoom.interactStep.eq(interact)
-                                )
-                ).limit(12)
+                .where(whereConditions)
+                .limit(12)
                 .fetch();
 
         Long count = jpaQueryFactory
                 .select(chatRoom.count())
                 .from(chatRoom)
                 .leftJoin(locker).on(locker.chatRoom.eq(chatRoom))
-                .where(
-                        chatRoom.usedBook.name.contains(searchKeyword)
-                                .or(chatRoom.seller.studentId.contains(searchKeyword))
-                                .or(chatRoom.buyer.studentId.contains(searchKeyword))
-                                .and(
-                                        interact == 0 ? Expressions.asNumber(1).eq(1) : chatRoom.interactStep.eq(interact)
-                                )
-                ).fetchOne();
+                .where(whereConditions)
+                .fetchOne();
 
         return new PageImpl<>(content, pageable, count);
     }
