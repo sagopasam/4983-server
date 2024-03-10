@@ -53,7 +53,7 @@ public class ChatController {
       AccessToken accessToken) {
 
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(chatService.chatRequestHandler(chatRequest, accessToken));
+        .body(chatService.chatRequestHandler(chatRequest, accessToken)  );
   }
 
   @GetMapping("/not-read/{chatRoomId}")

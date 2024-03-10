@@ -24,7 +24,6 @@ import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE
 import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE_BUYER;
 import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE_SELLER;
 
-
 import java.text.DecimalFormat;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -144,9 +143,11 @@ public class ChatLogicHandler {
                 sellerChat.updateIsReadTrue();
 
                 sendChattingNotification(seller, sellerMessage, "Chatbot", chatRoom.getChatRoomId());
+
                 sendChattingNotification(buyer, buyerMessage, "Chatbot", chatRoom.getChatRoomId());
 
                 chatRoom.setInteractStep(999);
+
                 chatRoom.getUsedBook().stopTrade();
 
                 return List.of(sellerChat.toChatMessageResponse());
@@ -169,6 +170,7 @@ public class ChatLogicHandler {
                 chatRoom.setInteractStep(3);
                 return List.of();
             }
+
             case BOOK_PLACEMENT_SET -> { // 서적 배치할 사물함 선택
                 if (chatRoom.getInteractStep() >= 4) {
                     throw new ChatException("이미 사물함을 선택 하였습니다.");
