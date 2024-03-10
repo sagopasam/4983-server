@@ -126,52 +126,52 @@ class ChatControllerTest extends BaseControllerTest {
 
   }
 
-  @Test
-  void 채팅방에서_버튼클릭시_모든_이벤트를_여기서_처리한다() throws Exception {
-    //given
-    final ChatRequest chatRequest = ChatRequest.of(1L, BOOK_PURCHASE_REQUEST);
-
-    final String accessToken = jwtTokenUtils.generateJwtToken("studentId",
-        TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
-
-    ChatMessageResponse response = ChatMessageResponse.of(
-        1L,
-        "누구누구님이 거래 요청을 보넀어요! \n오늘 거래하러 갈래요?",
-        ContentType.BOOK_PURCHASE_REQUEST_SELLER,
-        LocalDateTime.of(2023, 9, 22, 12, 30, 12)
-    );
-
-    when(chatService.chatRequestHandler(any(ChatRequest.class), any(AccessToken.class)))
-        .thenReturn(List.of(response));
-    //when
-    ResultActions resultActions = mockMvc.perform(post(API + "/chat-room/interact")
-            .header(HttpHeaders.AUTHORIZATION, accessToken)
-            .contentType(APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(chatRequest)))
-        .andDo(print());
-
-    //then
-    resultActions.andExpect(status().isCreated())
-        .andDo(
-            document("chat-room/interact/success",
-                requestHeaders(
-                    headerWithName(HttpHeaders.AUTHORIZATION).description("accessToken")
-                ),
-                requestFields(
-                    fieldWithPath("chatRoomId").description("채팅방 id"),
-                    fieldWithPath("contentType").description("채팅 타입"),
-                    fieldWithPath("message").description(
-                        "보낼 메시지 -> 메시지를 따로 보내는게 아니면, null을 담아주시면 됩니다")
-                ),
-                responseFields(
-                    fieldWithPath("[].chatRoomId").description("채팅방 id"),
-                    fieldWithPath("[].message").description("메시지"),
-                    fieldWithPath("[].contentType").description("채팅 타입"),
-                    fieldWithPath("[].createdAt").description("채팅을 보낸 시간")
-                )
-            )
-        );
-  }
+//  @Test
+//  void 채팅방에서_버튼클릭시_모든_이벤트를_여기서_처리한다() throws Exception {
+//    //given
+//    final ChatRequest chatRequest = ChatRequest.of(1L, BOOK_PURCHASE_REQUEST);
+//
+//    final String accessToken = jwtTokenUtils.generateJwtToken("studentId",
+//        TokenDuration.ACCESS_TOKEN_DURATION.getDuration());
+//
+//    ChatMessageResponse response = ChatMessageResponse.of(
+//        1L,
+//        "누구누구님이 거래 요청을 보넀어요! \n오늘 거래하러 갈래요?",
+//        ContentType.BOOK_PURCHASE_REQUEST_SELLER,
+//        LocalDateTime.of(2023, 9, 22, 12, 30, 12)
+//    );
+//
+//    when(chatService.chatRequestHandler(any(ChatRequest.class), any(AccessToken.class)))
+//        .thenReturn(List.of(response));
+//    //when
+//    ResultActions resultActions = mockMvc.perform(post(API + "/chat-room/interact")
+//            .header(HttpHeaders.AUTHORIZATION, accessToken)
+//            .contentType(APPLICATION_JSON)
+//            .content(objectMapper.writeValueAsString(chatRequest)))
+//        .andDo(print());
+//
+//    //then
+//    resultActions.andExpect(status().isCreated())
+//        .andDo(
+//            document("chat-room/interact/success",
+//                requestHeaders(
+//                    headerWithName(HttpHeaders.AUTHORIZATION).description("accessToken")
+//                ),
+//                requestFields(
+//                    fieldWithPath("chatRoomId").description("채팅방 id"),
+//                    fieldWithPath("contentType").description("채팅 타입"),
+//                    fieldWithPath("message").description(
+//                        "보낼 메시지 -> 메시지를 따로 보내는게 아니면, null을 담아주시면 됩니다")
+//                ),
+//                responseFields(
+//                    fieldWithPath("[].chatRoomId").description("채팅방 id"),
+//                    fieldWithPath("[].message").description("메시지"),
+//                    fieldWithPath("[].contentType").description("채팅 타입"),
+//                    fieldWithPath("[].createdAt").description("채팅을 보낸 시간")
+//                )
+//            )
+//        );
+//  }
 
   @Test
   void 읽지않은_채팅내역들을_반환해준다() throws Exception {

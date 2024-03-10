@@ -21,4 +21,4 @@ spring:
       - submodule/application-sms.yaml
       - submodule/application-s3.yml
   jpa:
-    open-in-view: true
+    open-in-view: false

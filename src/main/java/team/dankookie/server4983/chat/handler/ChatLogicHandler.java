@@ -110,7 +110,7 @@ public class ChatLogicHandler {
 
                 SellerChat sellerChat = saveSellerChat(chatRoom, BOOK_PURCHASE_REQUEST_SELLER,
                         sellerMessage);
-                BuyerChat buyerChat = saveBuyerChat(chatRoom, BOOK_PURCHASE_REQUEST_BUYER,
+                saveBuyerChat(chatRoom, BOOK_PURCHASE_REQUEST_BUYER,
                         buyerMessage);
 
                 sellerChat.updateIsReadTrue();

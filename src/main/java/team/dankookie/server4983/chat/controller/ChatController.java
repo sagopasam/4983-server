@@ -1,5 +1,7 @@
 package team.dankookie.server4983.chat.controller;
 
+import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PURCHASE_START;
+
 import java.util.List;
 import javax.security.auth.login.AccountException;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import team.dankookie.server4983.chat.dto.ChatRequest;
 import team.dankookie.server4983.chat.dto.ChatRoomRequest;
 import team.dankookie.server4983.chat.dto.ChatRoomResponse;
 import team.dankookie.server4983.chat.dto.ChatStopRequest;
+import team.dankookie.server4983.chat.handler.ChatLogicHandler;
 import team.dankookie.server4983.chat.service.ChatService;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 
@@ -27,7 +30,7 @@ import team.dankookie.server4983.jwt.dto.AccessToken;
 public class ChatController {
 
   private final ChatService chatService;
-
+  private final ChatLogicHandler chatLogicHandler;
   @PostMapping
   public ResponseEntity<ChatRoomResponse> createChatRoom(
       @RequestBody ChatRoomRequest chatRoomRequest,
@@ -53,7 +56,7 @@ public class ChatController {
       AccessToken accessToken) {
 
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(chatService.chatRequestHandler(chatRequest, accessToken)  );
+        .body(chatLogicHandler.chatLogic(chatRequest));
   }
 
   @GetMapping("/not-read/{chatRoomId}")
