@@ -70,7 +70,7 @@ public class ChatLogicHandler {
 
         Member buyer = chatRoom.getBuyer();
         Member seller = chatRoom.getSeller();
-
+        initChatRoomInteract(chatRoom);
         ifChattingAlreadyFinishedThrowError(chatRoom);
 
         switch (chatRequest.getContentType()) {
@@ -437,7 +437,9 @@ public class ChatLogicHandler {
     private String addZeroWhenLessThenTen(int number) {
         return number < 10 ? "0" + number : String.valueOf(number);
     }
-
+    private static void initChatRoomInteract(ChatRoom chatRoom) {
+        chatRoom.setInteractStep(0);
+    }
     public String formatToKoreanPrice(int number) {
         DecimalFormat koreanFormat = new DecimalFormat("###,###");
 
