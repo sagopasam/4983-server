@@ -280,7 +280,7 @@ public class ChatLogicHandler {
                     case BUYER -> {
                         return
                                 String.format(
-                                        "'%s' 님께 '%s' 서적 거래 요청을 수락했습니다. \n\n" +
+                                        "'%s' 님께 '%s' 서적 거래를 요청했습니다. \n\n" +
                                                 "판매자의 응답을 기다려주세요. :)",
                                         chatRoom.getSeller().getNickname(), chatRoom.getUsedBook().getName());
                     }
