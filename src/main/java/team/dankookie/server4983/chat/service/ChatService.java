@@ -66,9 +66,10 @@ public class ChatService {
 
         Member member = memberService.findMemberByStudentId(accessToken.studentId());
 
-        chatRoomRepository.findBySellerOrBuyerAndChatRoomId(member.getId(), member.getId(), chatRequest.getChatRoomId())
+        ChatRoom chatRoom = chatRoomRepository.findBySellerOrBuyerAndChatRoomId(member.getId(), member.getId(),
+                        chatRequest.getChatRoomId())
                 .orElseThrow(() -> new ChatException("해당 채팅방에 존재하지 않는 사용자입니다."));
-
+        initChatRoomInteract(chatRoom);
         return chatLogicHandler.chatLogic(chatRequest);
     }
 
@@ -228,6 +229,8 @@ public class ChatService {
 
         findChatRoom.getUsedBook().setIsDeletedTrue();
     }
-
+    private static void initChatRoomInteract(ChatRoom chatRoom) {
+        chatRoom.setInteractStep(0);
+    }
 
 }

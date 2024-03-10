@@ -67,7 +67,6 @@ public class ChatLogicHandler {
 
         ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRequest.getChatRoomId())
                 .orElseThrow(() -> new ChatException("채팅방을 찾을 수 없습니다."));
-
         Member buyer = chatRoom.getBuyer();
         Member seller = chatRoom.getSeller();
         ifChattingAlreadyFinishedThrowError(chatRoom);
@@ -81,7 +80,7 @@ public class ChatLogicHandler {
                 String buyerMessage = getMessage(BOOK_PURCHASE_START, UserRole.BUYER, chatRoom);
 
                 saveSellerChat(chatRoom, BOOK_PURCHASE_START_SELLER, sellerMessage);
-                BuyerChat buyerChat = saveBuyerChat(chatRoom, BOOK_PURCHASE_START_BUYER,
+                saveBuyerChat(chatRoom, BOOK_PURCHASE_START_BUYER,
                         buyerMessage);
 
                 sendChattingNotification(seller, sellerMessage, "Chatbot", chatRoom.getChatRoomId());
