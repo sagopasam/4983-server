@@ -261,6 +261,7 @@ public class ChatLogicHandler {
     private static void ifChattingAlreadyFinishedThrowError(ChatRoom chatRoom) {
         if (chatRoom.getInteractStep() == 999 || chatRoom.getInteractStep() == 1000
                 || chatRoom.getInteractStep() == 1001) {
+
             throw new ChatException("이미 종료된 거래입니다.");
         }
     }
