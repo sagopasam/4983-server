@@ -127,8 +127,9 @@ public class SchedulerService {
   @Transactional
   public void buyerNotDepositMoney() {
     List<ChatRoom> chatRoomListByTradeStep = chatRoomRepository.findAllByInteractStep(1);
+    chatRoomListByTradeStep.addAll(chatRoomRepository.findAllByInteractStep(2));
     chatRoomListByTradeStep.forEach(chatRoom -> {
-      LocalDateTime tradeAvailableDatetime = chatRoom.getUsedBook().getTradeAvailableDatetime();
+      LocalDateTime tradeAvailableDatetime = chatRoom.getUsedBook().getTradeAvailableDatetime().minusHours(9);
       long hours = Duration.between(LocalDateTime.now(), tradeAvailableDatetime).toHours();
       if (hours < 24 && buyerChatRepository.findAllByChatRoom(chatRoom).stream().noneMatch(
           buyerChat -> buyerChat.getContentType().equals(TRADE_WARNING_BUYER))) {
