@@ -26,6 +26,7 @@ public class FcmService {
 
     @Transactional
     public void updateFcmToken(String studentId, String token) {
+
         Member findMember = memberRepository.findByStudentId(studentId)
                 .orElseThrow(
                         () -> new IllegalArgumentException("해당하는 학번의 유저가 존재하지 않습니다.")
