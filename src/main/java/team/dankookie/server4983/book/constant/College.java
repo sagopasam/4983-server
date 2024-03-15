@@ -14,7 +14,8 @@ public enum College {
     LAW("법과대학"),
     ENGINEERING("공과대학"),
     EDUCATION("사범대학"),
-    MUSIC_AND_ARTS("음악예술대학");
+    MUSIC_AND_ARTS("음악예술대학"),
+    DEFAULT_VALUE("기본값");
 
     private final String koName;
 }

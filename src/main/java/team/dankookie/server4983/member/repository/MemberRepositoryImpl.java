@@ -55,8 +55,8 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     }
 
     private static BooleanExpression isSearchKeywordDepartment(Department department) {
-        System.out.println(department);
-        if (department == null) {
+
+        if (department == Department.DEFAULT) {
             return null;
         }
         return member.department.eq(department);
@@ -109,7 +109,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     }
 
     private BooleanBuilder pushCondition(final List<String> memberIds, final List<Department> departments,
-                                                                    final List<Integer> yearOfAdmissions) {
+                                         final List<Integer> yearOfAdmissions) {
         final BooleanBuilder booleanBuilder = new BooleanBuilder();
         if (!CollectionUtils.isEmpty(memberIds)) {
             booleanBuilder.and(member.studentId.in(memberIds));

@@ -8,9 +8,10 @@ import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.dto.AdminMemberListResponse;
 
 public interface MemberRepositoryCustom {
-  Page<AdminMemberListResponse> getMember(Pageable pageable, String searchKeyword);
+    Page<AdminMemberListResponse> getMember(Pageable pageable, String searchKeyword);
 
-  Page<AdminMemberListResponse> getBlockedMember(Pageable pageable, String searchKeyword);
+    Page<AdminMemberListResponse> getBlockedMember(Pageable pageable, String searchKeyword);
 
-  List<Member> findByPushCondition(List<String> memberIds, List<Department> departments, List<Integer> yearOfAdmissions);
+    List<Member> findByPushCondition(List<String> memberIds, List<Department> departments,
+                                     List<Integer> yearOfAdmissions);
 }

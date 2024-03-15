@@ -4,9 +4,9 @@ import java.util.List;
 import team.dankookie.server4983.member.domain.Member;
 
 public record FcmBaseRequest(
-         List<Member> members,
-         String title,
-         String body
+        List<Member> members,
+        String title,
+        String body
 ) {
 
     public static FcmBaseRequest of(List<Member> members, String title, String body) {
