@@ -112,15 +112,15 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                                          final List<Integer> yearOfAdmissions) {
         final BooleanBuilder booleanBuilder = new BooleanBuilder();
         if (!CollectionUtils.isEmpty(memberIds)) {
-            booleanBuilder.and(member.studentId.in(memberIds));
+            booleanBuilder.or(member.studentId.in(memberIds));
         }
 
         if (!CollectionUtils.isEmpty(departments)) {
-            booleanBuilder.and(member.department.in(departments));
+            booleanBuilder.or(member.department.in(departments));
         }
 
         if (!CollectionUtils.isEmpty(yearOfAdmissions)) {
-            booleanBuilder.and(member.yearOfAdmission.in(yearOfAdmissions));
+            booleanBuilder.or(member.yearOfAdmission.in(yearOfAdmissions));
         }
 
         return booleanBuilder;

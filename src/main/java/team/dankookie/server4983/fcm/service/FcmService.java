@@ -55,6 +55,7 @@ public class FcmService {
 
                 try {
                     firebaseMessaging.send(message);
+
                 } catch (FirebaseMessagingException e) {
                     log.warn("알림 보내기를 실패하였습니다. targetUserId={}", member.getId());
                 }
