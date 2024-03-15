@@ -21,6 +21,22 @@ public class MemberFixture {
                 .build();
     }
 
+    public static final Member createMemberByFirebaseToken(String token) {
+        return Member.builder()
+                .accountBank(AccountBank.K)
+                .accountHolder("accountHolder")
+                .accountNumber("accountNumber")
+                .firebaseToken(token)
+                .nickname("studentId")
+                .studentId("studentId")
+                .phoneNumber("phoneNumber")
+                .college(Department.DEPARTMENT_OF_LAW.getCollege())
+                .department(Department.DEPARTMENT_OF_LAW)
+                .yearOfAdmission(2023)
+                .password("password")
+                .build();
+    }
+
     public static Member createMemberByNickname(String nickname) {
         return Member.builder()
                 .accountBank(AccountBank.K)
