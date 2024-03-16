@@ -226,7 +226,7 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
                   .when(usedBook.bookStatus.eq(BookStatus.SOLD)).then(3)
                   .otherwise(4)
                   .asc(),
-              usedBook.tradeAvailableDatetime.desc()
+              usedBook.tradeAvailableDatetime.asc()
           ).fetch();
     } else {
 
