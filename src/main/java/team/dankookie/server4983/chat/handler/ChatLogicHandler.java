@@ -17,6 +17,9 @@ import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PURCHASE_
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_SALE_REJECTION;
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_SALE_REJECTION_BUYER;
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_SALE_REJECTION_SELLER;
+import static team.dankookie.server4983.chat.constant.ContentType.CANCEL;
+import static team.dankookie.server4983.chat.constant.ContentType.CANCEL_BUYER;
+import static team.dankookie.server4983.chat.constant.ContentType.CANCEL_SELLER;
 import static team.dankookie.server4983.chat.constant.ContentType.PAYMENT_CONFIRMATION_COMPLETE;
 import static team.dankookie.server4983.chat.constant.ContentType.PAYMENT_CONFIRMATION_COMPLETE_BUYER;
 import static team.dankookie.server4983.chat.constant.ContentType.PAYMENT_CONFIRMATION_COMPLETE_SELLER;
@@ -51,6 +54,9 @@ import team.dankookie.server4983.sms.service.CoolSmsService;
 @RequiredArgsConstructor
 public class ChatLogicHandler {
 
+    private static final int BOOK_PURCHASE_START = 1;
+    private static final int CANCEL_STEP = -1;
+
     private final ChatRoomRepository chatRoomRepository;
     private final FcmService fcmService;
     private final LockerRepository lockerRepository;
@@ -76,8 +82,8 @@ public class ChatLogicHandler {
                 if (chatRoom.getInteractStep() >= 1) {
                     throw new ChatException("이미 거래 요청을 보냈습니다.");
                 }
-                String sellerMessage = getMessage(BOOK_PURCHASE_START, UserRole.SELLER, chatRoom);
-                String buyerMessage = getMessage(BOOK_PURCHASE_START, UserRole.BUYER, chatRoom);
+                String sellerMessage = getMessage(ContentType.BOOK_PURCHASE_START, UserRole.SELLER, chatRoom);
+                String buyerMessage = getMessage(ContentType.BOOK_PURCHASE_START, UserRole.BUYER, chatRoom);
 
                 saveSellerChat(chatRoom, BOOK_PURCHASE_START_SELLER, sellerMessage);
                 saveBuyerChat(chatRoom, BOOK_PURCHASE_START_BUYER,
@@ -230,6 +236,25 @@ public class ChatLogicHandler {
                 return List.of(buyerChat.toChatMessageResponse());
             }
 
+            case CANCEL -> {
+                if (chatRoom.getInteractStep() >= BOOK_PURCHASE_START) {
+                    throw new ChatException("구매 요청 이후 단계에 있는 상품만 취소가 가능합니다.");
+                }
+                releaseLocker(chatRoom);
+
+                String sellerMessage = getMessage(CANCEL, UserRole.SELLER, chatRoom);
+                String buyerMessage = getMessage(CANCEL, UserRole.BUYER, chatRoom);
+
+                saveSellerChat(chatRoom, CANCEL_SELLER, sellerMessage);
+                saveBuyerChat(chatRoom, CANCEL_BUYER, buyerMessage);
+
+                sendChattingNotification(seller, sellerMessage, "Chatbot", chatRoom.getChatRoomId());
+                sendChattingNotification(buyer, buyerMessage, "Chatbot", chatRoom.getChatRoomId());
+
+                chatRoom.setInteractStep(CANCEL_STEP);
+                return List.of();
+            }
+
         }
 
         throw new ChatException("잘못된 데이터 요청입니다.");
@@ -287,6 +312,19 @@ public class ChatLogicHandler {
                     }
                 }
             }
+
+            case CANCEL -> {
+                switch (userRole) {
+                    case SELLER -> {
+                        return String.format("'%s' 님이 거래를 취소하였습니다.\n", chatRoom.getBuyer().getNickname());
+
+                    }
+                    case BUYER -> {
+                        return "거래가 정상적으로 취소되었습니다.\n";
+                    }
+                }
+            }
+
             case BOOK_PURCHASE_WARNING -> {
                 switch (userRole) {
                     case SELLER -> {
