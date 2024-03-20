@@ -17,6 +17,7 @@ public class PushService {
 
     private final FcmService fcmService;
     private final MemberRepository memberRepository;
+    private final String DEFAULT_TITLE = "사고파삼";
 
     public void push(AdminPushRequest request) {
         if (request.isAll()) {
@@ -25,13 +26,13 @@ public class PushService {
         }
 
         final List<Member> members = memberRepository.findByPushCondition(request.getMemberIds(), request.getDepartments(), request.getYearOfAdmissions());
-        final FcmBaseRequest fcmBaseRequest = FcmBaseRequest.of(members, "사고파삼", request.getMessage());
+        final FcmBaseRequest fcmBaseRequest = FcmBaseRequest.of(members, DEFAULT_TITLE, request.getMessage());
         fcmService.sendNotificationByToken(fcmBaseRequest);
     }
 
     private void pushAllMembers(final AdminPushRequest request) {
         final List<Member> members = memberRepository.findAll();
-        final FcmBaseRequest fcmBaseRequest = FcmBaseRequest.of(members, "사고파삼", request.getMessage());
+        final FcmBaseRequest fcmBaseRequest = FcmBaseRequest.of(members, DEFAULT_TITLE, request.getMessage());
         fcmService.sendNotificationByToken(fcmBaseRequest);
     }
 }
