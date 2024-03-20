@@ -54,7 +54,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         return new PageImpl<>(content, pageable, count);
     }
 
-    private static BooleanExpression isSearchKeywordDepartment(Department department) {
+    private  BooleanExpression isSearchKeywordDepartment(Department department) {
 
         if (department == Department.DEFAULT) {
             return null;
