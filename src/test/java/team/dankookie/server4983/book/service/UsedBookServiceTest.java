@@ -1,5 +1,15 @@
 package team.dankookie.server4983.book.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.Executor;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,15 +34,6 @@ import team.dankookie.server4983.member.service.MemberService;
 import team.dankookie.server4983.s3.dto.S3Response;
 import team.dankookie.server4983.s3.service.S3UploadService;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 class UsedBookServiceTest extends BaseServiceTest {
 
     @InjectMocks
@@ -51,6 +52,9 @@ class UsedBookServiceTest extends BaseServiceTest {
     MemberService memberService;
 
     @Mock
+    Executor defaultTaskExecutor;
+
+    @Mock
     JwtTokenUtils jwtTokenUtils;
 
     @Mock
@@ -59,12 +63,13 @@ class UsedBookServiceTest extends BaseServiceTest {
     @Test
     void 중고책을_저장하고_중고책_관련_이미지들을_저장한다() {
         //given
-        List<MultipartFile> multipartFileList = List.of(new MockMultipartFile("file", "fileOriginName", "image/jpeg", "file".getBytes()));
+        List<MultipartFile> multipartFileList = List.of(
+                new MockMultipartFile("file", "fileOriginName", "image/jpeg", "file".getBytes()));
         UsedBookSaveRequest usedBookSaveRequest = UsedBookSaveRequest.of(
                 College.LAW,
                 Department.BUSINESS,
                 15000,
-                LocalDateTime.of(2023, 9, 13,12,0),
+                LocalDateTime.of(2023, 9, 13, 12, 0),
                 "책이름",
                 "출판사",
                 false,
@@ -82,15 +87,17 @@ class UsedBookServiceTest extends BaseServiceTest {
                 .thenReturn(member);
         when(usedBookRepository.save(any()))
                 .thenReturn(UsedBook.builder().id(usedBookId).build());
-        when(uploadService.saveFileWithUUID(any()))
+        lenient().when(uploadService.saveFileWithUUID(any()))
                 .thenReturn(S3Response.of("imageName", "fileS3Key", "fileOriginName"));
 
         //when
-        UsedBookSaveResponse usedBookSaveResponse = usedBookService.saveAndSaveFiles(multipartFileList, usedBookSaveRequest, accessToken);
+        UsedBookSaveResponse usedBookSaveResponse = usedBookService.saveAndSaveFiles(multipartFileList,
+                usedBookSaveRequest, accessToken);
 
         //then
         assertThat(usedBookSaveResponse.usedBookId()).isEqualTo(usedBookId);
     }
+
 
     @Test
     void 중고서적의_id값으로_중고서적을_찾는다() {
@@ -112,7 +119,7 @@ class UsedBookServiceTest extends BaseServiceTest {
                 .name(bookName)
                 .publisher(publisher)
                 .price(15000)
-                .tradeAvailableDatetime(LocalDateTime.of(2023, 9, 13,12,0))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 9, 13, 12, 0))
                 .build();
 
         when(usedBookRepository.findById(usedBookId))
