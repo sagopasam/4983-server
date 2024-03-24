@@ -1,8 +1,24 @@
 server:
   port: 8080
+  tomcat:
+    mbeanregistry:
+      enabled: true
 frontend:
   url: http://localhost:3000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health
 
 spring:
   profiles:
     default: local
+  config:
+    import:
+      - submodule/application-jwt.yml
+      - submodule/application-sms.yaml
+      - submodule/application-s3.yml
+  jpa:
+    open-in-view: false

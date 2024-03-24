@@ -12,6 +12,10 @@ java {
     sourceCompatibility = '17'
 }
 
+jar {
+    enabled = false
+}
+
 configurations {
     asciidoctorExt
     compileOnly {
@@ -28,8 +32,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-//    db
+//    db (h2, mysql)
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
@@ -43,14 +50,35 @@ dependencies {
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
+//    Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
+//    JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+//     lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+//    spring-boot-configuration-processor
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
+//    spring-boot-devtools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//    prometheus
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
+// S3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+//    Firebase Admin
+    implementation 'com.google.firebase:firebase-admin:9.2.0'
+
+//    Cool SMS
+    implementation 'net.nurigo:sdk:4.3.0'
 }
 
 ext {

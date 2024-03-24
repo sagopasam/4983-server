@@ -30,8 +30,8 @@ public class AccessTokenArgumentResolver implements HandlerMethodArgumentResolve
     }
 
     private String getAccessToken(String authorizationHeader) {
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring(7);
+        if (authorizationHeader != null) {
+            return authorizationHeader;
         }
         return null;
     }
