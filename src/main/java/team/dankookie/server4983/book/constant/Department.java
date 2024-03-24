@@ -60,17 +60,19 @@ public enum Department {
     VOCAL("성악전공", MUSIC_AND_ARTS),
     ORCHESTRA("관현악전공", MUSIC_AND_ARTS),
     COMPOSITION("작곡전공", MUSIC_AND_ARTS),
-    GUGAK("국악전공", MUSIC_AND_ARTS);
+    GUGAK("국악전공", MUSIC_AND_ARTS),
+    DEFAULT("기본값",DEFAULT_VALUE);
 
     private final String koName;
     private final College college;
 
+    //해당 하는 값이 없을 시 DEFAULT 반환
     public static Department getByKoName(String koName) {
         for (Department department : values()) {
             if (department.getKoName().equals(koName)) {
                 return department;
             }
         }
-        return null;
+        return DEFAULT;
     }
 }
