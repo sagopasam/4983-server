@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import team.dankookie.server4983.fcm.dto.FcmBaseRequest;
 import team.dankookie.server4983.member.domain.Member;
 import team.dankookie.server4983.member.fixture.MemberFixture;
+import team.dankookie.server4983.member.repository.MemberRepository;
 
 @Service
 @ExtendWith(MockitoExtension.class)
@@ -28,6 +29,9 @@ public class FcmServiceTest {
     @Mock
     FirebaseMessaging firebaseMessaging;
 
+    @Mock
+    MemberRepository memberRepository;
+
     @Test
     void 푸시_알림_테스트() throws FirebaseMessagingException {
 
@@ -37,5 +41,6 @@ public class FcmServiceTest {
         verify(firebaseMessaging, times(1)).send(any(Message.class));
 
     }
+
 }
 
