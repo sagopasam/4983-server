@@ -65,7 +65,7 @@ class UsedBookServiceTest extends BaseServiceTest {
     TokenSecretKey tokenSecretKey;
 
     @Test
-    void 중고책을_저장하고_중고책_관련_이미지들을_저장한다() throws InterruptedException {
+    void 중고책을_저장하고_중고책_관련_이미지들을_저장한다() {
         //given
         List<MultipartFile> multipartFileList = List.of(
                 new MockMultipartFile("file", "fileOriginName", "image/jpeg", "file".getBytes()));
@@ -103,7 +103,7 @@ class UsedBookServiceTest extends BaseServiceTest {
     }
 
     @Test
-    void 중고책을_저장하고_중고책_관련_이미지들을_저장하는_메소드가_비동기로_동작하는지_검사한다() throws InterruptedException {
+    void 중고책을_저장하고_중고책_관련_이미지들을_저장하는_메소드가_비동기로_동작하는지_검사한다() {
         //given
         List<MultipartFile> multipartFileList = List.of(
                 new MockMultipartFile("file", "fileOriginName", "image/jpeg", "file".getBytes()),
