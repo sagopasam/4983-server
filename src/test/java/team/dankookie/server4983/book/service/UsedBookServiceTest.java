@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -13,6 +15,7 @@ import java.util.concurrent.Executor;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import team.dankookie.server4983.book.constant.BookStatus;
@@ -26,6 +29,7 @@ import team.dankookie.server4983.book.dto.UsedBookSaveResponse;
 import team.dankookie.server4983.book.repository.bookImage.BookImageRepository;
 import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
 import team.dankookie.server4983.common.BaseServiceTest;
+import team.dankookie.server4983.common.config.AppConfig;
 import team.dankookie.server4983.jwt.constants.TokenSecretKey;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
@@ -61,7 +65,7 @@ class UsedBookServiceTest extends BaseServiceTest {
     TokenSecretKey tokenSecretKey;
 
     @Test
-    void 중고책을_저장하고_중고책_관련_이미지들을_저장한다() {
+    void 중고책을_저장하고_중고책_관련_이미지들을_저장한다() throws InterruptedException {
         //given
         List<MultipartFile> multipartFileList = List.of(
                 new MockMultipartFile("file", "fileOriginName", "image/jpeg", "file".getBytes()));
@@ -96,6 +100,45 @@ class UsedBookServiceTest extends BaseServiceTest {
 
         //then
         assertThat(usedBookSaveResponse.usedBookId()).isEqualTo(usedBookId);
+    }
+
+    @Test
+    void 중고책을_저장하고_중고책_관련_이미지들을_저장하는_메소드가_비동기로_동작하는지_검사한다() throws InterruptedException {
+        //given
+        List<MultipartFile> multipartFileList = List.of(
+                new MockMultipartFile("file", "fileOriginName", "image/jpeg", "file".getBytes()),
+                new MockMultipartFile("file2", "fileOriginName2", "image/jpeg", "file".getBytes()));
+        UsedBookSaveRequest usedBookSaveRequest = UsedBookSaveRequest.of(
+                College.LAW,
+                Department.BUSINESS,
+                15000,
+                LocalDateTime.of(2023, 9, 13, 12, 0),
+                "책이름",
+                "출판사",
+                false,
+                true,
+                true
+        );
+        final AccessToken accessToken = AccessToken.of("accessToken", "studentId");
+        final String studentId = "studentId";
+        final Member member = Member.builder().build();
+        final long usedBookId = 1L;
+
+        when(jwtTokenUtils.getStudentId(any()))
+                .thenReturn(studentId);
+        when(memberService.findMemberByStudentId(studentId))
+                .thenReturn(member);
+        when(usedBookRepository.save(any()))
+                .thenReturn(UsedBook.builder().id(usedBookId).build());
+        lenient().when(uploadService.saveFileWithUUID(any()))
+                .thenReturn(S3Response.of("imageName", "fileS3Key", "fileOriginName"));
+
+        //when
+        usedBookService.saveAndSaveFiles(multipartFileList,
+                usedBookSaveRequest, accessToken);
+
+        //then
+        verify(defaultTaskExecutor, times(2)).execute(any());
     }
 
 

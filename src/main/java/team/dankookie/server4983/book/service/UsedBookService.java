@@ -45,10 +45,16 @@ public class UsedBookService {
 
         for (MultipartFile multipartFile : multipartFileList) {
             CompletableFuture.supplyAsync(() -> {
-                saveFileToS3(multipartFile, usedBook);
+                try {
+                    saveFileToS3(multipartFile, usedBook);
+                } catch (RuntimeException e) {
+                    log.warn(e.getMessage());
+                    throw new RuntimeException(e.getMessage());
+                }
                 return "success";
             }, defaultTaskExecutor).exceptionally(e -> {
-                throw new RuntimeException(e.getMessage());
+                log.warn(e.getMessage());
+                return "error";
             });
         }
         return UsedBookSaveResponse.of(usedBook.getId());
@@ -146,10 +152,20 @@ public class UsedBookService {
 
         if (multipartFileList != null) {
             for (MultipartFile multipartFile : multipartFileList) {
-                saveFileToS3(multipartFile, usedBook);
+                CompletableFuture.supplyAsync(() -> {
+                    try {
+                        saveFileToS3(multipartFile, usedBook);
+                    } catch (RuntimeException e) {
+                        log.warn(e.getMessage());
+                        throw new RuntimeException(e.getMessage());
+                    }
+                    return "success";
+                }, defaultTaskExecutor).exceptionally(e -> {
+                    log.warn(e.getMessage());
+                    return "error";
+                });
             }
         }
-
         return UsedBookSaveResponse.of(usedBook.getId());
     }
 
