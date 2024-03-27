@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +29,6 @@ import team.dankookie.server4983.book.dto.UsedBookSaveResponse;
 import team.dankookie.server4983.book.repository.bookImage.BookImageRepository;
 import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
 import team.dankookie.server4983.common.BaseServiceTest;
-import team.dankookie.server4983.common.config.AppConfig;
 import team.dankookie.server4983.jwt.constants.TokenSecretKey;
 import team.dankookie.server4983.jwt.dto.AccessToken;
 import team.dankookie.server4983.jwt.util.JwtTokenUtils;
@@ -38,30 +37,31 @@ import team.dankookie.server4983.member.service.MemberService;
 import team.dankookie.server4983.s3.dto.S3Response;
 import team.dankookie.server4983.s3.service.S3UploadService;
 
+@SpringBootTest
 class UsedBookServiceTest extends BaseServiceTest {
 
-    @InjectMocks
+    @Autowired
     UsedBookService usedBookService;
 
-    @Mock
+    @MockBean
     S3UploadService uploadService;
 
-    @Mock
+    @MockBean
     UsedBookRepository usedBookRepository;
 
-    @Mock
+    @MockBean
     BookImageRepository bookImageRepository;
 
-    @Mock
+    @MockBean
     MemberService memberService;
 
-    @Mock
+    @MockBean(name = "defaultTaskExecutor")
     Executor defaultTaskExecutor;
 
-    @Mock
+    @MockBean
     JwtTokenUtils jwtTokenUtils;
 
-    @Mock
+    @MockBean
     TokenSecretKey tokenSecretKey;
 
     @Test
@@ -91,10 +91,10 @@ class UsedBookServiceTest extends BaseServiceTest {
                 .thenReturn(member);
         when(usedBookRepository.save(any()))
                 .thenReturn(UsedBook.builder().id(usedBookId).build());
-        lenient().when(uploadService.saveFileWithUUID(any()))
+        when(uploadService.saveFileWithUUID(any()))
                 .thenReturn(S3Response.of("imageName", "fileS3Key", "fileOriginName"));
 
-        //when
+        //whenN
         UsedBookSaveResponse usedBookSaveResponse = usedBookService.saveAndSaveFiles(multipartFileList,
                 usedBookSaveRequest, accessToken);
 
