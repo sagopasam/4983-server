@@ -94,7 +94,7 @@ class UsedBookServiceTest extends BaseServiceTest {
         when(uploadService.saveFileWithUUID(any()))
                 .thenReturn(S3Response.of("imageName", "fileS3Key", "fileOriginName"));
 
-        //whenN
+        //when
         UsedBookSaveResponse usedBookSaveResponse = usedBookService.saveAndSaveFiles(multipartFileList,
                 usedBookSaveRequest, accessToken);
 
