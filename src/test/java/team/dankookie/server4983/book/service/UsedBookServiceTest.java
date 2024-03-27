@@ -87,7 +87,7 @@ class UsedBookServiceTest extends BaseServiceTest {
 
         //when
         UsedBookSaveResponse usedBookSaveResponse = usedBookService.saveAndSaveFiles(multipartFileList, usedBookSaveRequest, accessToken);
-
+        System.out.println("현재 쓰레드: " + Thread.currentThread().getName());
         //then
         assertThat(usedBookSaveResponse.usedBookId()).isEqualTo(usedBookId);
     }
