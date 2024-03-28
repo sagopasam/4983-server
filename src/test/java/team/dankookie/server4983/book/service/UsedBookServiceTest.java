@@ -3,7 +3,6 @@ package team.dankookie.server4983.book.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,6 +10,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ class UsedBookServiceTest extends BaseServiceTest {
     @MockBean
     MemberService memberService;
 
-    @MockBean(name = "defaultTaskExecutor")
+    @Autowired
     Executor defaultTaskExecutor;
 
     @MockBean
@@ -65,7 +65,7 @@ class UsedBookServiceTest extends BaseServiceTest {
     TokenSecretKey tokenSecretKey;
 
     @Test
-    void 중고책을_저장하고_중고책_관련_이미지들을_저장한다() {
+    void 중고책을_저장하고_중고책_관련_이미지들을_저장한다() throws ExecutionException, InterruptedException {
         //given
         List<MultipartFile> multipartFileList = List.of(
                 new MockMultipartFile("file", "fileOriginName", "image/jpeg", "file".getBytes()));
@@ -103,7 +103,7 @@ class UsedBookServiceTest extends BaseServiceTest {
     }
 
     @Test
-    void 중고책을_저장하고_중고책_관련_이미지들을_저장하는_메소드가_비동기로_동작하는지_검사한다() {
+    void 중고책을_저장하고_중고책_관련_이미지들을_저장하는_메소드가_비동기로_동작하는지_검사한다() throws ExecutionException, InterruptedException {
         //given
         List<MultipartFile> multipartFileList = List.of(
                 new MockMultipartFile("file", "fileOriginName", "image/jpeg", "file".getBytes()),
@@ -130,8 +130,10 @@ class UsedBookServiceTest extends BaseServiceTest {
                 .thenReturn(member);
         when(usedBookRepository.save(any()))
                 .thenReturn(UsedBook.builder().id(usedBookId).build());
-        lenient().when(uploadService.saveFileWithUUID(any()))
+        when(uploadService.saveFileWithUUID(multipartFileList.get(0)))
                 .thenReturn(S3Response.of("imageName", "fileS3Key", "fileOriginName"));
+        when(uploadService.saveFileWithUUID(multipartFileList.get(1)))
+                .thenReturn(S3Response.of("imageName2", "fileS3Key", "fileOriginName"));
 
         //when
         usedBookService.saveAndSaveFiles(multipartFileList,

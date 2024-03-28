@@ -1,7 +1,9 @@
 package team.dankookie.server4983.book.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,36 +39,39 @@ public class UsedBookService {
 
     @Transactional
     public UsedBookSaveResponse saveAndSaveFiles(List<MultipartFile> multipartFileList,
-                                                 UsedBookSaveRequest usedBookSaveRequest, AccessToken accessToken) {
+                                                 UsedBookSaveRequest usedBookSaveRequest, AccessToken accessToken)
+            throws ExecutionException, InterruptedException {
 
         String studentId = getStudentIdWithAccessToken(accessToken);
         Member member = memberService.findMemberByStudentId(studentId);
         UsedBook usedBook = usedBookRepository.save(usedBookSaveRequest.toEntity(member));
-
-        for (MultipartFile multipartFile : multipartFileList) {
-            CompletableFuture.supplyAsync(() -> {
-                try {
-                    saveFileToS3(multipartFile, usedBook);
-                } catch (RuntimeException e) {
-                    log.warn(e.getMessage());
-                    throw new RuntimeException(e.getMessage());
-                }
-                return "success";
-            }, defaultTaskExecutor).exceptionally(e -> {
-                log.warn(e.getMessage());
-                return "error";
-            });
-        }
+        saveFileToS3(multipartFileList, usedBook);
         return UsedBookSaveResponse.of(usedBook.getId());
     }
 
-    private void saveFileToS3(MultipartFile multipartFile, UsedBook usedBook) {
-        S3Response s3Response = uploadService.saveFileWithUUID(multipartFile);
-        BookImage bookImage = BookImage.builder()
-                .usedBook(usedBook)
-                .imageUrl(s3Response.s3ImageUrl()).build();
-        bookImageRepository.save(bookImage);
+    private void saveFileToS3(List<MultipartFile> multipartFileList, UsedBook usedBook)
+            throws InterruptedException, ExecutionException {
+        for (MultipartFile multipartFile : multipartFileList) {
+            CompletableFuture<String> future = CompletableFuture.runAsync(() -> {
+
+                S3Response s3Response = uploadService.saveFileWithUUID(multipartFile);
+                BookImage bookImage = BookImage.builder()
+                        .usedBook(usedBook)
+                        .imageUrl(s3Response.s3ImageUrl()).build();
+                bookImageRepository.save(bookImage);
+
+            }, defaultTaskExecutor).handle((result, error) -> {
+                if (error != null) {
+                    return error.getMessage();
+                }
+                return "success";
+            });
+            if (!Objects.equals(future.get(), "success")) {
+                throw new RuntimeException(future.get());
+            }
+        }
     }
+
 
     public UsedBookResponse findByUsedBookId(Long id, String studentId) {
 
@@ -138,7 +143,8 @@ public class UsedBookService {
 
     @Transactional
     public UsedBookSaveResponse updateUsedBook(Long id, List<MultipartFile> multipartFileList,
-                                               UsedBookSaveRequest usedBookSaveRequest, AccessToken accessToken) {
+                                               UsedBookSaveRequest usedBookSaveRequest, AccessToken accessToken)
+            throws ExecutionException, InterruptedException {
         String studentId = getStudentIdWithAccessToken(accessToken);
         Member member = memberService.findMemberByStudentId(studentId);
 
@@ -151,20 +157,7 @@ public class UsedBookService {
         usedBook.updateUsedBook(usedBookSaveRequest);
 
         if (multipartFileList != null) {
-            for (MultipartFile multipartFile : multipartFileList) {
-                CompletableFuture.supplyAsync(() -> {
-                    try {
-                        saveFileToS3(multipartFile, usedBook);
-                    } catch (RuntimeException e) {
-                        log.warn(e.getMessage());
-                        throw new RuntimeException(e.getMessage());
-                    }
-                    return "success";
-                }, defaultTaskExecutor).exceptionally(e -> {
-                    log.warn(e.getMessage());
-                    return "error";
-                });
-            }
+            saveFileToS3(multipartFileList, usedBook);
         }
         return UsedBookSaveResponse.of(usedBook.getId());
     }
