@@ -49,6 +49,7 @@ public class UsedBookService {
         return UsedBookSaveResponse.of(usedBook.getId());
     }
 
+
     private void saveFileToS3(List<MultipartFile> multipartFileList, UsedBook usedBook)
             throws InterruptedException, ExecutionException {
         for (MultipartFile multipartFile : multipartFileList) {

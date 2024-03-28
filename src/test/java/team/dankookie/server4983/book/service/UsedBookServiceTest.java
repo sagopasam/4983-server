@@ -3,20 +3,19 @@ package team.dankookie.server4983.book.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.multipart.MultipartFile;
 import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.constant.College;
@@ -43,6 +42,9 @@ class UsedBookServiceTest extends BaseServiceTest {
     @Autowired
     UsedBookService usedBookService;
 
+    @Autowired
+    ThreadPoolTaskExecutor defaultTaskExecutor;
+
     @MockBean
     S3UploadService uploadService;
 
@@ -55,9 +57,6 @@ class UsedBookServiceTest extends BaseServiceTest {
     @MockBean
     MemberService memberService;
 
-    @Autowired
-    Executor defaultTaskExecutor;
-
     @MockBean
     JwtTokenUtils jwtTokenUtils;
 
@@ -65,6 +64,7 @@ class UsedBookServiceTest extends BaseServiceTest {
     TokenSecretKey tokenSecretKey;
 
     @Test
+    @DisplayName("중고책과 관련 이미지 저장")
     void 중고책을_저장하고_중고책_관련_이미지들을_저장한다() throws ExecutionException, InterruptedException {
         //given
         List<MultipartFile> multipartFileList = List.of(
@@ -103,6 +103,7 @@ class UsedBookServiceTest extends BaseServiceTest {
     }
 
     @Test
+    @DisplayName("비동기로 중고책과 관련 이미지 저장")
     void 중고책을_저장하고_중고책_관련_이미지들을_저장하는_메소드가_비동기로_동작하는지_검사한다() throws ExecutionException, InterruptedException {
         //given
         List<MultipartFile> multipartFileList = List.of(
@@ -130,21 +131,21 @@ class UsedBookServiceTest extends BaseServiceTest {
                 .thenReturn(member);
         when(usedBookRepository.save(any()))
                 .thenReturn(UsedBook.builder().id(usedBookId).build());
-        when(uploadService.saveFileWithUUID(multipartFileList.get(0)))
+        when(uploadService.saveFileWithUUID(any()))
                 .thenReturn(S3Response.of("imageName", "fileS3Key", "fileOriginName"));
-        when(uploadService.saveFileWithUUID(multipartFileList.get(1)))
-                .thenReturn(S3Response.of("imageName2", "fileS3Key", "fileOriginName"));
 
         //when
         usedBookService.saveAndSaveFiles(multipartFileList,
                 usedBookSaveRequest, accessToken);
 
         //then
-        verify(defaultTaskExecutor, times(2)).execute(any());
+        assertThat(defaultTaskExecutor.getActiveCount()).isEqualTo(2);
+//        verify(defaultTaskExecutor, times(2)).execute(any());
     }
 
 
     @Test
+    @DisplayName("id값으로 중고서적 찾기")
     void 중고서적의_id값으로_중고서적을_찾는다() {
         //given
         final String nickname = "studentId";
@@ -182,6 +183,7 @@ class UsedBookServiceTest extends BaseServiceTest {
     }
 
     @Test
+    @DisplayName("중고서적 삭제")
     void 중고서적을_삭제에_성공한다() {
         //given
         Long usedBookId = 1L;
@@ -204,6 +206,7 @@ class UsedBookServiceTest extends BaseServiceTest {
     }
 
     @Test
+    @DisplayName("사용자가 다른 사용자 게시물을 삭제")
     void 해당_사용자가_등록한_게시물이_아니면_삭제가_실패한다() {
         //given
         Long usedBookId = 1L;
