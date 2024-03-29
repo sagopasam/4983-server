@@ -28,6 +28,7 @@ import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE
 import static team.dankookie.server4983.chat.constant.ContentType.TRADE_COMPLETE_SELLER;
 
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -407,10 +408,19 @@ public class ChatLogicHandler {
                                         "책을 넣을 사물함을 선택하고 비밀번호를 설정해주세요.";
                     }
                     case BUYER -> {
+                        final LocalDateTime tradeAvailableDatetime = chatRoom.getUsedBook().getTradeAvailableDatetime();
                         return
                                 "입금이 확인되었습니다.\n" +
                                         "\n" +
-                                        "거래날짜에 판매자가 사물함에 서적을 배치할 예정입니다.";
+                                        "판매자가 '" + chatRoom.getUsedBook().getName() + "' 서적을\n" +
+                                        tradeAvailableDatetime.getYear() + "년 " +
+                                        tradeAvailableDatetime.getMonthValue() + "월 " +
+                                        tradeAvailableDatetime.getDayOfMonth() + "일 " +
+                                        tradeAvailableDatetime.getHour() + "시 " +
+                                        tradeAvailableDatetime.getMinute() + "분에\n" +
+                                        "배치할 예정입니다.\n\n" +
+                                        "수령하실 사물함 번호와 비밀번호는\n" +
+                                        "추후에 안내됩니다.";
                     }
                 }
             }
