@@ -1,5 +1,7 @@
 package team.dankookie.server4983.chat.service;
 
+import static team.dankookie.server4983.chat.constant.ContentType.ADMIN_REQUEST_MESSAGE_TO_BUYER;
+import static team.dankookie.server4983.chat.constant.ContentType.ADMIN_REQUEST_MESSAGE_TO_SELLER;
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PLACEMENT_COMPLETE;
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PLACEMENT_SET;
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PURCHASE_REQUEST;
@@ -18,10 +20,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.dankookie.server4983.book.domain.Locker;
 import team.dankookie.server4983.book.repository.locker.LockerRepository;
+import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
+import team.dankookie.server4983.chat.domain.SellerChat;
+import team.dankookie.server4983.chat.dto.AdminChatMessageRequest;
 import team.dankookie.server4983.chat.dto.AdminChatMessageResponse;
 import team.dankookie.server4983.chat.dto.AdminChatRoomListResponse;
 import team.dankookie.server4983.chat.dto.ChatRequest;
+import team.dankookie.server4983.chat.exception.ChatException;
 import team.dankookie.server4983.chat.handler.ChatBotAdmin;
 import team.dankookie.server4983.chat.handler.ChatLogicHandler;
 import team.dankookie.server4983.chat.repository.ChatRoomRepository;
@@ -106,6 +112,24 @@ public class AdminChatService {
     public void cancel(final Long chatRoomId) {
         chatRoomRepository.findById(chatRoomId)
                 .ifPresent(chatRoom -> chatLogicHandler.chatLogic(ChatRequest.of(chatRoomId, CANCEL)));
+    }
+
+    @Transactional
+    public void postBuyerChat(Long chatRoomId, String messageToBuyer) {
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRoomId)
+                .orElseThrow(() -> new ChatException("채팅방을 찾을 수 없습니다."));
+        BuyerChat buyerChat = BuyerChat.buildBuyerChat(messageToBuyer, ADMIN_REQUEST_MESSAGE_TO_BUYER,
+                chatRoom);
+        chatRoom.addBuyerChat(buyerChat);
+    }
+
+    @Transactional
+    public void postSellerChat(Long chatRoomId, String messageToSeller) {
+        ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(chatRoomId)
+                .orElseThrow(() -> new ChatException("채팅방을 찾을 수 없습니다."));
+        SellerChat sellerChat = SellerChat.buildSellerChat(messageToSeller, ADMIN_REQUEST_MESSAGE_TO_SELLER,
+                chatRoom);
+        chatRoom.addSellerChat(sellerChat);
     }
 
     private void ifChatRoomEmptySaveMockLocker(ChatRoom chatRoom) {
