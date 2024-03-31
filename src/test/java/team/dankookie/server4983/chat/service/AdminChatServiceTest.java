@@ -52,7 +52,7 @@ public class AdminChatServiceTest {
 
     @Test
     @DisplayName("관리자가 판매자에게 메세지를 보낸다.")
-    public void postChattingToSeller() {
+    void postChattingToSeller() {
 
         //given
         final String buyerId = "buyer";
@@ -85,7 +85,7 @@ public class AdminChatServiceTest {
 
     @Test
     @DisplayName("관리자가 구매자에게 메세지를 보낸다.")
-    public void postChattingToBuyer() {
+    void postChattingToBuyer() {
 
         //given
         final String buyerId = "buyer";
