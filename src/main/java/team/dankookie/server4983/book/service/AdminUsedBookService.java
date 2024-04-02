@@ -26,6 +26,6 @@ public class AdminUsedBookService {
   public void updateBookStatus(Long id, BookStatus bookStatus) {
     UsedBook usedBook = usedBookRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
-    usedBook.setBookStatus(bookStatus);
+    usedBook.updateStatus(bookStatus);
   }
 }

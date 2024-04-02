@@ -1,5 +1,7 @@
 package team.dankookie.server4983.book.domain;
 
+import static team.dankookie.server4983.book.constant.BookStatus.*;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -42,7 +44,6 @@ public class UsedBook extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Department department;
 
-    @Setter
     @Enumerated(EnumType.STRING)
     private BookStatus bookStatus;
 
@@ -114,4 +115,8 @@ public class UsedBook extends BaseEntity {
         this.bookStatus = BookStatus.SOLD;
     }
 
+    public void updateStatus(BookStatus status) {
+        isDeleted = status == DELETE;
+        this.bookStatus = status;
+    }
 }
