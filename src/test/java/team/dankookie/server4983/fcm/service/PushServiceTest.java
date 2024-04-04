@@ -46,8 +46,8 @@ public class PushServiceTest {
     @Nested
     class isAllTest {
         @Test
-        @DisplayName("isAll이 true 일 때")
-        void isALL이_참_이면_모든_회원에게_알림을_보낸다() {
+        @DisplayName("isAll이 참이면 모든 회원에게 알림을 보낸다.")
+        void  pushAllMembers(){
 
             // given
             String studentId = "studentId";
@@ -65,8 +65,8 @@ public class PushServiceTest {
         }
 
         @Test
-        @DisplayName("isAll이 false 일 때")
-        void isAll이_참이_아니면_조건에_따른_회원에_대해서만_알림을_보낸다() {
+        @DisplayName("isAll이 참이 아니면 특종 조건에 따른 회원에 대해서만 알림을 보낸다.")
+        void pushSpecificMembers() {
             // given
             AdminPushRequest pushRequest = new AdminPushRequest(List.of(Department.ARCHITECTURE, Department.SOFTWARE),
                     List.of("1", "2"), List.of(2023, 2022), "test", false);
