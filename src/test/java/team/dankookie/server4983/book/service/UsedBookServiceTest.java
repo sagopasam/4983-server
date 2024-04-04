@@ -64,8 +64,8 @@ class UsedBookServiceTest extends BaseServiceTest {
     TokenSecretKey tokenSecretKey;
 
     @Test
-    @DisplayName("중고책과 관련 이미지 저장")
-    void 중고책을_저장하고_중고책_관련_이미지들을_저장한다() throws ExecutionException, InterruptedException {
+    @DisplayName("중고책과 관련 이미지를 저장한다")
+    void saveBook() throws ExecutionException, InterruptedException {
         //given
         List<MultipartFile> multipartFileList = List.of(
                 new MockMultipartFile("file", "fileOriginName", "image/jpeg", "file".getBytes()));
@@ -103,8 +103,8 @@ class UsedBookServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("비동기로 중고책과 관련 이미지 저장")
-    void 중고책을_저장하고_중고책_관련_이미지들을_저장하는_메소드가_비동기로_동작하는지_검사한다() throws ExecutionException, InterruptedException {
+    @DisplayName("비동기로 중고책과 관련 이미지를 저장한다.")
+    void saveBookByAsync() throws ExecutionException, InterruptedException {
         //given
         List<MultipartFile> multipartFileList = List.of(
                 new MockMultipartFile("file", "fileOriginName", "image/jpeg", "file".getBytes()),
@@ -145,8 +145,8 @@ class UsedBookServiceTest extends BaseServiceTest {
 
 
     @Test
-    @DisplayName("id값으로 중고서적 찾기")
-    void 중고서적의_id값으로_중고서적을_찾는다() {
+    @DisplayName("id값으로 중고서적을 찾는다.")
+    void findBook() {
         //given
         final String nickname = "studentId";
         final long usedBookId = 1L;
@@ -183,8 +183,8 @@ class UsedBookServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("중고서적 삭제")
-    void 중고서적을_삭제에_성공한다() {
+    @DisplayName("중고서적을 삭제한다.")
+    void removeBook() {
         //given
         Long usedBookId = 1L;
         String nickname = "studentId";
@@ -206,8 +206,8 @@ class UsedBookServiceTest extends BaseServiceTest {
     }
 
     @Test
-    @DisplayName("사용자가 다른 사용자 게시물을 삭제")
-    void 해당_사용자가_등록한_게시물이_아니면_삭제가_실패한다() {
+    @DisplayName("사용자가 다른 사용자 게시물을 삭제하는것에 실패한다.")
+    void removeByOtherMember() {
         //given
         Long usedBookId = 1L;
         String nickname = "studentId";
