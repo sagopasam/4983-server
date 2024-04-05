@@ -28,84 +28,84 @@ import team.dankookie.server4983.member.service.MemberDetailsService;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-  private final JwtTokenUtils jwtTokenUtils;
-  private final MemberDetailsService memberDetailsService;
+    private final JwtTokenUtils jwtTokenUtils;
+    private final MemberDetailsService memberDetailsService;
 
-  private final List<String> EXCLUDE_URI = List.of(
-      "/docs/**",
-      "/api/v1/token/valid",
-      "/api/v1/token/update",
-      "/api/v1/login",
-      "/api/v1/members/password/certification-number",
-      "/api/v1/members/password",
-      "/api/v1/register/duplicate/studentId",
-      "/api/v1/register/duplicate/nickname",
-      "/api/v1/my-pages/certification-number",
-      "/api/v1/register",
-      "/api/v1/admin/login"
-  );
-
-  @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-      FilterChain filterChain) throws ServletException, IOException {
-
-    String requestURI = request.getRequestURI();
-
-    if (!requestURI.contains("/docs/index.html")) {
-      log.info("requestURI: {}", requestURI);
-    }
-
-    if (EXCLUDE_URI.stream().anyMatch(requestURI::startsWith)) {
-      log.info("exclude uri: {}", requestURI);
-      filterChain.doFilter(request, response);
-      return;
-    }
-
-    if (request.getHeader(AUTHORIZATION) == null || request.getHeader(AUTHORIZATION).isEmpty()) {
-      filterChain.doFilter(request, response);
-      return;
-    }
-
-    String accessToken = request.getHeader(AUTHORIZATION);
-
-    String studentId = jwtTokenUtils.getStudentId(accessToken);
-
-    Boolean isTokenValid = jwtTokenUtils.validate(accessToken, studentId);
-
-    if (!isTokenValid) {
-      throw new NotAuthorizedException("유효하지 않은 토큰입니다.");
-    }
-
-    Boolean isTokenExpired = jwtTokenUtils.isTokenExpired(accessToken);
-    if (isTokenExpired) {
-      throw new NotAuthorizedException("만료된 토큰입니다.");
-    }
-
-    UserDetails member = memberDetailsService.loadUserByUsername(studentId);
-
-    AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-        member,
-        null,
-        member.getAuthorities()
+    private final List<String> EXCLUDE_URI = List.of(
+            "/docs/**",
+            "/api/v1/token/valid",
+            "/api/v1/token/update",
+            "/api/v1/login",
+            "/api/v1/members/password/certification-number",
+            "/api/v1/members/password",
+            "/api/v1/register/duplicate/studentId",
+            "/api/v1/register/duplicate/nickname",
+            "/api/v1/my-pages/certification-number",
+            "/api/v1/register",
+            "/api/v1/admin/login"
     );
 
-    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-    SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-    securityContext.setAuthentication(authentication);
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
-    SecurityContextHolder.setContext(securityContext);
+        String requestURI = request.getRequestURI();
 
-    filterChain.doFilter(request, response);
-  }
+        if (!requestURI.contains("/docs/index.html")) {
+            log.info("requestURI: {}", requestURI);
+        }
 
-  private String parseBearerToken(HttpServletRequest request) {
+        if (EXCLUDE_URI.stream().anyMatch(requestURI::startsWith)) {
+            log.info("exclude uri: {}", requestURI);
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-    String accessToken = request.getHeader(AUTHORIZATION);
+        if (request.getHeader(AUTHORIZATION) == null || request.getHeader(AUTHORIZATION).isEmpty()) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-    if (StringUtils.hasText(accessToken) && accessToken.startsWith("Bearer ")) {
-      return accessToken.substring(7);
-    } else {
-      throw new NotAuthorizedException("잘못된 토큰입니다.");
+        String accessToken = request.getHeader(AUTHORIZATION);
+
+        String studentId = jwtTokenUtils.getStudentId(accessToken);
+
+        Boolean isTokenValid = jwtTokenUtils.validate(accessToken, studentId);
+
+        if (!isTokenValid) {
+            throw new NotAuthorizedException("유효하지 않은 토큰입니다.");
+        }
+
+        Boolean isTokenExpired = jwtTokenUtils.isTokenExpired(accessToken);
+        if (isTokenExpired) {
+            throw new NotAuthorizedException("만료된 토큰입니다.");
+        }
+
+        UserDetails member = memberDetailsService.loadUserByUsername(studentId);
+
+        AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                member,
+                null,
+                member.getAuthorities()
+        );
+
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
+
+        filterChain.doFilter(request, response);
     }
-  }
+
+    private String parseBearerToken(HttpServletRequest request) {
+
+        String accessToken = request.getHeader(AUTHORIZATION);
+
+        if (StringUtils.hasText(accessToken) && accessToken.startsWith("Bearer ")) {
+            return accessToken.substring(7);
+        } else {
+            throw new NotAuthorizedException("잘못된 토큰입니다.");
+        }
+    }
 }
