@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.book.repository.usedBook.UsedBookRepository;
+import team.dankookie.server4983.chat.constant.ContentType;
 import team.dankookie.server4983.chat.domain.ChatRoom;
 import team.dankookie.server4983.chat.dto.ChatRoomRequest;
 import team.dankookie.server4983.chat.dto.ChatRoomResponse;
@@ -73,7 +74,7 @@ public class AdminChatServiceTest {
         ChatRoomResponse savedChatRoom = chatService.createChatRoom(chatRoomRequest, AccessToken.of("test", buyerId));
 
         //when
-        adminChatService.postSellerChat(savedChatRoom.getChatRoomId(), "[관리자 메세지] 관리자 메세지가 왔습니다.");
+        adminChatService.postChat(savedChatRoom.getChatRoomId(), "[관리자 메세지] 관리자 메세지가 왔습니다.",ContentType.ADMIN_REQUEST_MESSAGE_TO_SELLER);
 
         //then
         ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(savedChatRoom.getChatRoomId())
@@ -106,7 +107,7 @@ public class AdminChatServiceTest {
         ChatRoomResponse savedChatRoom = chatService.createChatRoom(chatRoomRequest, AccessToken.of("test", buyerId));
 
         //when
-        adminChatService.postBuyerChat(savedChatRoom.getChatRoomId(), "[관리자 메세지] 관리자 메세지가 왔습니다.");
+        adminChatService.postChat(savedChatRoom.getChatRoomId(), "[관리자 메세지] 관리자 메세지가 왔습니다.", ContentType.ADMIN_REQUEST_MESSAGE_TO_BUYER);
 
         //then
         ChatRoom chatRoom = chatRoomRepository.findByChatRoomId(savedChatRoom.getChatRoomId())

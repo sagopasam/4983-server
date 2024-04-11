@@ -8,7 +8,6 @@ import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PLACEMENT
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PURCHASE_REQUEST;
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PURCHASE_REQUEST_BUYER;
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PURCHASE_REQUEST_SELLER;
-import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PURCHASE_START;
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PURCHASE_START_BUYER;
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PURCHASE_START_NOTIFY_BUYER;
 import static team.dankookie.server4983.chat.constant.ContentType.BOOK_PURCHASE_START_NOTIFY_SELLER;

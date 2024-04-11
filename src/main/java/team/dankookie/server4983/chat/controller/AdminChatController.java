@@ -61,18 +61,12 @@ public class AdminChatController {
         return ResponseEntity.ok(adminChatService.getSellerChat(chatRoomId));
     }
 
-    @PostMapping("{chatRoomId}/buyer")
-    public ResponseEntity<Void> postBuyerChat(@RequestBody AdminChatMessageRequest messageRequest,
-                                              @PathVariable Long chatRoomId) {
-        adminChatService.postBuyerChat(chatRoomId, messageRequest.getMessage());
+    @PostMapping("{chatRoomId}/user")
+    public ResponseEntity<Void> postChat(@RequestBody AdminChatMessageRequest messageRequest,
+                                         @PathVariable Long chatRoomId) {
+        adminChatService.postChat(chatRoomId, messageRequest.getMessage(), messageRequest.getContentType());
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("{chatRoomId}/seller")
-    public ResponseEntity<Void> postSellerChat(@RequestBody AdminChatMessageRequest messageRequest,
-                                               @PathVariable Long chatRoomId) {
-        adminChatService.postSellerChat(chatRoomId, messageRequest.getMessage());
-        return ResponseEntity.ok().build();
-    }
 
 }
