@@ -23,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import team.dankookie.server4983.book.domain.QLocker;
 import team.dankookie.server4983.book.domain.UsedBook;
 import team.dankookie.server4983.chat.domain.BuyerChat;
 import team.dankookie.server4983.chat.domain.ChatRoom;
@@ -313,6 +312,7 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepositoryCustom {
                 ).from(chatRoom)
                 .leftJoin(locker).on(locker.chatRoom.eq(chatRoom))
                 .where(whereConditions)
+                .offset(pageable.getOffset())
                 .limit(12)
                 .fetch();
 
