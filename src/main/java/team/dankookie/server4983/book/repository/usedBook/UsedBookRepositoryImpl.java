@@ -30,32 +30,6 @@ public class UsedBookRepositoryImpl implements UsedBookRepositoryCustom {
     public Page<AdminUsedBookListResponse> getAdminUsedBookList(Pageable pageable,
                                                                 String searchKeyword, BookStatus bookStatus) {
 
-    if (bookStatus == BookStatus.ALL) {
-      List<AdminUsedBookListResponse> content = jpaQueryFactory
-          .select(
-              new QAdminUsedBookListResponse(
-                  usedBook.id,
-                  usedBook.bookStatus,
-                  usedBook.name,
-                  usedBook.publisher,
-                  usedBook.price,
-                  usedBook.createdAt
-              )
-          ).from(usedBook)
-          .where(
-              boolNameOrPublisherContains(searchKeyword)
-          ).orderBy(usedBook.id.desc())
-          .offset(pageable.getOffset())
-          .limit(12)
-          .fetch();
-      Long count = jpaQueryFactory
-          .select(usedBook.count())
-          .from(usedBook)
-          .where(
-              boolNameOrPublisherContains(searchKeyword)
-          ).fetchOne();
-      return new PageImpl<>(content, pageable, count);
-    }
         if (bookStatus == BookStatus.ALL) {
             List<AdminUsedBookListResponse> content = jpaQueryFactory
                     .select(
