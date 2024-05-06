@@ -41,7 +41,7 @@ public class AdminLockerService {
     }
 
     @Transactional
-    public boolean updateLocker(Integer lockerNumber, Boolean isExists) {
+    public void updateLocker(Integer lockerNumber, Boolean isExists) {
 
         if (isExists) {
             lockerRepository.save(
@@ -49,16 +49,14 @@ public class AdminLockerService {
                             .lockerNumber(lockerNumber)
                             .password("임의설정비밀번호")
                             .tradeDate(LocalDate.now())
-                            .isExists(isExists)
+                            .isExists(true)
                             .build()
             );
         } else {
-            Locker locker = lockerRepository.findByLockerNumber(lockerNumber)
-                    .orElseThrow(() -> new IllegalArgumentException("해당 사물함이 존재하지 않습니다."));
+            Locker locker = lockerRepository.findByLockerNumberAndIsExists(lockerNumber);
 
             locker.releaseLocker();
         }
 
-        return true;
     }
 }
