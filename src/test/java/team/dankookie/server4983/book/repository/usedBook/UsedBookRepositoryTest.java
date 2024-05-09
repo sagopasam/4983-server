@@ -1,7 +1,7 @@
 package team.dankookie.server4983.book.repository.usedBook;
 
-
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import team.dankookie.server4983.book.constant.BookStatus;
@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 
 class UsedBookRepositoryTest extends BaseRepositoryTest {
 
@@ -339,4 +338,36 @@ class UsedBookRepositoryTest extends BaseRepositoryTest {
         assertThat(isUsedBookSavedByThisMember).isFalse();
     }
 
+    @Test
+    @DisplayName("판매 삭제 상태가 되면 응답 리스트에 포함되지 않는다")
+    void get_book_list_by_delete_status() {
+        //given
+        Member member = MemberFixture.createMember();
+        memberRepository.save(member);
+
+        int numberOfBooks = 10;
+
+        for (int i = 0; i < numberOfBooks; i++) {
+            UsedBook book = UsedBook.builder()
+              .bookStatus(BookStatus.SALE)
+              .sellerMember(member)
+              .isDeleted(false)
+              .tradeAvailableDatetime(LocalDateTime.now())
+              .price(10000)
+              .name("책이름")
+              .build();
+
+            UsedBook saved = usedBookRepository.save(book);
+
+            if (i == 5) {
+                saved.updateStatus(BookStatus.DELETE);
+            }
+        }
+
+        //when
+        List<UsedBookListResponse> usedBookList = usedBookRepository.getUsedBookList(false);
+
+        //then
+        assertThat(usedBookList).hasSize(numberOfBooks - 1);
+    }
 }
