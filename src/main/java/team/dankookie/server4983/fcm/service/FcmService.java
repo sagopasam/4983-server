@@ -47,7 +47,6 @@ public class FcmService {
                         .setBody(request.body())
                         .setImage("https://4983-s3.s3.ap-northeast-2.amazonaws.com/appIcon.png")
                         .build();
-
                 Message message = Message.builder()
                         .setToken(member.getFirebaseToken())
                         .setNotification(notification)
