@@ -1,9 +1,21 @@
 package team.dankookie.server4983.book.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.multipart.MultipartFile;
 import team.dankookie.server4983.book.constant.BookStatus;
 import team.dankookie.server4983.book.constant.College;
@@ -24,47 +36,44 @@ import team.dankookie.server4983.member.service.MemberService;
 import team.dankookie.server4983.s3.dto.S3Response;
 import team.dankookie.server4983.s3.service.S3UploadService;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
+@SpringBootTest
 class UsedBookServiceTest extends BaseServiceTest {
 
-    @InjectMocks
+    @Autowired
     UsedBookService usedBookService;
 
-    @Mock
+    @Autowired
+    ThreadPoolTaskExecutor defaultTaskExecutor;
+
+    @MockBean
     S3UploadService uploadService;
 
-    @Mock
+    @MockBean
     UsedBookRepository usedBookRepository;
 
-    @Mock
+    @MockBean
     BookImageRepository bookImageRepository;
 
-    @Mock
+    @MockBean
     MemberService memberService;
 
-    @Mock
+    @MockBean
     JwtTokenUtils jwtTokenUtils;
 
-    @Mock
+    @MockBean
     TokenSecretKey tokenSecretKey;
 
     @Test
-    void 중고책을_저장하고_중고책_관련_이미지들을_저장한다() {
+    @DisplayName("중고책과 관련 이미지를 저장한다")
+    void saveBook() throws ExecutionException, InterruptedException {
         //given
-        List<MultipartFile> multipartFileList = List.of(new MockMultipartFile("file", "fileOriginName", "image/jpeg", "file".getBytes()));
+        List<MultipartFile> multipartFileList = List.of(
+                new MockMultipartFile("file", "fileOriginName", "image/jpeg", "file".getBytes()));
         UsedBookSaveRequest usedBookSaveRequest = UsedBookSaveRequest.of(
                 College.LAW,
                 Department.BUSINESS,
                 15000,
-                LocalDateTime.of(2023, 9, 13,12,0),
+                LocalDateTime.of(2023, 9, 13, 12, 0),
                 "책이름",
                 "출판사",
                 false,
@@ -86,14 +95,58 @@ class UsedBookServiceTest extends BaseServiceTest {
                 .thenReturn(S3Response.of("imageName", "fileS3Key", "fileOriginName"));
 
         //when
-        UsedBookSaveResponse usedBookSaveResponse = usedBookService.saveAndSaveFiles(multipartFileList, usedBookSaveRequest, accessToken);
+        UsedBookSaveResponse usedBookSaveResponse = usedBookService.saveAndSaveFiles(multipartFileList,
+                usedBookSaveRequest, accessToken);
 
         //then
         assertThat(usedBookSaveResponse.usedBookId()).isEqualTo(usedBookId);
     }
 
     @Test
-    void 중고서적의_id값으로_중고서적을_찾는다() {
+    @DisplayName("비동기로 중고책과 관련 이미지를 저장한다.")
+    void saveBookByAsync() throws ExecutionException, InterruptedException {
+        //given
+        List<MultipartFile> multipartFileList = List.of(
+                new MockMultipartFile("file", "fileOriginName", "image/jpeg", "file".getBytes()),
+                new MockMultipartFile("file2", "fileOriginName2", "image/jpeg", "file".getBytes()));
+        UsedBookSaveRequest usedBookSaveRequest = UsedBookSaveRequest.of(
+                College.LAW,
+                Department.BUSINESS,
+                15000,
+                LocalDateTime.of(2023, 9, 13, 12, 0),
+                "책이름",
+                "출판사",
+                false,
+                true,
+                true
+        );
+        final AccessToken accessToken = AccessToken.of("accessToken", "studentId");
+        final String studentId = "studentId";
+        final Member member = Member.builder().build();
+        final long usedBookId = 1L;
+
+        when(jwtTokenUtils.getStudentId(any()))
+                .thenReturn(studentId);
+        when(memberService.findMemberByStudentId(studentId))
+                .thenReturn(member);
+        when(usedBookRepository.save(any()))
+                .thenReturn(UsedBook.builder().id(usedBookId).build());
+        when(uploadService.saveFileWithUUID(any()))
+                .thenReturn(S3Response.of("imageName", "fileS3Key", "fileOriginName"));
+
+        //when
+        usedBookService.saveAndSaveFiles(multipartFileList,
+                usedBookSaveRequest, accessToken);
+
+        //then
+        assertThat(defaultTaskExecutor.getActiveCount()).isEqualTo(2);
+//        verify(defaultTaskExecutor, times(2)).execute(any());
+    }
+
+
+    @Test
+    @DisplayName("id값으로 중고서적을 찾는다.")
+    void findBook() {
         //given
         final String nickname = "studentId";
         final long usedBookId = 1L;
@@ -112,7 +165,7 @@ class UsedBookServiceTest extends BaseServiceTest {
                 .name(bookName)
                 .publisher(publisher)
                 .price(15000)
-                .tradeAvailableDatetime(LocalDateTime.of(2023, 9, 13,12,0))
+                .tradeAvailableDatetime(LocalDateTime.of(2023, 9, 13, 12, 0))
                 .build();
 
         when(usedBookRepository.findById(usedBookId))
@@ -130,7 +183,8 @@ class UsedBookServiceTest extends BaseServiceTest {
     }
 
     @Test
-    void 중고서적을_삭제에_성공한다() {
+    @DisplayName("중고서적을 삭제한다.")
+    void removeBook() {
         //given
         Long usedBookId = 1L;
         String nickname = "studentId";
@@ -152,7 +206,8 @@ class UsedBookServiceTest extends BaseServiceTest {
     }
 
     @Test
-    void 해당_사용자가_등록한_게시물이_아니면_삭제가_실패한다() {
+    @DisplayName("사용자가 다른 사용자 게시물을 삭제하는것에 실패한다.")
+    void removeByOtherMember() {
         //given
         Long usedBookId = 1L;
         String nickname = "studentId";
